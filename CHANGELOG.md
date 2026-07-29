@@ -24,5 +24,5 @@ This project follows the structure of Keep a Changelog. Versioning policy is def
 - Strengthened repository agent rules for knowledge preservation.
 - Replaced mandatory Pull Request assumptions with Architecture Review Gate.
 - Added a platform-independent task lifecycle for implementation review and approval.
-- Clarified solo-maintainer integration governance.
+- Clarified solo-maintainer baseline acceptance governance.
 - Simplified repository workflow to single-branch development on `master`.

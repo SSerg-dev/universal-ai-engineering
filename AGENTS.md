@@ -21,7 +21,7 @@ AI coding and documentation agents working in this repository MUST preserve the 
 - Keep human-readable and machine-readable registries synchronized.
 - Report all deleted governed files in the task evidence package or equivalent review record.
 - Treat unexpected pre-existing content as a discovery finding, not as disposable material.
-- Wait for Architecture Review Gate when required.
+- Wait for Architecture Review Gate for material changes.
 - Wait for explicit human approval before accepting implemented work into the governing baseline.
 - Continue with the next task only after the current task has reviewable evidence.
 - Do not assume Pull Requests, feature branches, or merge commits.

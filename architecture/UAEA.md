@@ -230,13 +230,13 @@ Traceability is maintained through metadata blocks, the human-readable registry,
 
 ## 22. Architecture Review Gate
 
-Architecture Review Gate (ARG) is the mandatory review checkpoint that verifies that a proposed change conforms to governing architecture, specifications, traceability requirements, validation requirements, and human approval rules before integration into the governing baseline.
+Architecture Review Gate (ARG) is the mandatory review checkpoint that verifies that a proposed change conforms to governing architecture, specifications, traceability requirements, validation requirements, and human approval rules before acceptance into the governing baseline.
 
 ARG is a governance and quality-control concept. It is independent of any specific source-control platform. In the current repository, ARG is normally implemented through review of small commits on `master` and a task evidence package. A Pull Request, temporary branch diff, commit range, patch, local review, repository-native change request, or equivalent auditable mechanism may also implement ARG when useful.
 
 ### Purpose
 
-ARG prevents implementation completion from being treated as architectural approval. It creates a reviewable checkpoint between implementation and integration.
+ARG prevents implementation completion from being treated as architectural approval. It creates a reviewable checkpoint between implementation and acceptance into the governing baseline.
 
 ### Scope
 
@@ -266,7 +266,7 @@ ARG reviews the implementation against:
 
 ### Evidence Requirements
 
-The evidence package should include task ID, task title, task status, scope, changed files, summary of changes, governing artifacts reviewed, acceptance criteria, validation performed, validation results, known limitations, unresolved questions, commit SHA or patch identifier, comparison base, reviewer findings, approval record, and integration record.
+The evidence package should include task ID, task title, task status, scope, changed files, summary of changes, governing artifacts reviewed, acceptance criteria, validation performed, validation results, known limitations, unresolved questions, commit SHA or patch identifier, comparison base, reviewer findings, approval record, and acceptance record.
 
 Evidence should be proportional to architectural impact, implementation risk, security impact, number of affected artifacts, reversibility, and compliance requirements.
 
@@ -314,7 +314,7 @@ Planned: architecture, requirements, scope, constraints, and acceptance criteria
 
 Implemented: the planned change has been implemented and is ready for independent architectural review. Implementation completion does not imply approval.
 
-Architecturally Reviewed: the implementation has been reviewed against governing artifacts, dependencies, traceability, knowledge-preservation rules, validation evidence, and acceptance criteria. This state does not authorize integration unless the accountable human also approves.
+Architecturally Reviewed: the implementation has been reviewed against governing artifacts, dependencies, traceability, knowledge-preservation rules, validation evidence, and acceptance criteria. This state does not authorize acceptance into the governing baseline unless the accountable human also approves.
 
 Approved: the accountable human has explicitly authorized the change for acceptance into the governing baseline. Approved is a task decision state and must not be confused with the lifecycle status of a governed document or released artifact.
 

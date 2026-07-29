@@ -138,7 +138,7 @@ TBD.
 
 TBD.
 
-Preliminary: implementation evidence should identify task ID, task title, task status, scope, changed files, summary of changes, governing artifacts reviewed, acceptance criteria, validation performed, validation results, known limitations, unresolved questions, commit SHA or patch identifier, comparison base, reviewer findings, approval record, and integration record.
+Preliminary: implementation evidence should identify task ID, task title, task status, scope, changed files, summary of changes, governing artifacts reviewed, acceptance criteria, validation performed, validation results, known limitations, unresolved questions, commit SHA or patch identifier, comparison base, reviewer findings, approval record, and acceptance record.
 
 Preliminary: evidence should be proportional to architectural impact, implementation risk, security impact, affected artifacts, reversibility, and compliance requirements.
 
