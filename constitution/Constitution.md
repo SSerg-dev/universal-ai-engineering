@@ -70,7 +70,7 @@ Every governed artifact must state:
 
 ## 11. Human Accountability
 
-AI agents MAY assist with analysis, planning, implementation, review, or documentation, but accountable human approval remains required for governance decisions and merges.
+AI agents MAY assist with analysis, planning, implementation, review, or documentation, but accountable human approval remains required for governance decisions and integration into a governing baseline.
 
 ## 12. Evidence-Based Verification
 

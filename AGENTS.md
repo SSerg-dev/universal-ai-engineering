@@ -13,14 +13,14 @@ AI coding and documentation agents working in this repository MUST preserve the 
 - Do not mark documents Approved or Stable without explicit human approval.
 - Validate internal links before presenting work for review.
 - Preserve traceability between artifacts, dependencies, owners, status, versions, and repository locations.
-- Show evidence of validation in implementation notes or pull request descriptions.
+- Show evidence of validation in the task evidence package, review record, change request, or equivalent auditable mechanism.
 - Distinguish rename, migration, consolidation, and deletion.
 - Preserve ADRs and changelog history.
 - Keep human-readable and machine-readable registries synchronized.
-- Report all deleted governed files in the pull request description.
+- Report all deleted governed files in the task evidence package or equivalent review record.
 - Treat unexpected pre-existing content as a discovery finding, not as disposable material.
-- Never merge without human approval.
-- Do not merge your own work.
+- Never integrate changes into a governing baseline without human approval.
+- Do not integrate your own work without explicit human approval.
 
 ## Knowledge Preservation
 
@@ -32,6 +32,17 @@ Repository agents MUST NOT delete governed knowledge without:
 - explicit human approval.
 
 Agents SHOULD consolidate compatible knowledge instead of replacing one version with another. This is a repository agent rule governed by the current architecture and human review process; it is not yet a ratified constitutional principle.
+
+## Architecture Review Gate
+
+- Agents MUST NOT treat implementation completion as approval.
+- Agents MUST prepare reviewable evidence after implementation.
+- Agents MUST identify the comparison base and changed artifacts.
+- Agents MUST NOT integrate changes before explicit human approval.
+- Agents MUST correct review findings before requesting approval.
+- Agents MUST support review without requiring a Pull Request.
+- Agents MAY use a Pull Request when it improves collaboration, traceability, or risk management.
+- Agents MUST keep task states distinct: Planned, Implemented, Architecturally Reviewed, and Approved.
 
 ## Governing Sources
 

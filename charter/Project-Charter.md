@@ -128,9 +128,15 @@ The foundation is successful when:
 
 This Charter is governed by the [Constitution](../constitution/Constitution.md).
 
+Architectural review is mandatory before integration into the governing baseline. Pull Requests are optional implementation mechanisms, not universal governance requirements.
+
+The operating process must remain executable by a solo maintainer while preserving architectural governance, traceability, validation, and explicit human approval. Review rigor should be proportional to architectural impact, risk, affected artifacts, and reversibility.
+
 ## 13. Decision Process
 
-Material decisions require documented rationale, traceability to governing artifacts, and accountable human approval.
+Material decisions require documented rationale, traceability to governing artifacts, Architecture Review Gate when implementation is affected, and accountable human approval.
+
+The accountable human has final approval authority. Architecture Review Gate may be implemented through a Pull Request, branch diff, commit review, patch review, local review, or equivalent auditable mechanism.
 
 ## 14. Foundation Release 1.0
 
@@ -161,6 +167,16 @@ Knowledge:
 ## 16. High-Level Roadmap
 
 The project proceeds from foundation governance to UGSD Specification, methodology, reference assets, reference implementation, and education.
+
+High-level operating model:
+
+```text
+Task
+  -> Implementation
+  -> Architecture Review Gate
+  -> Human Approval
+  -> Integration
+```
 
 ## 17. Major Risks
 

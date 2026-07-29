@@ -6,6 +6,8 @@ Status: In Progress
 
 Foundation Release 1.0 establishes the initial governance, architecture, registry, specification skeleton, repository instructions, and roadmap for Universal AI Engineering.
 
+- Establish Architecture Review Gate as the platform-independent integration control.
+
 ## UGSD Specification 1.0
 
 Status: Planned

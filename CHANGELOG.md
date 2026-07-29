@@ -22,3 +22,6 @@ This project follows the structure of Keep a Changelog. Versioning policy is def
 - Consolidated draft foundation documents with pre-existing repository knowledge.
 - Restored ADR and machine-readable registry history for review continuity.
 - Strengthened repository agent rules for knowledge preservation.
+- Replaced mandatory Pull Request assumptions with Architecture Review Gate.
+- Added a platform-independent task lifecycle for implementation review and approval.
+- Clarified solo-maintainer integration governance.

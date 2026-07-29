@@ -91,13 +91,27 @@ Preliminary candidate lifecycle:
 Discovery
   -> Specification
   -> Planning
-  -> Architecture Review
-  -> Execution
+  -> Implementation
+  -> Architecture Review Gate
+  -> Human Approval
+  -> Integration
   -> Verification
   -> Evaluation
   -> Delivery
   -> Retrospective
   -> Knowledge Capture
+```
+
+Preliminary task decision lifecycle:
+
+```text
+Planned -> Implemented -> Architecturally Reviewed -> Approved
+```
+
+Preliminary correction path:
+
+```text
+Implemented -> Architecture Review -> Changes Required -> Implemented
 ```
 
 ## 10. Discovery
@@ -124,6 +138,10 @@ TBD.
 
 TBD.
 
+Preliminary: implementation evidence should identify task ID, task title, task status, scope, changed files, summary of changes, governing artifacts reviewed, acceptance criteria, validation performed, validation results, known limitations, unresolved questions, commit SHA or patch identifier, comparison base, reviewer findings, approval record, and integration record.
+
+Preliminary: evidence should be proportional to architectural impact, implementation risk, security impact, affected artifacts, reversibility, and compliance requirements.
+
 ## 16. Quality Gates
 
 TBD.
@@ -133,6 +151,7 @@ Preliminary candidate gates:
 - Definition of Ready
 - Specification Approval
 - Architecture Approval
+- Architecture Review Gate
 - Execution Authorization
 - Verification Gate
 - Evaluation Gate
@@ -143,17 +162,25 @@ Preliminary candidate gates:
 
 TBD.
 
+Preliminary: human approval is distinct from implementation completion and architectural review. A task should not be integrated into a governing baseline until the accountable human explicitly approves it.
+
 ## 18. Agent Responsibilities
 
 TBD.
+
+Preliminary: agents may implement, prepare evidence, and correct findings, but they should not treat implementation completion as approval. Agents should support review using Pull Requests, branch diffs, commit ranges, patches, local review records, or equivalent auditable mechanisms.
 
 ## 19. Change Management
 
 TBD.
 
+Preliminary: changes that fail Architecture Review Gate should enter Changes Required and return to Implemented only after correction. Review comments should not be treated as approval.
+
 ## 20. Traceability
 
 TBD.
+
+Preliminary: task traceability should connect task definition, implementation evidence, comparison base, changed artifacts, review findings, human approval, integration record, and release record when applicable.
 
 ## 21. Conformance
 

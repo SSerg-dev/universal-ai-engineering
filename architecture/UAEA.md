@@ -228,7 +228,119 @@ Planned -> Draft -> Review -> Approved -> Stable
 
 Traceability is maintained through metadata blocks, the human-readable registry, the machine-readable registry, internal links, changelog entries, and architectural decision records.
 
-## 22. Change Governance
+## 22. Architecture Review Gate
+
+Architecture Review Gate (ARG) is the mandatory review checkpoint that verifies that a proposed change conforms to governing architecture, specifications, traceability requirements, validation requirements, and human approval rules before integration into the governing baseline.
+
+ARG is a governance and quality-control concept. It is independent of any specific source-control platform. A Pull Request is one possible implementation of ARG, but a branch diff, commit range, patch, local Git review, repository-native change request, or equivalent auditable mechanism may also implement ARG.
+
+### Purpose
+
+ARG prevents implementation completion from being treated as architectural approval. It creates a reviewable checkpoint between implementation and integration.
+
+### Scope
+
+ARG applies to material changes that affect governed artifacts, architecture, specifications, registry metadata, evidence practices, implementation behavior, or release readiness.
+
+### Entry Criteria
+
+- the planned change has been implemented;
+- changed artifacts are identifiable;
+- comparison base is identified;
+- implementation evidence is available;
+- known limitations and unresolved questions are recorded.
+
+### Review Subjects
+
+ARG reviews the implementation against:
+
+- the Constitution;
+- the Project Charter;
+- UAEA;
+- applicable specifications;
+- artifact dependencies;
+- traceability requirements;
+- knowledge-preservation rules;
+- validation evidence;
+- acceptance criteria.
+
+### Evidence Requirements
+
+The evidence package should include task ID, task title, task status, scope, changed files, summary of changes, governing artifacts reviewed, acceptance criteria, validation performed, validation results, known limitations, unresolved questions, commit SHA or patch identifier, comparison base, reviewer findings, approval record, and integration record.
+
+Evidence should be proportional to architectural impact, implementation risk, security impact, number of affected artifacts, reversibility, and compliance requirements.
+
+### Possible Outcomes
+
+- Architecturally Reviewed: review completed without blocking findings.
+- Changes Required: review found blocking issues that must be corrected.
+- Rejected: the implementation should not proceed in its current form.
+
+Review comments alone do not imply approval.
+
+### Human Approval
+
+ARG does not replace accountable human approval. A task may be Architecturally Reviewed while still pending human approval.
+
+### Integration
+
+ARG must occur before final integration into the governing baseline. Integration includes approved changes in the governing branch or baseline. A commit in `master` does not automatically imply that a governed artifact is Stable.
+
+### Platform Independence
+
+The implementation mechanism may be:
+
+- Pull Request;
+- branch diff;
+- commit range;
+- patch;
+- local Git review;
+- repository-native change request;
+- equivalent auditable mechanism.
+
+No source-control platform is required by the governing architecture.
+
+### Proportionality
+
+Small, low-risk changes may use concise evidence and lightweight review. High-impact or high-risk changes require deeper evidence, review, and traceability.
+
+## 23. Task State Model
+
+```text
+Planned -> Implemented -> Architecturally Reviewed -> Approved
+```
+
+Planned: architecture, requirements, scope, constraints, and acceptance criteria are sufficiently defined for implementation. The task has not yet been implemented.
+
+Implemented: the planned change has been implemented and is ready for independent architectural review. Implementation completion does not imply approval.
+
+Architecturally Reviewed: the implementation has been reviewed against governing artifacts, dependencies, traceability, knowledge-preservation rules, validation evidence, and acceptance criteria. This state does not authorize integration unless the accountable human also approves.
+
+Approved: the accountable human has explicitly authorized the change for integration into the governing baseline. Approved is a task decision state and must not be confused with the lifecycle status of a governed document or released artifact.
+
+Correction path:
+
+```text
+Implemented -> Architecture Review -> Changes Required -> Implemented
+```
+
+A task that fails ARG must not progress to Approved. The reviewer records findings, severity, required corrections, affected artifacts, evidence reviewed, and final review result. After corrections, the implementation must pass ARG again.
+
+## 24. Integration Model
+
+Implementation is the creation or modification of project artifacts.
+
+Architecture Review is evaluation of the implementation against governing requirements.
+
+Approval is explicit authorization by the accountable human.
+
+Integration is inclusion of approved changes into the governing branch or baseline.
+
+Release is publication of an identified and versioned project baseline for supported use.
+
+A change may be integrated without being part of a formal stable release.
+
+## 25. Change Governance
 
 Material architecture changes require:
 
@@ -241,17 +353,19 @@ Material architecture changes require:
 - registry update;
 - verification.
 
-## 23. AI Integration Architecture
+## 26. AI Integration Architecture
 
 AI systems implement capabilities and roles. Normative documents refer to abstract roles such as planner, analyst, architect, implementer, reviewer, evaluator, release assistant, and documentation assistant.
 
 Products may implement these roles, but no product is embedded as a mandatory dependency.
 
-## 24. Architectural Decision Records
+Repository-specific examples may use current tools, but the universal architecture uses abstract roles such as Accountable Human, Task Author, Implementer, Architecture Reviewer, and Integrator.
+
+## 27. Architectural Decision Records
 
 Architectural Decision Records capture material architecture decisions and their consequences. Existing ADRs must be preserved unless explicit architectural approval authorizes retirement.
 
-## 25. Architectural Invariants
+## 28. Architectural Invariants
 
 - governing authority is explicit;
 - implementation cannot redefine architecture;
@@ -260,16 +374,17 @@ Architectural Decision Records capture material architecture decisions and their
 - every artifact is registered;
 - change history is preserved;
 - human accountability remains identifiable.
+- every material change MUST pass Architecture Review Gate before integration into the governing baseline.
 
-## 26. Foundation Architecture Baseline
+## 29. Foundation Architecture Baseline
 
 The proposed foundation baseline consists of the Constitution, Project Charter, UAEA, Artifact Registry, and UGSD Specification skeleton. Final acceptance requires explicit human approval.
 
-## 27. Evolution Policy
+## 30. Evolution Policy
 
 Material architectural changes require impact analysis, registry synchronization, review, and explicit human approval.
 
-## 28. Open Architectural Questions
+## 31. Open Architectural Questions
 
 - Exact ADR template.
 - Registry machine-readable schema validation.

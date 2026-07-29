@@ -58,6 +58,20 @@ Lower-level artifacts must not override or contradict higher-level artifacts.
 
 Foundation Release 1.0 will establish the initial Constitution, Project Charter, Universal AI Engineering Architecture, Artifact Registry, UGSD Specification skeleton, repository governance instructions, and roadmap.
 
+## Development Workflow
+
+The project is currently maintained by one human owner. The default workflow is:
+
+```text
+Task
+  -> Implementation
+  -> Architecture Review Gate
+  -> Human Approval
+  -> Integration
+```
+
+Pull Requests are optional. Architectural review and explicit human approval remain mandatory before integration into the governing baseline. The workflow is platform-independent and may be implemented through any auditable review mechanism.
+
 ## Contribution Status
 
-External contribution rules are not finalized. Until governance is approved, proposed changes SHOULD preserve artifact identifiers, maintain traceability, update the Artifact Registry when governed artifacts change, and require human approval before merge.
+External contribution rules are not finalized. Until governance is approved, proposed changes SHOULD preserve artifact identifiers, maintain traceability, update the Artifact Registry when governed artifacts change, pass Architecture Review Gate, and require human approval before integration.
