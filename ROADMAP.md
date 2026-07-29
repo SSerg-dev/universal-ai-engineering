@@ -1,30 +1,37 @@
 # Roadmap
 
-## Foundation
+## Foundation Release 1.0
 
-- [x] Repository structure
-- [x] Constitution draft
-- [x] Project Charter draft
-- [x] UAEA draft
-- [x] Artifact Registry draft
-- [x] UGSD Specification skeleton
-- [ ] Foundation review
-- [ ] Foundation baseline 1.0 approval
+Status: In Progress
 
-## Standards
+Foundation Release 1.0 establishes the initial governance, architecture, registry, specification skeleton, repository instructions, and roadmap for Universal AI Engineering.
 
-- [ ] UGSD terminology
-- [ ] Lifecycle semantics
-- [ ] State machine
-- [ ] Roles and responsibility matrix
-- [ ] Artifact schemas
-- [ ] Gates and evidence model
-- [ ] Conformance profiles
-- [ ] UGSD Specification 1.0 candidate
+## UGSD Specification 1.0
 
-## Later phases
+Status: Planned
 
-- [ ] UGSD Methodology
-- [ ] Reference Repository
-- [ ] Universal Agentic OS
-- [ ] Senior AI Agent Engineer Handbook
+Define the Universal Get Stuff Done Specification as a vendor-independent lifecycle standard for human and agent engineering work.
+
+## UGSD Methodology
+
+Status: Planned
+
+Explain practical application of the UGSD Specification without redefining normative requirements.
+
+## Reference Repository
+
+Status: Planned
+
+Provide templates, reference assets, checks, and examples that conform to the approved governing artifacts.
+
+## Universal Agentic OS
+
+Status: Planned
+
+Create a reference implementation that demonstrates compliant use of Universal AI Engineering and UGSD.
+
+## Senior AI Agent Engineer Handbook
+
+Status: Planned
+
+Publish educational material for senior-level application of the framework, with references to governing sources.

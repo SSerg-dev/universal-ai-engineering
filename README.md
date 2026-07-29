@@ -1,39 +1,63 @@
 # Universal AI Engineering
 
-**Universal AI Engineering (UAE)** is an open engineering framework for designing, implementing, verifying, and evolving AI-first software systems.
+Universal AI Engineering (UAE) is an open engineering framework for designing, governing, implementing, verifying, and evolving AI-first software systems.
 
-> **Architecture first. Specifications second. Implementation third. Evidence always.**
+UAE is an engineering framework rather than only a book. It defines governance, architecture, standards, methodology, templates, reference assets, a reference implementation, and educational material.
 
-## Foundation documents
+## Project Status
 
-1. [Constitution of Universal AI Engineering](constitution/CONSTITUTION.md)
-2. [Project Charter](charter/PROJECT_CHARTER.md)
-3. [Universal AI Engineering Architecture](architecture/UAEA.md)
-4. [Artifact Registry](registry/ARTIFACT_REGISTRY.md)
-5. [UGSD Specification v1.0 — Skeleton](standards/UGSD_SPECIFICATION.md)
+Foundation Release 1.0 is in draft. The governance model is still being established, and no foundation artifact is approved or stable yet.
 
-## Governing hierarchy
+> Architecture first. Specifications second. Implementation third. Evidence always.
+
+## Ecosystem Layers
+
+1. Governance
+2. Architecture
+3. Standards
+4. Methodology
+5. Templates and reference assets
+6. Reference implementation
+7. Education
+
+## Document Hierarchy
 
 ```text
-Constitution
-    ↓
+Constitution of Universal AI Engineering
+        ↓
 Project Charter
-    ↓
-UAEA
-    ↓
+        ↓
+Universal AI Engineering Architecture
+        ↓
 UGSD Specification
-    ↓
+        ↓
 UGSD Methodology
-    ↓
-Reference Assets and Implementations
-    ↓
+        ↓
+Templates and Reference Assets
+        ↓
+Reference Implementation
+        ↓
 Educational Materials
 ```
 
-The Artifact Registry is the authoritative index connecting all governed artifacts.
+Lower-level artifacts must not override or contradict higher-level artifacts.
 
-## Repository status
+## Repository Navigation
 
-- Foundation baseline: `0.1.0-draft`
-- UGSD Specification: `1.0.0-draft`
-- Status: Initial foundation
+- [Constitution](constitution/Constitution.md)
+- [Project Charter](charter/Project-Charter.md)
+- [Universal AI Engineering Architecture](architecture/UAEA.md)
+- [Artifact Registry](registry/Artifact-Registry.md)
+- [UGSD Specification](standards/UGSD-Specification.md)
+- [Methodology](methodology/README.md)
+- [Reference Assets](reference/README.md)
+- [Universal Agentic OS](agentic-os/README.md)
+- [Senior AI Agent Engineer Handbook](senior-handbook/README.md)
+
+## Foundation Release 1.0 Scope
+
+Foundation Release 1.0 will establish the initial Constitution, Project Charter, Universal AI Engineering Architecture, Artifact Registry, UGSD Specification skeleton, repository governance instructions, and roadmap.
+
+## Contribution Status
+
+External contribution rules are not finalized. Until governance is approved, proposed changes SHOULD preserve artifact identifiers, maintain traceability, update the Artifact Registry when governed artifacts change, and require human approval before merge.

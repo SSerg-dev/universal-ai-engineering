@@ -1,13 +1,18 @@
 # Changelog
 
-## 0.1.0-draft — 2026-07-29
+All notable changes to this project will be documented in this file.
+
+This project follows the structure of Keep a Changelog. Versioning policy is defined by the governing architecture and is not finalized for a stable release.
+
+## Unreleased
 
 ### Added
 
-- Constitution of Universal AI Engineering
-- Project Charter
-- Universal AI Engineering Architecture
-- Artifact Registry in Markdown and YAML
-- UGSD Specification v1.0 skeleton
-- ADR-0001 foundation baseline
-- Initial repository structure
+- Initial Universal AI Engineering foundation repository structure.
+- Draft Constitution of Universal AI Engineering.
+- Draft Project Charter.
+- Draft Universal AI Engineering Architecture.
+- Draft Artifact Registry CMDB.
+- Draft UGSD Specification skeleton.
+- Repository-level agent instructions.
+- Initial roadmap and planned component placeholders.
