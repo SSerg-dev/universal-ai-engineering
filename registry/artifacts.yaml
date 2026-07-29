@@ -1,0 +1,222 @@
+schema_version: '1.0'
+artifacts:
+  - id: UAE-CONSTITUTION
+    name: Constitution of Universal AI Engineering
+    type: Governance
+    version: 0.1.0
+    status: Draft
+    owner: Governance Owner; Sergei as final human authority
+    parent: null
+    depends_on: []
+    children:
+      - UAE-CHARTER
+    references: []
+    adr:
+      - ADR-0001
+    repository: constitution/Constitution.md
+    changelog: CHANGELOG.md
+    lifecycle: Draft
+    compatible_versions: []
+    tags:
+      - foundation
+      - governance
+    created: 2026-07-29
+    updated: 2026-07-29
+  - id: UAE-CHARTER
+    name: Universal AI Engineering Project Charter
+    type: Governance
+    version: 0.1.0
+    status: Draft
+    owner: Project Sponsor
+    parent: UAE-CONSTITUTION
+    depends_on:
+      - UAE-CONSTITUTION
+    children:
+      - UAEA
+    references: []
+    adr:
+      - ADR-0001
+    repository: charter/Project-Charter.md
+    changelog: CHANGELOG.md
+    lifecycle: Draft
+    compatible_versions:
+      - UAE-CONSTITUTION 0.1.0
+    tags:
+      - foundation
+      - governance
+    created: 2026-07-29
+    updated: 2026-07-29
+  - id: UAEA
+    name: Universal AI Engineering Architecture
+    type: Architecture
+    version: 0.1.0
+    status: Draft
+    owner: Architecture Owner
+    parent: UAE-CHARTER
+    depends_on:
+      - UAE-CONSTITUTION
+      - UAE-CHARTER
+    children:
+      - UAE-REGISTRY
+      - UGSD-SPEC
+      - UAOS
+      - SAEH
+    references: []
+    adr:
+      - ADR-0001
+    repository: architecture/UAEA.md
+    changelog: CHANGELOG.md
+    lifecycle: Draft
+    compatible_versions:
+      - UAE-CONSTITUTION 0.1.0
+      - UAE-CHARTER 0.1.0
+    tags:
+      - foundation
+      - architecture
+    created: 2026-07-29
+    updated: 2026-07-29
+  - id: UAE-REGISTRY
+    name: Universal AI Engineering Artifact Registry
+    type: Architecture
+    version: 0.1.0
+    status: Draft
+    owner: Repository Maintainer
+    parent: UAEA
+    depends_on:
+      - UAE-CONSTITUTION
+      - UAE-CHARTER
+      - UAEA
+    children: []
+    references:
+      - registry/artifacts.yaml
+    adr:
+      - ADR-0001
+    repository: registry/Artifact-Registry.md
+    changelog: CHANGELOG.md
+    lifecycle: Draft
+    compatible_versions:
+      - UAEA 0.1.0
+    tags:
+      - foundation
+      - registry
+    created: 2026-07-29
+    updated: 2026-07-29
+  - id: UGSD-SPEC
+    name: UGSD Specification
+    type: Standard
+    version: 0.1.0
+    status: Draft
+    owner: Specification Owner
+    parent: UAEA
+    depends_on:
+      - UAE-CONSTITUTION
+      - UAE-CHARTER
+      - UAEA
+      - UAE-REGISTRY
+    children:
+      - UGSD-METHODOLOGY
+      - UAE-REFERENCE
+    references: []
+    adr:
+      - ADR-0001
+    repository: standards/UGSD-Specification.md
+    changelog: CHANGELOG.md
+    lifecycle: Draft
+    compatible_versions:
+      - UAEA 0.1.0
+    tags:
+      - foundation
+      - standard
+    created: 2026-07-29
+    updated: 2026-07-29
+  - id: UGSD-METHODOLOGY
+    name: UGSD Methodology
+    type: Methodology
+    version: 0.1.0
+    status: Planned
+    owner: Methodology Owner
+    parent: UGSD-SPEC
+    depends_on:
+      - UGSD-SPEC
+    children: []
+    references: []
+    adr: []
+    repository: methodology/README.md
+    changelog: CHANGELOG.md
+    lifecycle: Planned
+    compatible_versions:
+      - UGSD-SPEC 0.1.0
+    tags:
+      - methodology
+    created: 2026-07-29
+    updated: 2026-07-29
+  - id: UAE-REFERENCE
+    name: Universal AI Engineering Reference Repository
+    type: Template
+    version: 0.1.0
+    status: Planned
+    owner: Repository Maintainer
+    parent: UGSD-SPEC
+    depends_on:
+      - UGSD-SPEC
+      - UGSD-METHODOLOGY
+    children:
+      - UAOS
+    references: []
+    adr: []
+    repository: reference/README.md
+    changelog: CHANGELOG.md
+    lifecycle: Planned
+    compatible_versions:
+      - UGSD-SPEC 0.1.0
+    tags:
+      - reference
+      - templates
+    created: 2026-07-29
+    updated: 2026-07-29
+  - id: UAOS
+    name: Universal Agentic OS
+    type: Implementation
+    version: 0.1.0
+    status: Planned
+    owner: Architecture Owner
+    parent: UAEA
+    depends_on:
+      - UGSD-SPEC
+      - UAE-REFERENCE
+    children: []
+    references:
+      - SAEH
+    adr: []
+    repository: agentic-os/README.md
+    changelog: CHANGELOG.md
+    lifecycle: Planned
+    compatible_versions:
+      - UGSD-SPEC 0.1.0
+    tags:
+      - implementation
+    created: 2026-07-29
+    updated: 2026-07-29
+  - id: SAEH
+    name: Senior AI Agent Engineer Handbook
+    type: Education
+    version: 0.1.0
+    status: Planned
+    owner: Education Owner
+    parent: UAEA
+    depends_on:
+      - UGSD-SPEC
+      - UAOS
+    children: []
+    references: []
+    adr: []
+    repository: senior-handbook/README.md
+    changelog: CHANGELOG.md
+    lifecycle: Planned
+    compatible_versions:
+      - UGSD-SPEC 0.1.0
+      - UAOS 0.1.0
+    tags:
+      - education
+    created: 2026-07-29
+    updated: 2026-07-29

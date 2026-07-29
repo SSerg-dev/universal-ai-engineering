@@ -13,11 +13,11 @@ depends_on:
 
 ## 1. Purpose
 
-Universal AI Engineering Architecture (UAEA) defines ecosystem structure, artifact placement, dependency rules, authority boundaries, and evolution policy.
+Universal AI Engineering Architecture (UAEA) defines the structural architecture of the Universal AI Engineering ecosystem: layers, artifacts, authority boundaries, dependencies, repositories, compatibility rules, and evolution model.
 
 ## 2. Architectural Context
 
-UAE is a documentation-first engineering framework for AI-first systems. It separates governing authority, standards, explanatory methodology, reusable assets, implementation, and education.
+Universal AI Engineering is a documentation-first engineering framework for AI-first software systems. It separates governance, architecture, standards, methodology, reference assets, reference implementation, and education so each artifact has a clear authority level and responsibility.
 
 ## 3. Architectural Principles
 
@@ -27,8 +27,54 @@ UAE is a documentation-first engineering framework for AI-first systems. It sepa
 - Human accountability remains explicit.
 - Vendor independence is preserved.
 - Lower-level artifacts do not redefine higher-level artifacts.
+- Existing governed knowledge is consolidated rather than discarded when compatible with the governing hierarchy.
 
-## 4. Ecosystem Layers
+## 4. Ecosystem Model
+
+```text
++------------------------------------------------+
+| Governance                                     |
+| Constitution, Project Charter                  |
++------------------------+-----------------------+
+                         |
+                         v
++------------------------------------------------+
+| Architecture                                   |
+| UAEA, ADRs, Artifact Registry                  |
++------------------------+-----------------------+
+                         |
+                         v
++------------------------------------------------+
+| Standards                                      |
+| UGSD Specification                             |
++------------------------+-----------------------+
+                         |
+                         v
++------------------------------------------------+
+| Methodology                                    |
+| UGSD Methodology                               |
++------------------------+-----------------------+
+                         |
+                         v
++------------------------------------------------+
+| Reference Assets                               |
+| Templates, schemas, checks, examples           |
++------------------------+-----------------------+
+                         |
+                         v
++------------------------------------------------+
+| Reference Implementation                       |
+| Universal Agentic OS                           |
++------------------------+-----------------------+
+                         |
+                         v
++------------------------------------------------+
+| Education                                      |
+| Senior AI Agent Engineer Handbook              |
++------------------------------------------------+
+```
+
+## 5. Ecosystem Layers
 
 1. Governance
 2. Architecture
@@ -38,17 +84,45 @@ UAE is a documentation-first engineering framework for AI-first systems. It sepa
 6. Reference Implementation
 7. Education
 
-## 5. Artifact Dependency Model
+## 6. Artifact Authority Model
 
-Every governed artifact has a stable ID, parent, dependencies, owner, status, version, lifecycle phase, and repository location recorded in the [Artifact Registry](../registry/Artifact-Registry.md).
+- The Constitution defines enduring rules.
+- The Charter defines project intent, scope, and success.
+- UAEA defines ecosystem structure and boundaries.
+- Specifications define normative requirements.
+- Methodology explains practical application.
+- Reference assets encode reusable compliant patterns.
+- Implementations demonstrate conformance.
+- Educational material teaches and critiques the system.
 
-## 6. Normative Hierarchy
+No lower layer may silently redefine a higher layer.
+
+## 7. Core Artifacts
+
+| Artifact | Layer | Normative? | Primary responsibility |
+| --- | --- | ---: | --- |
+| Constitution | Governance | Yes | Enduring principles and authority |
+| Project Charter | Governance | Yes | Scope, objectives, success |
+| UAEA | Architecture | Yes | Structure and dependencies |
+| Artifact Registry | Architecture | Yes for metadata | Central artifact index |
+| UGSD Specification | Standards | Yes | Lifecycle and conformance |
+| UGSD Methodology | Methodology | No, explanatory | Practical guidance |
+| Reference Repository | Assets | Mixed | Templates and automation |
+| Universal Agentic OS | Implementation | No | Reference conformance |
+| Senior Handbook | Education | No | Senior-level application |
+
+## 8. Artifact Dependency Model
+
+Every governed artifact declares its `parent` and `depends_on` relationships and is indexed in the [Artifact Registry](../registry/Artifact-Registry.md). Machine-readable metadata remains in [registry/artifacts.yaml](../registry/artifacts.yaml) for validation and automation.
+
+## 9. Normative Hierarchy
 
 ```mermaid
 flowchart TD
   Constitution["Constitution of Universal AI Engineering"]
   Charter["Project Charter"]
   UAEA["Universal AI Engineering Architecture"]
+  Registry["Artifact Registry"]
   UGSD["UGSD Specification"]
   Methodology["UGSD Methodology"]
   Assets["Templates and Reference Assets"]
@@ -57,80 +131,148 @@ flowchart TD
 
   Constitution --> Charter
   Charter --> UAEA
+  UAEA --> Registry
   UAEA --> UGSD
   UGSD --> Methodology
-  Methodology --> Assets
-  Assets --> UAOS
+  UGSD --> Assets
+  UAEA --> UAOS
   UAOS --> Handbook
+  UAEA --> Handbook
 ```
 
-## 7. Governance Layer
+## 10. Governance Layer
 
 The Governance Layer contains the [Constitution](../constitution/Constitution.md) and [Project Charter](../charter/Project-Charter.md).
 
-## 8. Architecture Layer
+## 11. Architecture Layer
 
 The Architecture Layer contains UAEA, architectural decision records, diagrams, and the Artifact Registry.
 
-## 9. Standards Layer
+## 12. Standards Layer
 
 The Standards Layer contains normative specifications, beginning with the [UGSD Specification](../standards/UGSD-Specification.md).
 
-## 10. Methodology Layer
+## 13. Methodology Layer
 
 The Methodology Layer explains how to apply approved standards. It does not redefine normative requirements.
 
-## 11. Reference Assets Layer
+## 14. Reference Assets Layer
 
 The Reference Assets Layer will contain templates, schemas, checks, examples, and other reusable assets.
 
-## 12. Implementation Layer
+## 15. Implementation Layer
 
-The Implementation Layer will contain Universal Agentic OS as a reference implementation.
+The Implementation Layer will contain Universal Agentic OS as a reference implementation. Implementations must identify supported specification versions.
 
-## 13. Education Layer
+## 16. Education Layer
 
-The Education Layer will contain educational material such as the Senior AI Agent Engineer Handbook.
+The Education Layer will contain educational material such as the Senior AI Agent Engineer Handbook. Educational artifacts may depend on implementations for examples but remain governed by architecture and applicable specifications.
 
-## 14. Repository Architecture
+## 17. Repository Architecture
 
-The initial repository is organized by ecosystem layer:
+Initial monorepo structure:
 
 ```text
-constitution/
-charter/
-architecture/
-registry/
-standards/
-methodology/
-reference/
-agentic-os/
-senior-handbook/
+universal-ai-engineering/
+|-- README.md
+|-- CHANGELOG.md
+|-- ROADMAP.md
+|-- AGENTS.md
+|-- constitution/
+|-- charter/
+|-- architecture/
+|   |-- decisions/
+|   `-- diagrams/
+|-- registry/
+|   `-- artifacts/
+|-- standards/
+|-- methodology/
+|-- reference/
+|-- agentic-os/
+`-- senior-handbook/
 ```
 
-## 15. Versioning
+The architecture permits later extraction into independent repositories when ownership, release cadence, or contribution volume justifies it.
 
-Foundation artifacts use semantic versioning. Draft status indicates that an artifact is not approved or stable.
+## 18. Dependency Rules
 
-## 16. Traceability
+1. Every artifact declares `parent` and `depends_on`.
+2. Cyclic normative dependencies are prohibited.
+3. Educational artifacts may depend on implementations and standards.
+4. Standards must not depend on one reference implementation.
+5. Reference implementations must identify supported specification versions.
+6. Registry metadata must be machine-readable and reviewable.
 
-Traceability is maintained through metadata blocks, the Artifact Registry, internal links, changelog entries, and architectural decision records.
+## 19. Versioning Model
 
-## 17. Architectural Decision Records
+Semantic Versioning is used where practical:
 
-Architectural Decision Records capture material architecture decisions and their consequences. The ADR directory is planned in [architecture/decisions](decisions/README.md).
+- `MAJOR`: incompatible normative or structural change;
+- `MINOR`: backward-compatible capability or requirement addition;
+- `PATCH`: clarification or correction without intended behavioral incompatibility.
 
-## 18. Evolution Policy
+Draft status indicates that an artifact is not approved or stable. Compatibility is explicit, not inferred solely from matching major versions.
 
-Material architectural changes require impact analysis, registry updates, review, and explicit human approval.
+## 20. Lifecycle Model
 
-## 19. Foundation Architecture Baseline
+```text
+Planned -> Draft -> Review -> Approved -> Stable
+                                   |
+                                   v
+                              Deprecated -> Retired
+```
 
-The initial foundation baseline consists of the Constitution, Project Charter, UAEA, Artifact Registry, and UGSD Specification skeleton.
+`Approved` means formally accepted but not necessarily released as a stable baseline. `Stable` means released and intended for supported use. Only Approved or Stable artifacts normally become Deprecated. Retired artifacts remain traceable but are no longer active.
 
-## 20. Open Questions
+## 21. Traceability Model
+
+Traceability is maintained through metadata blocks, the human-readable registry, the machine-readable registry, internal links, changelog entries, and architectural decision records.
+
+## 22. Change Governance
+
+Material architecture changes require:
+
+- proposal;
+- impact analysis;
+- ADR;
+- affected-artifact list;
+- migration and compatibility assessment;
+- approval;
+- registry update;
+- verification.
+
+## 23. AI Integration Architecture
+
+AI systems implement capabilities and roles. Normative documents refer to abstract roles such as planner, analyst, architect, implementer, reviewer, evaluator, release assistant, and documentation assistant.
+
+Products may implement these roles, but no product is embedded as a mandatory dependency.
+
+## 24. Architectural Decision Records
+
+Architectural Decision Records capture material architecture decisions and their consequences. Existing ADRs must be preserved unless explicit architectural approval authorizes retirement.
+
+## 25. Architectural Invariants
+
+- governing authority is explicit;
+- implementation cannot redefine architecture;
+- standards remain implementation-independent;
+- evidence is required for acceptance;
+- every artifact is registered;
+- change history is preserved;
+- human accountability remains identifiable.
+
+## 26. Foundation Architecture Baseline
+
+The proposed foundation baseline consists of the Constitution, Project Charter, UAEA, Artifact Registry, and UGSD Specification skeleton. Final acceptance requires explicit human approval.
+
+## 27. Evolution Policy
+
+Material architectural changes require impact analysis, registry synchronization, review, and explicit human approval.
+
+## 28. Open Architectural Questions
 
 - Exact ADR template.
-- Registry machine-readable schema.
+- Registry machine-readable schema validation.
+- Normative keyword conventions.
 - Conformance profile model.
-- Documentation publication process.
+- Documentation build and publication process.

@@ -16,3 +16,9 @@ This project follows the structure of Keep a Changelog. Versioning policy is def
 - Draft UGSD Specification skeleton.
 - Repository-level agent instructions.
 - Initial roadmap and planned component placeholders.
+
+### Changed
+
+- Consolidated draft foundation documents with pre-existing repository knowledge.
+- Restored ADR and machine-readable registry history for review continuity.
+- Strengthened repository agent rules for knowledge preservation.
