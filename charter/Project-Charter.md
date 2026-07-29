@@ -128,15 +128,15 @@ The foundation is successful when:
 
 This Charter is governed by the [Constitution](../constitution/Constitution.md).
 
-Architectural review is mandatory before integration into the governing baseline. Pull Requests are optional implementation mechanisms, not universal governance requirements.
+Architectural review is mandatory before acceptance into the governing baseline. Pull Requests, feature branches, and Git merge operations are optional implementation mechanisms, not universal governance requirements.
 
-The operating process must remain executable by a solo maintainer while preserving architectural governance, traceability, validation, and explicit human approval. Review rigor should be proportional to architectural impact, risk, affected artifacts, and reversibility.
+The current repository is maintained by one accountable human and uses `master` as the single long-lived development branch. The operating process must remain executable by a solo maintainer while preserving architectural governance, traceability, validation, and explicit human approval. Review rigor should be proportional to architectural impact, risk, affected artifacts, and reversibility.
 
 ## 13. Decision Process
 
 Material decisions require documented rationale, traceability to governing artifacts, Architecture Review Gate when implementation is affected, and accountable human approval.
 
-The accountable human has final approval authority. Architecture Review Gate may be implemented through a Pull Request, branch diff, commit review, patch review, local review, or equivalent auditable mechanism.
+The accountable human has final approval authority. Architecture Review Gate may be implemented through commit review, patch review, local review, Pull Request, temporary branch diff, or equivalent auditable mechanism.
 
 ## 14. Foundation Release 1.0
 
@@ -175,7 +175,7 @@ Task
   -> Implementation
   -> Architecture Review Gate
   -> Human Approval
-  -> Integration
+  -> Continue Development
 ```
 
 ## 17. Major Risks

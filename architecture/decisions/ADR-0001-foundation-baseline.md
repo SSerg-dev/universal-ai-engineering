@@ -27,4 +27,4 @@ All subsequent artifacts must be registered and conform to higher-level governin
 - New foundation-level entities require an ADR and impact analysis.
 - Implementation and educational work begins only against registered governing artifacts.
 - The initial repository is organized as a documentation-first monorepo.
-- Final acceptance requires explicit human approval and integration of the reviewed foundation change into the governing baseline.
+- Final acceptance requires explicit human approval and acceptance of the reviewed foundation change into the governing baseline.

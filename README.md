@@ -60,18 +60,22 @@ Foundation Release 1.0 will establish the initial Constitution, Project Charter,
 
 ## Development Workflow
 
-The project is currently maintained by one human owner. The default workflow is:
+The project is currently maintained by one accountable human and uses a single main development branch: `master`.
+
+The default workflow is:
 
 ```text
 Task
   -> Implementation
   -> Architecture Review Gate
   -> Human Approval
-  -> Integration
+  -> Continue Development
 ```
 
-Pull Requests are optional. Architectural review and explicit human approval remain mandatory before integration into the governing baseline. The workflow is platform-independent and may be implemented through any auditable review mechanism.
+Work is organized as small, logically complete commits on `master`. Pull Requests, temporary development branches, and Git merge operations are optional mechanisms, not standard workflow requirements.
+
+Architectural review and explicit human approval remain mandatory before an implementation is accepted into the current governing baseline. The workflow is platform-independent and may be implemented through any auditable review mechanism.
 
 ## Contribution Status
 
-External contribution rules are not finalized. Until governance is approved, proposed changes SHOULD preserve artifact identifiers, maintain traceability, update the Artifact Registry when governed artifacts change, pass Architecture Review Gate, and require human approval before integration.
+External contribution rules are not finalized. Until governance is approved, proposed changes SHOULD preserve artifact identifiers, maintain traceability, update the Artifact Registry when governed artifacts change, pass Architecture Review Gate, and require human approval before acceptance into the governing baseline.

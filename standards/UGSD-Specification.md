@@ -94,7 +94,7 @@ Discovery
   -> Implementation
   -> Architecture Review Gate
   -> Human Approval
-  -> Integration
+  -> Continue Development
   -> Verification
   -> Evaluation
   -> Delivery
@@ -162,13 +162,13 @@ Preliminary candidate gates:
 
 TBD.
 
-Preliminary: human approval is distinct from implementation completion and architectural review. A task should not be integrated into a governing baseline until the accountable human explicitly approves it.
+Preliminary: human approval is distinct from implementation completion and architectural review. A task should not be accepted into a governing baseline until the accountable human explicitly approves it.
 
 ## 18. Agent Responsibilities
 
 TBD.
 
-Preliminary: agents may implement, prepare evidence, and correct findings, but they should not treat implementation completion as approval. Agents should support review using Pull Requests, branch diffs, commit ranges, patches, local review records, or equivalent auditable mechanisms.
+Preliminary: agents may implement, prepare evidence, and correct findings, but they should not treat implementation completion as approval. Agents should support review using commit review, patches, local review records, Pull Requests, temporary branch diffs, or equivalent auditable mechanisms.
 
 ## 19. Change Management
 
@@ -180,7 +180,7 @@ Preliminary: changes that fail Architecture Review Gate should enter Changes Req
 
 TBD.
 
-Preliminary: task traceability should connect task definition, implementation evidence, comparison base, changed artifacts, review findings, human approval, integration record, and release record when applicable.
+Preliminary: task traceability should connect task definition, implementation evidence, comparison base, changed artifacts, review findings, human approval, acceptance record, and release record when applicable.
 
 ## 21. Conformance
 

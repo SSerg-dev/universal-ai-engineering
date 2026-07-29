@@ -232,7 +232,7 @@ Traceability is maintained through metadata blocks, the human-readable registry,
 
 Architecture Review Gate (ARG) is the mandatory review checkpoint that verifies that a proposed change conforms to governing architecture, specifications, traceability requirements, validation requirements, and human approval rules before integration into the governing baseline.
 
-ARG is a governance and quality-control concept. It is independent of any specific source-control platform. A Pull Request is one possible implementation of ARG, but a branch diff, commit range, patch, local Git review, repository-native change request, or equivalent auditable mechanism may also implement ARG.
+ARG is a governance and quality-control concept. It is independent of any specific source-control platform. In the current repository, ARG is normally implemented through review of small commits on `master` and a task evidence package. A Pull Request, temporary branch diff, commit range, patch, local review, repository-native change request, or equivalent auditable mechanism may also implement ARG when useful.
 
 ### Purpose
 
@@ -284,21 +284,21 @@ ARG does not replace accountable human approval. A task may be Architecturally R
 
 ### Integration
 
-ARG must occur before final integration into the governing baseline. Integration includes approved changes in the governing branch or baseline. A commit in `master` does not automatically imply that a governed artifact is Stable.
+ARG must occur before final acceptance into the governing baseline. Integration is acceptance of an approved implementation into the current governing baseline. It is a governance concept, not a Git operation, and it does not imply a Git merge. A commit in `master` does not automatically imply that a governed artifact is Stable.
 
 ### Platform Independence
 
-The implementation mechanism may be:
+The current repository uses a single long-lived branch, `master`, with small, logically complete commits. The review mechanism may be:
 
-- Pull Request;
-- branch diff;
 - commit range;
 - patch;
-- local Git review;
+- local review;
+- Pull Request;
+- temporary development branch diff;
 - repository-native change request;
 - equivalent auditable mechanism.
 
-No source-control platform is required by the governing architecture.
+No source-control platform, Pull Request workflow, feature branch, or merge commit is required by the governing architecture.
 
 ### Proportionality
 
@@ -316,7 +316,7 @@ Implemented: the planned change has been implemented and is ready for independen
 
 Architecturally Reviewed: the implementation has been reviewed against governing artifacts, dependencies, traceability, knowledge-preservation rules, validation evidence, and acceptance criteria. This state does not authorize integration unless the accountable human also approves.
 
-Approved: the accountable human has explicitly authorized the change for integration into the governing baseline. Approved is a task decision state and must not be confused with the lifecycle status of a governed document or released artifact.
+Approved: the accountable human has explicitly authorized the change for acceptance into the governing baseline. Approved is a task decision state and must not be confused with the lifecycle status of a governed document or released artifact.
 
 Correction path:
 
@@ -334,13 +334,43 @@ Architecture Review is evaluation of the implementation against governing requir
 
 Approval is explicit authorization by the accountable human.
 
-Integration is inclusion of approved changes into the governing branch or baseline.
+Integration is acceptance of an approved implementation into the current governing baseline.
+
+Integration MUST NOT imply a Git merge. It is a governance concept, not a Git operation.
 
 Release is publication of an identified and versioned project baseline for supported use.
 
-A change may be integrated without being part of a formal stable release.
+A change may be accepted into the governing baseline without being part of a formal stable release.
 
-## 25. Change Governance
+## 25. Repository Workflow
+
+The current repository uses a single-branch workflow because it is maintained by one accountable human:
+
+```text
+master
+   |
+   +-- Planned
+   |
+   +-- Implemented
+   |
+   +-- Architecture Review Gate
+   |
+   +-- Approved
+   |
+   +-- Continue Development
+```
+
+The standard repository workflow uses:
+
+- one long-lived branch: `master`;
+- small, logically complete commits;
+- Architecture Review Gate after implementation;
+- explicit human approval;
+- continued development on `master`.
+
+Development branches may be used temporarily if necessary, but they are not part of the standard repository workflow.
+
+## 26. Change Governance
 
 Material architecture changes require:
 
@@ -353,7 +383,7 @@ Material architecture changes require:
 - registry update;
 - verification.
 
-## 26. AI Integration Architecture
+## 27. AI Integration Architecture
 
 AI systems implement capabilities and roles. Normative documents refer to abstract roles such as planner, analyst, architect, implementer, reviewer, evaluator, release assistant, and documentation assistant.
 
@@ -361,11 +391,11 @@ Products may implement these roles, but no product is embedded as a mandatory de
 
 Repository-specific examples may use current tools, but the universal architecture uses abstract roles such as Accountable Human, Task Author, Implementer, Architecture Reviewer, and Integrator.
 
-## 27. Architectural Decision Records
+## 28. Architectural Decision Records
 
 Architectural Decision Records capture material architecture decisions and their consequences. Existing ADRs must be preserved unless explicit architectural approval authorizes retirement.
 
-## 28. Architectural Invariants
+## 29. Architectural Invariants
 
 - governing authority is explicit;
 - implementation cannot redefine architecture;
@@ -374,17 +404,18 @@ Architectural Decision Records capture material architecture decisions and their
 - every artifact is registered;
 - change history is preserved;
 - human accountability remains identifiable.
-- every material change MUST pass Architecture Review Gate before integration into the governing baseline.
+- every material change MUST pass Architecture Review Gate before acceptance into the governing baseline.
+- repository workflow does not require Pull Requests, feature branches, or Git merge operations.
 
-## 29. Foundation Architecture Baseline
+## 30. Foundation Architecture Baseline
 
 The proposed foundation baseline consists of the Constitution, Project Charter, UAEA, Artifact Registry, and UGSD Specification skeleton. Final acceptance requires explicit human approval.
 
-## 30. Evolution Policy
+## 31. Evolution Policy
 
 Material architectural changes require impact analysis, registry synchronization, review, and explicit human approval.
 
-## 31. Open Architectural Questions
+## 32. Open Architectural Questions
 
 - Exact ADR template.
 - Registry machine-readable schema validation.
