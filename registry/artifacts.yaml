@@ -1,0 +1,159 @@
+schema_version: '1.0'
+artifacts:
+- id: UAE-CONSTITUTION
+  name: Constitution of Universal AI Engineering
+  type: Constitution
+  version: 1.0.0-draft
+  status: Draft
+  owner: Governance Owner
+  parent: null
+  depends_on: []
+  children:
+  - UAE-CHARTER
+  adr:
+  - ADR-0001
+  repository_path: constitution/CONSTITUTION.md
+  lifecycle: Draft
+  compatible_with: []
+- id: UAE-CHARTER
+  name: Universal AI Engineering Project Charter
+  type: Charter
+  version: 1.0.0-draft
+  status: Draft
+  owner: Project Sponsor
+  parent: UAE-CONSTITUTION
+  depends_on:
+  - UAE-CONSTITUTION
+  children:
+  - UAEA
+  adr:
+  - ADR-0001
+  repository_path: charter/PROJECT_CHARTER.md
+  lifecycle: Draft
+  compatible_with:
+  - UAE-CONSTITUTION@1.0
+- id: UAEA
+  name: Universal AI Engineering Architecture
+  type: Architecture
+  version: 1.0.0-draft
+  status: Draft
+  owner: Architecture Owner
+  parent: UAE-CHARTER
+  depends_on:
+  - UAE-CONSTITUTION
+  - UAE-CHARTER
+  children:
+  - UAE-REGISTRY
+  - UGSD-SPEC
+  - UAOS
+  - SAEH
+  adr:
+  - ADR-0001
+  repository_path: architecture/UAEA.md
+  lifecycle: Draft
+  compatible_with:
+  - UAE-CONSTITUTION@1.0
+  - UAE-CHARTER@1.0
+- id: UAE-REGISTRY
+  name: Universal AI Engineering Artifact Registry
+  type: Registry
+  version: 1.0.0-draft
+  status: Draft
+  owner: Repository Maintainer
+  parent: UAEA
+  depends_on:
+  - UAE-CONSTITUTION
+  - UAEA
+  children: []
+  adr:
+  - ADR-0001
+  repository_path: registry/ARTIFACT_REGISTRY.md
+  lifecycle: Draft
+  compatible_with:
+  - UAEA@1.0
+- id: UGSD-SPEC
+  name: UGSD Specification
+  type: Standard
+  version: 1.0.0-draft
+  status: Draft
+  owner: Specification Owner
+  parent: UAEA
+  depends_on:
+  - UAE-CONSTITUTION
+  - UAE-CHARTER
+  - UAEA
+  - UAE-REGISTRY
+  children:
+  - UGSD-METHOD
+  - UAE-REFERENCE
+  adr:
+  - ADR-0001
+  repository_path: standards/UGSD_SPECIFICATION.md
+  lifecycle: Draft
+  compatible_with:
+  - UAEA@1.0
+- id: UGSD-METHOD
+  name: UGSD Methodology
+  type: Book
+  version: 1.0.0-planned
+  status: Planned
+  owner: Methodology Owner
+  parent: UGSD-SPEC
+  depends_on:
+  - UGSD-SPEC
+  children: []
+  adr: []
+  repository_path: methodology/
+  lifecycle: Proposed
+  compatible_with:
+  - UGSD-SPEC@1.0
+- id: UAE-REFERENCE
+  name: Universal AI Engineering Reference Repository
+  type: Reference Assets
+  version: 1.0.0-planned
+  status: Planned
+  owner: Repository Maintainer
+  parent: UGSD-SPEC
+  depends_on:
+  - UGSD-SPEC
+  children:
+  - UAOS
+  adr: []
+  repository_path: reference/
+  lifecycle: Proposed
+  compatible_with:
+  - UGSD-SPEC@1.0
+- id: UAOS
+  name: Universal Agentic OS
+  type: Reference Implementation
+  version: 1.0.0-planned
+  status: Planned
+  owner: Architecture Owner
+  parent: UAEA
+  depends_on:
+  - UGSD-SPEC
+  - UAE-REFERENCE
+  children:
+  - SAEH
+  adr: []
+  repository_path: agentic-os/
+  lifecycle: Proposed
+  compatible_with:
+  - UGSD-SPEC@1.0
+- id: SAEH
+  name: Senior AI Agent Engineer Handbook
+  type: Book
+  version: 1.0.0-planned
+  status: Planned
+  owner: Education Owner
+  parent: UAEA
+  depends_on:
+  - UGSD-SPEC
+  - UAOS
+  children: []
+  adr: []
+  repository_path: senior-handbook/
+  lifecycle: Proposed
+  compatible_with:
+  - UGSD-SPEC@1.0
+  - UAOS@1.0
