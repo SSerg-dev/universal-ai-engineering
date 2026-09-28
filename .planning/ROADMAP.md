@@ -21,7 +21,7 @@ One internal-documentation assistant evolves through ten runnable vertical slice
 
 ### Phase 1: Typed Agent Loop
 **Goal:** Deliver the smallest complete, reviewable Agentic OS slice.
-**Mode:** mvp
+**Mode:** standard
 **Depends on:** Nothing
 **Requirements:** [FOUND-01, ARCH-01, EDU-02, EDU-03, CORE-01, CORE-02, CORE-03, CORE-04, NFR-01, NFR-02, NFR-03]
 **Success Criteria:**
