@@ -1,81 +1,47 @@
-# Universal AI Engineering
+# Universal Agentic OS Course
 
-Universal AI Engineering (UAE) is an open engineering framework for designing, governing, implementing, verifying, and evolving AI-first software systems.
+A ten-iteration TypeScript course and reference implementation for building an Agentic OS around one internal-documentation assistant.
 
-UAE is an engineering framework rather than only a book. It defines governance, architecture, standards, methodology, templates, reference assets, a reference implementation, and educational material.
+The assistant evolves through a stable walkthrough:
 
-## Project Status
+`question → document search → tools → answer → state → quality evaluation`
 
-Foundation Release 1.0 is in draft. The governance model is still being established, and no foundation artifact is approved or stable yet.
+## Current Scope
 
-> Architecture first. Specifications second. Implementation third. Evidence always.
+The first iteration is intentionally small:
 
-## Ecosystem Layers
+- one agent;
+- one tool;
+- a typed agent loop;
+- Node CLI and Fastify API adapters;
+- a structured JSONL execution journal;
+- deterministic automated tests;
+- no RAG, durable memory, MCP, UI, or multi-agent coordination.
 
-1. Governance
-2. Architecture
-3. Standards
-4. Methodology
-5. Templates and reference assets
-6. Reference implementation
-7. Education
+Later iterations add typed tools, MCP, RAG, memory, evaluations, observability, streaming with Angular/Tailwind, guardrails, and routing.
 
-## Document Hierarchy
+## Technology
 
-```text
-Constitution of Universal AI Engineering
-        ↓
-Project Charter
-        ↓
-Universal AI Engineering Architecture
-        ↓
-UGSD Specification
-        ↓
-UGSD Methodology
-        ↓
-Templates and Reference Assets
-        ↓
-Reference Implementation
-        ↓
-Educational Materials
-```
+- TypeScript and Node.js 24
+- Zod
+- Fastify
+- Vitest
+- PostgreSQL and pgvector when retrieval is introduced
+- Angular and Tailwind when the UI is introduced
 
-Lower-level artifacts must not override or contradict higher-level artifacts.
+React and Next.js are not part of the selected architecture.
 
-## Repository Navigation
+## Documentation
 
-- [Constitution](constitution/Constitution.md)
-- [Project Charter](charter/Project-Charter.md)
-- [Universal AI Engineering Architecture](architecture/UAEA.md)
-- [Artifact Registry](registry/Artifact-Registry.md)
-- [UGSD Specification](standards/UGSD-Specification.md)
-- [Methodology](methodology/README.md)
-- [Reference Assets](reference/README.md)
-- [Universal Agentic OS](agentic-os/README.md)
-- [Senior AI Agent Engineer Handbook](senior-handbook/README.md)
+- [Project brief](docs/PROJECT-BRIEF.md)
+- [Greenfield restart decision](docs/architecture/decisions/ADR-0002-greenfield-restart.md)
+- [Legacy baseline index](docs/archive/LEGACY-BASELINE.md)
+- [Reset evidence](docs/reviews/RESET-0001-evidence.md)
+- [GSD project context](.planning/PROJECT.md)
+- [Requirements](.planning/REQUIREMENTS.md)
+- [Roadmap](.planning/ROADMAP.md)
+- [Current state](.planning/STATE.md)
 
-## Foundation Release 1.0 Scope
+## Status
 
-Foundation Release 1.0 will establish the initial Constitution, Project Charter, Universal AI Engineering Architecture, Artifact Registry, UGSD Specification skeleton, repository governance instructions, and roadmap.
-
-## Development Workflow
-
-The project is currently maintained by one accountable human and uses a single main development branch: `master`.
-
-The default workflow is:
-
-```text
-Task
-  -> Implementation
-  -> Architecture Review Gate
-  -> Human Approval
-  -> Continue Development
-```
-
-Work is organized as small, logically complete commits on `master`. Pull Requests, temporary development branches, and Git merge operations are optional mechanisms, not standard workflow requirements.
-
-Architectural review and explicit human approval remain mandatory before an implementation is accepted into the current governing baseline. The workflow is platform-independent and may be implemented through any auditable review mechanism.
-
-## Contribution Status
-
-External contribution rules are not finalized. Until governance is approved, proposed changes SHOULD preserve artifact identifiers, maintain traceability, update the Artifact Registry when governed artifacts change, pass Architecture Review Gate, and require human approval before acceptance into the governing baseline.
+Greenfield planning. No implementation capability has been approved or shipped yet.
