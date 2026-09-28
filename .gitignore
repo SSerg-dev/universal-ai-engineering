@@ -1,5 +1,6 @@
 .codex/
 .planning/debug/
+.planning/research/.cache/
 node_modules/
 dist/
 coverage/
