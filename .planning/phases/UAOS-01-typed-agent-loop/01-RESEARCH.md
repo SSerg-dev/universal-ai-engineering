@@ -581,13 +581,19 @@ Security enforcement is enabled at ASVS Level 1 with blocking on high severity. 
 
 ## Suggested Plan Decomposition
 
-The roadmap already fixes three plans and their intent. [VERIFIED: `.planning/ROADMAP.md:22-38`] Research supports this execution order:
+The revision-loop scope gate requires nine sequential plans, each with at most ten `files_modified` entries. The split preserves the contract-first order while isolating search boundaries, loop failures, HTTP transport, and evidence closure into independently reviewable units. [VERIFIED: checker stall re-entry 1; `.planning/ROADMAP.md` Phase 1]
 
-1. **01-01 — contracts and Wave 0:** revalidate RESET-0001 without changing its approval state; create ADR-0003; define every public schema/type/port/event payload/transition/error stage; scaffold Node 24 package/config/test harness; write failing acceptance/architecture tests. This plan should contain the dependency-install human checkpoint because four package verdicts are SUS.
-2. **01-02 — core tracer and outbound adapters:** implement the two-state use case, deterministic fakes, deterministic teaching model, real Markdown search, system clock/ID, and JSONL journal. Lead with one happy-path tracer, then add the complete failure matrix one logical task at a time.
-3. **01-03 — inbound adapters and evidence:** add `uaos ask`, Fastify POST route, SIGINT/disconnect cancellation, status mapping, CLI/HTTP smoke tests, iteration teaching guide, changelog/traceability/link validation, and `ITERATION-01-evidence.md`. Leave Architectural Review and Approved pending until explicit human action.
+1. **01-01 — reset, ADR, and fail-first specifications:** revalidate RESET-0001, decide ADR-0003, create the pending gate record, and write reset/dependency/loop/teaching/schema/event specifications without installing packages.
+2. **01-02 — schemas, ports, and blocking review gate:** materialize strict schemas and the five narrow ports, then stop for the canonical package-legitimacy plus Architecture Review Gate.
+3. **01-03 — approved workspace and core tracer:** activate only the exact human-accepted Node 24 package set and prove the provider-neutral use-case happy path.
+4. **01-04 — concrete teaching adapters:** add controlled Markdown fixtures, lexical search, deterministic teaching model, and deterministic test adapters for the visible question → search → answer flow.
+5. **01-05 — schema and lexical boundary expansion:** exhaust strict input/action/result boundaries plus Unicode/case/ranking/excerpt/empty/malformed-fixture behavior.
+6. **01-06 — loop failures and core independence:** close the full failure/deadline/cancellation/limit/concurrency matrix, then run core compilation and dependency/port tests with explicit PowerShell fail-fast checks.
+7. **01-07 — JSONL and CLI:** add system clock/IDs, safe per-run JSONL, default composition, `uaos ask`, and SIGINT evidence.
+8. **01-08 — Fastify parity and concurrency:** add the single POST adapter, exact status mapping, disconnect semantics, CLI parity, and concurrent persisted-run isolation.
+9. **01-09 — teaching and evidence closure:** add the learner guide, validation, traceability, changelog, requirement/threat evidence, and distinct governance states.
 
-Contract review must precede Plan 01-02 implementation, but human approval of the completed phase remains a separate terminal gate. [VERIFIED: `AGENTS.md:8,11-15`]
+Plan 01-03 installation and dependent implementation are blocked on the completed Plan 01-02 human gate. Candidate pins remain unapproved until that checkpoint. Approval and stability of the finished phase remain later, independent human decisions. [VERIFIED: `AGENTS.md:8,11-15`; Package Legitimacy Audit; canonical T-01-SC in Plan 01-02]
 
 ## Assumptions Log
 
@@ -598,34 +604,24 @@ Contract review must precede Plan 01-02 implementation, but human approval of th
 | A3 | Terminal cancellation evidence uses a separate bounded cleanup signal. | Patterns / Pitfalls | If D-09 is interpreted as requiring the aborted caller signal for every append, D-14/D-16 cannot be satisfied simultaneously. |
 | A4 | Normalize/deduplicate lexical terms and use first matching line as excerpt. | Pattern 6 | Different desired token/excerpt semantics would change fixture snapshots and public tool results. |
 | A5 | Use one JSONL file per `runId`. | Code Examples | A single global journal would need process-wide and cross-process serialization guarantees. |
-| A6 | Exact `stage` values, overall timeout, body limit, and HTTP status map will be fixed by ADR-0003 within delegated discretion. | Open Questions | Leaving these implicit creates incompatible adapters/tests. |
+| A6 | Exact `stage` values, overall timeout, body limit, and HTTP status map are fixed by the resolved planning decisions and must be recorded in ADR-0003. | Resolved Questions | Divergence from the resolved values would create incompatible adapters/tests. |
 
-## Open Questions
+## Resolved Questions
 
-1. **What are the exact public `error.stage` values?**
-   - What we know: `stage` is public, and error codes are locked. [VERIFIED: `01-CONTEXT.md:34,39-42`]
-   - What is unclear: the allowed stage union is not enumerated.
-   - Recommendation: ADR-0003 must define and quote a small stable union before tests or adapters.
+1. **(RESOLVED) Exact public `error.stage` values**
+   - **RESOLVED:** ADR-0003 and the contract plans use the stable union `request | model | tool | journal | orchestration`. This is within delegated filename/type/detail discretion and keeps D-10 codes unchanged. [VERIFIED: `01-CONTEXT.md:34,39-42`; Plans 01-01/01-02]
 
-2. **What numeric overall timeout and HTTP body limit should the teaching runtime use?**
-   - What we know: one overall deadline and bounded execution are locked; Fastify exposes body/handler limits. [VERIFIED: `01-CONTEXT.md:33`; CITED: https://fastify.dev/docs/latest/Reference/Request/]
-   - What is unclear: exact configuration values.
-   - Recommendation: treat them as composition policy, document defaults in ADR-0003, and test overrides with smaller deterministic values.
+2. **(RESOLVED) Numeric overall timeout and HTTP body limit**
+   - **RESOLVED:** Composition defaults are an overall `5,000 ms` deadline and a `16 KiB` Fastify body limit. Tests may inject shorter deterministic deadlines without changing the public default. [VERIFIED: D-09/D-13 and delegated composition-policy discretion; Plans 01-01/01-06/01-08]
 
-3. **How is terminal evidence persisted after cancellation?**
-   - What we know: signals propagate to journal calls and `run.cancelled` is required whenever the journal remains writable. [VERIFIED: `01-CONTEXT.md:33,44,48-52`]
-   - What is unclear: whether terminal cleanup may use a fresh signal.
-   - Recommendation: explicitly authorize a bounded cleanup signal in ADR-0003; otherwise record the contract conflict before implementation.
+3. **(RESOLVED) Terminal evidence after cancellation**
+   - **RESOLVED:** Ordinary appends use the composed caller/deadline signal; `run.cancelled` uses an independent bounded `250 ms` cleanup signal because the winning caller signal is already aborted. If this final append fails, the public result is `JOURNAL_FAILURE`, preserving D-16/D-19 fail-closed semantics. [VERIFIED: D-09, D-14, D-16, D-19; Plans 01-01/01-06/01-07/01-08]
 
-4. **Does a runtime demo require a real model provider?**
-   - What we know: no provider or SDK is selected, the core must be vendor-neutral, and offline deterministic adapters are required. [VERIFIED: `AGENTS.md:9,22-25`; `01-CONTEXT.md:28,56-57`]
-   - What is unclear: whether the learner-facing CLI/API demo is expected to call an external model.
-   - Recommendation: ship a clearly labeled deterministic teaching model in Phase 1; defer provider credentials/SDK adapter until explicitly scoped.
+4. **(RESOLVED) Runtime provider expectation**
+   - **RESOLVED:** Phase 1 ships a clearly labeled deterministic teaching model for both CLI and HTTP. No real provider, SDK, credentials, network dependency, or provider-shaped core type is introduced; a provider adapter requires later explicit scope. [VERIFIED: `AGENTS.md:9,22-25`; D-06/D-21; Plans 01-04/01-07/01-08]
 
-5. **Dependency freshness checkpoint**
-   - What we know: official docs and registry confirm all package names/pins; the legitimacy seam flags five packages solely as `too-new`.
-   - What is unclear: whether the human will accept the pins unchanged.
-   - Recommendation: add one human verification checkpoint before the install task, then record the accepted versions in the lockfile/evidence.
+5. **(RESOLVED) Dependency freshness checkpoint**
+   - **RESOLVED:** Freshness is resolved procedurally, not by asserting approval: Plan 01-02 contains a blocking-human checkpoint before any installation. The candidate pins remain `typescript@7.0.2`, `zod@4.6.5`, `fastify@5.12.5`, `vitest@5.0.2`, `vite@8.3.1`, and `@types/node@24.19.0`, but candidates are not self-approved. Only after explicit human package acceptance and architecture review with no blocking findings may `01-02-SUMMARY.md` contain exactly one `accepted-package-pins` record whose only categories are duplicate-preserving `dependencies` and `devDependencies` arrays of exact `[name, version]` tuples. Plan 01-03 validates tuple shape, strict lowercase npm names, exact SemVer, and within/across-category duplicates before converting rows to maps, then uses only that human-accepted set. Until the checkpoint completes, the five SUS publications are not approved, the canonical record must be absent, and no package lock may be created. [VERIFIED: Package Legitimacy Audit; canonical threat T-01-SC in Plan 01-02]
 
 ## Sources
 
@@ -633,7 +629,7 @@ Contract review must precede Plan 01-02 implementation, but human approval of th
 
 - `.planning/phases/UAOS-01-typed-agent-loop/01-CONTEXT.md` — locked Phase 1 decisions and exclusions.
 - `.planning/REQUIREMENTS.md` — authoritative requirement wording and traceability.
-- `.planning/ROADMAP.md` — Phase 1 goal, success criteria, and three-plan decomposition.
+- `.planning/ROADMAP.md` — Phase 1 goal, success criteria, and nine-plan decomposition.
 - `AGENTS.md` — repository working and architecture rules.
 - `docs/architecture/decisions/ADR-0002-greenfield-restart.md` — greenfield authorization and recovery point.
 - `docs/reviews/RESET-0001-evidence.md` — reset inventory and pending review/approval state.
