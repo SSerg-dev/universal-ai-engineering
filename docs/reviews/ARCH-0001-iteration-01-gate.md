@@ -35,6 +35,21 @@ Current research candidates, shown for review only, are:
 | `vite` | `8.3.1` | Pending legitimacy review |
 | `@types/node` | `24.19.0` | Pending legitimacy review |
 
+### Prepared Official Publication Evidence
+
+The executor queried the official npm registry on 2026-09-29 without downloading or installing any package. Every requested exact specification returned the same package name and version, an npm-registry tarball, Subresource Integrity metadata, and the expected upstream repository. This establishes package-name legitimacy and confirms that the exact publication exists; it does **not** accept the version or authorize installation.
+
+| Candidate exact pin | Official publication evidence | Published (UTC) | Human exact-version decision |
+|---|---|---:|---|
+| [`typescript@7.0.2`](https://www.npmjs.com/package/typescript?activeTab=versions) | Registry name/version match; repository `microsoft/TypeScript`; Node engine `>=16.20.0` | 2026-07-08 | **Pending** |
+| [`zod@4.6.5`](https://www.npmjs.com/package/zod?activeTab=versions) | Registry name/version match; repository `colinhacks/zod` | 2026-09-13 | **Pending** |
+| [`fastify@5.12.5`](https://www.npmjs.com/package/fastify?activeTab=versions) | Registry name/version match; repository `fastify/fastify` | 2026-09-16 | **Pending** |
+| [`vitest@5.0.2`](https://www.npmjs.com/package/vitest?activeTab=versions) | Registry name/version match; repository `vitest-dev/vitest`; Node 24 is declared supported | 2026-09-25 | **Pending** |
+| [`vite@8.3.1`](https://www.npmjs.com/package/vite?activeTab=versions) | Registry name/version match; repository `vitejs/vite`; satisfies Vitest 5's declared Vite 8 peer range | 2026-09-24 | **Pending** |
+| [`@types/node@24.19.0`](https://www.npmjs.com/package/%40types/node?activeTab=versions) | Registry name/version match; repository `DefinitelyTyped/DefinitelyTyped`; satisfies Vitest 5's declared Node-types peer range | 2026-09-25 | **Pending** |
+
+Registry metadata also reports that `vitest@5.0.2` accepts Node `^24.0.0`, Vite `^8.0.0`, and `@types/node >=24.0.0`; `vite@8.3.1` accepts Node `>=22.12.0`. These are compatibility facts only. The five freshness-flagged publications remain SUS until the human explicitly accepts, replaces, or rejects each exact pin.
+
 ## Architecture Review Checklist
 
 - [ ] Reset evidence independently proves `e4a25e9`, declared retirements, migrations, and Pending approval.
@@ -47,9 +62,21 @@ Current research candidates, shown for review only, are:
 - [ ] Package names and exact versions have been explicitly accepted or replaced by a human before installation.
 - [ ] Blocking review findings are recorded and resolved before approval.
 
+### Prepared Reviewer Evidence
+
+| Review area | Prepared evidence | Automated preparation result |
+|---|---|---|
+| Reset and governance | `RESET-0001`, ADR-0003, and this gate keep implementation, architectural review, approval, and stability separate. | Ready for human inspection; all gate decisions remain Pending. |
+| D-01 through D-21 | ADR-0003 fixes the one-tool/two-state loop, stable failures, public result, event envelope, journaling, and dependency direction without adding deferred capabilities. | No automated mismatch found. |
+| Strict runtime contracts | `agent-contracts.ts`, `agent-errors.ts`, and `agent-events.ts` use strict Zod objects, exact discriminants/vocabularies, inferred types, positive sequences, and metadata-only event payloads. | `schemas-events-ok`; forbidden payload specifications remain fail-first. |
+| Core dependency direction | The domain imports only Zod and core-owned error schemas. The five application ports import only core-owned types and use `AbortSignal` where required. | `ports-ok`; no provider/framework/filesystem/process/database/transport import found. |
+| Deterministic specifications | Schema, event, loop, and teaching specifications are concrete and contain no skipped, focused, or TODO tests. | Fail-first intent confirmed statically; execution intentionally awaits package acceptance and workspace activation. |
+| Five research resolutions | Error stages, 5000 ms/16 KiB limits, 250 ms cancellation evidence, deterministic teaching model, and the package-gate procedure are present in ADR/research. | All five RESOLVED records found. |
+| Supply-chain boundary | No `package.json`, `package-lock.json`, or `node_modules` exists, and no canonical accepted-package-pins record has been emitted. | Gate remains closed as required. |
+
 ## Findings
 
-No architecture review has occurred. Findings: **Pending**.
+Automated preparation found no blocking contract or dependency-direction mismatch. This is evidence for review, not an architecture decision. No human architecture review has occurred. Human findings: **Pending**.
 
 ## Decision Record
 
