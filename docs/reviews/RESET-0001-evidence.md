@@ -7,6 +7,7 @@
 - **Implemented:** Complete
 - **Architecturally Reviewed:** Pending
 - **Approved:** Pending
+- **Stable:** Pending
 
 ## Comparison Base
 
@@ -87,6 +88,17 @@ All deletions are recoverable from Git commit `e4a25e9`.
 - Restore untracked planning content from the external pre-reset ZIP created before deletion.
 - Do not delete or rewrite `.git` history.
 
+## 2026-09-29 Revalidation
+
+The Phase 1 contract-first pass independently rechecked this record before any schema, port, loop, or adapter implementation was introduced.
+
+- Recovery commit `e4a25e9` remains reachable and contains the 23 tracked files described by the original comparison base.
+- Every path in **Declared Retirements** is absent from the active tree, except that `.planning/` now contains the explicitly recreated greenfield GSD project rather than the retired brownfield-ingestion projection.
+- `architecture/decisions/ADR-0001-foundation-baseline.md` remains recoverable at the recovery commit and is migrated, with its identifier preserved, to `docs/architecture/decisions/ADR-0001-foundation-baseline.md`.
+- The three former `reviews/UAE-*` records remain recoverable from the recovery commit and indexed by `docs/archive/LEGACY-BASELINE.md`; none has been silently reinstated or represented as approved.
+- `LICENSE` and Git history remain intact. Local `.codex/` runtime state remains excluded from the tracked project tree.
+- The reset is still **Architecturally Reviewed: Pending**, **Approved: Pending**, and **Stable: Pending**. Revalidation is evidence of inventory integrity, not approval.
+
 ## Validation Required After Implementation
 
 - [x] Only declared legacy paths were retired; Git status matches the table above.
@@ -104,4 +116,4 @@ All deletions are recoverable from Git commit `e4a25e9`.
 ## Residual Notes
 
 - `.codex/.gsd-staging/` could not be removed because the host denied access. It is local GSD state under the Git-ignored `.codex/` directory and does not affect repository contents.
-- The working tree remains uncommitted pending roadmap review and explicit acceptance of the reset result.
+- At the original evidence capture, the greenfield working tree was uncommitted pending roadmap review and explicit acceptance. It was later committed as `b8650a3` without changing the recovery point or converting any Pending review, approval, or stability state.
