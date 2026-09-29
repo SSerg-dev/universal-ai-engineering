@@ -7,21 +7,21 @@
 
 ### Foundation and Architecture
 
-- [ ] **FOUND-01**: Maintainer can verify the greenfield reset, retired paths, recovery point, and new minimal project structure from one evidence record.
-- [ ] **ARCH-01**: Developer can review stable domain, application, port, adapter, event, and error contracts before implementation depends on them.
+- [x] **FOUND-01**: Maintainer can verify the greenfield reset, retired paths, recovery point, and new minimal project structure from one evidence record.
+- [x] **ARCH-01**: Developer can review stable domain, application, port, adapter, event, and error contracts before implementation depends on them.
 
 ### Learning Experience
 
 - [ ] **EDU-01**: Learner can run and compare ten versions that preserve one scenario while adding one major capability per version.
-- [ ] **EDU-02**: Learner can follow the internal-documentation assistant scenario consistently from question to grounded answer.
+- [x] **EDU-02**: Learner can follow the internal-documentation assistant scenario consistently from question to grounded answer.
 - [ ] **EDU-03**: Learner can inspect explanation, tests, validation output, and review state for every iteration.
 
 ### Agent Loop Foundation
 
-- [ ] **CORE-01**: Learner can run a typed agent loop that accepts a question, asks a model for the next action, executes one tool, and returns a terminal answer or typed failure.
+- [x] **CORE-01**: Learner can run a typed agent loop that accepts a question, asks a model for the next action, executes one tool, and returns a terminal answer or typed failure.
 - [ ] **CORE-02**: Learner can invoke the same application use case through a Node CLI and Fastify HTTP API.
 - [ ] **CORE-03**: Learner can inspect a correlated JSONL journal of loop, model, tool, error, and result events.
-- [ ] **CORE-04**: Learner can run deterministic success, failure, timeout, cancellation, and limit tests without network access.
+- [x] **CORE-04**: Learner can run deterministic success, failure, timeout, cancellation, and limit tests without network access.
 
 ### Tool System
 
@@ -64,9 +64,9 @@
 
 ### Quality Attributes
 
-- [ ] **NFR-01**: Core domain and application modules compile without provider SDK, Fastify, Angular, PostgreSQL client, or MCP transport imports.
+- [x] **NFR-01**: Core domain and application modules compile without provider SDK, Fastify, Angular, PostgreSQL client, or MCP transport imports.
 - [ ] **NFR-02**: Infrastructure adapters can be replaced through stable ports without changing agent-loop behavior.
-- [ ] **NFR-03**: Every phase produces reproducible tests, traceability updates, reviewable evidence, and an explicit human approval state.
+- [x] **NFR-03**: Every phase produces reproducible tests, traceability updates, reviewable evidence, and an explicit human approval state.
 
 ## v2 Requirements
 
@@ -90,15 +90,15 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | Phase 1 | Pending |
-| ARCH-01 | Phase 1 | Pending |
+| FOUND-01 | Phase 1 | Complete |
+| ARCH-01 | Phase 1 | Complete |
 | EDU-01 | Phase 10 | Pending |
-| EDU-02 | Phase 1 | Pending |
+| EDU-02 | Phase 1 | Complete |
 | EDU-03 | Phase 1 | Pending |
-| CORE-01 | Phase 1 | Pending |
+| CORE-01 | Phase 1 | Complete |
 | CORE-02 | Phase 1 | Pending |
 | CORE-03 | Phase 1 | Pending |
-| CORE-04 | Phase 1 | Pending |
+| CORE-04 | Phase 1 | Complete |
 | TOOL-01 | Phase 2 | Pending |
 | TOOL-02 | Phase 2 | Pending |
 | MCP-01 | Phase 3 | Pending |
@@ -111,9 +111,9 @@
 | UI-01 | Phase 8 | Pending |
 | GUARD-01 | Phase 9 | Pending |
 | ROUTER-01 | Phase 10 | Pending |
-| NFR-01 | Phase 1 | Pending |
+| NFR-01 | Phase 1 | Complete |
 | NFR-02 | Phase 1 | Pending |
-| NFR-03 | Phase 1 | Pending |
+| NFR-03 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 24 total

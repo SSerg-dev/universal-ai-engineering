@@ -32,11 +32,11 @@ One internal-documentation assistant evolves through ten runnable vertical slice
 4. Learner can inspect correlated JSONL events and run deterministic success and failure tests offline.
 5. Evidence distinguishes implemented, reviewed, and approved states.
 
-**Plans:** 9 plans
+**Plans:** 1/9 plans executed
 
 Plans:
 **Wave 1**
-- [ ] 01-01-PLAN.md — Revalidate reset evidence, decide ADR-0003, and write fail-first reset, architecture, loop, teaching, schema, and event specifications.
+- [x] 01-01-PLAN.md — Revalidate reset evidence, decide ADR-0003, and write fail-first reset, architecture, loop, teaching, schema, and event specifications.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 01-02-PLAN.md — Define strict schemas and five narrow ports, then complete the blocking package-legitimacy and Architecture Review Gate.
@@ -223,7 +223,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Typed Agent Loop | 0/9 | Not started | - |
+| 1. Typed Agent Loop | 1/9 | In Progress|  |
 | 2. Typed Tool System | 0/2 | Not started | - |
 | 3. MCP Boundary | 0/2 | Not started | - |
 | 4. Grounded Retrieval | 0/2 | Not started | - |
