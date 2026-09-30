@@ -1,0 +1,9 @@
+{
+  "command": "npm run test -- tests/integration/search-docs.test.ts tests/integration/teaching-scenario.test.ts --reporter=tap",
+  "exitCode": 1,
+  "targetTest": "rejects invalid roots and fixtures whose first content line is not an H1",
+  "targetFile": "tests/integration/search-docs.test.ts",
+  "expected": "Startup rejects a malformed Markdown fixture whose first non-empty content line is not the required level-one title",
+  "actual": "MarkdownSearchDocs.load resolved with a fixture that placed prose before a later H1 title",
+  "output": "TAP version 13\nnot ok 1 - tests/integration/search-docs.test.ts\nnot ok 1 - rejects invalid roots and fixtures whose first content line is not an H1\nAssertionError: promise resolved MarkdownSearchDocs{} instead of rejecting\nok 2 - tests/integration/teaching-scenario.test.ts\n# tests 9\n# pass 8\n# fail 1"
+}
