@@ -1,0 +1,9 @@
+{
+  "command": "npm run test -- tests/integration/teaching-scenario.test.ts --reporter=tap",
+  "exitCode": 1,
+  "targetTest": "shows question → search_docs → answer with exact reproducible evidence",
+  "targetFile": "tests/integration/teaching-scenario.test.ts",
+  "expected": "The offline teaching model and deterministic evidence ports reproduce one source-backed 2/1 run with sequence 1 through 8",
+  "actual": "DeterministicTeachingModel is undefined before the teaching and evidence adapters are implemented",
+  "output": "TAP version 13\nnot ok 1 - tests/integration/teaching-scenario.test.ts\nnot ok 1 - shows question → search_docs → answer with exact reproducible evidence\nAssertionError: DeterministicTeachingModel should provide the offline model path: expected undefined to be type of 'function'\n# tests 2\n# pass 1\n# fail 1"
+}
