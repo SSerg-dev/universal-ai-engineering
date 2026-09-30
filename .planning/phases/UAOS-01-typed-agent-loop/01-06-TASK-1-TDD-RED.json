@@ -1,0 +1,9 @@
+{
+  "command": "npm run test -- tests/unit/run-agent-failures.test.ts --reporter=tap -t \"times out work completing at the exact deadline boundary\"",
+  "exitCode": 1,
+  "targetTest": "times out work completing at the exact deadline boundary",
+  "targetFile": "tests/unit/run-agent-failures.test.ts",
+  "expected": "Work completing at the overall deadline returns TIMEOUT at the orchestration stage with one terminal event",
+  "actual": "The use case had no overall deadline and returned INVALID_TRANSITION after the delayed model action instead of TIMEOUT",
+  "output": "TAP version 13\n1..1\nnot ok 1 - tests/unit/run-agent-failures.test.ts\nnot ok 12 - times out work completing at the exact deadline boundary\nAssertionError: expected INVALID_TRANSITION to match TIMEOUT\n# tests 21\n# pass 0\n# fail 1"
+}
