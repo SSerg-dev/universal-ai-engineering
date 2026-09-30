@@ -27,7 +27,7 @@ export type AgentErrorStage = z.infer<typeof AgentErrorStageSchema>;
 
 export const AgentErrorSchema = z.strictObject({
   code: AgentErrorCodeSchema,
-  message: z.string().min(1),
+  message: z.string().trim().min(1),
   stage: AgentErrorStageSchema,
   retryable: z.boolean(),
 });

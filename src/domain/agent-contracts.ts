@@ -21,7 +21,7 @@ export const SearchDocumentMatchSchema = z.strictObject({
   documentId: NonEmptyStringSchema,
   title: NonEmptyStringSchema,
   excerpt: z.string(),
-  matchedTerms: z.array(NonEmptyStringSchema),
+  matchedTerms: z.array(NonEmptyStringSchema).min(1),
 });
 
 export type SearchDocumentMatch = z.infer<typeof SearchDocumentMatchSchema>;
