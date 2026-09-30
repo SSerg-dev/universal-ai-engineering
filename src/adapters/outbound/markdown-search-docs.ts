@@ -54,17 +54,17 @@ function firstMatchingExcerpt(
 
 async function loadDocument(root: string, filename: string): Promise<LoadedDocument> {
   const content = await readFile(join(root, filename), "utf8");
-  const title = content
-    .split(/\r?\n/u)
-    .map((line) => line.match(/^#\s+(.+?)\s*$/u)?.[1]?.trim())
-    .find((candidate): candidate is string => candidate !== undefined && candidate.length > 0);
+  const lines = content.split(/\r?\n/u);
+  const firstContentLine = lines.find((line) => line.trim().length > 0)?.trim();
+  const title = firstContentLine?.match(/^#\s+(.+?)\s*$/u)?.[1]?.trim();
 
   if (title === undefined) {
-    throw new Error(`Markdown fixture ${filename} must contain a level-one heading.`);
+    throw new Error(
+      `Markdown fixture ${filename} first non-empty line must be a level-one heading.`,
+    );
   }
 
-  const contentLines = content
-    .split(/\r?\n/u)
+  const contentLines = lines
     .map((line) => line.trim())
     .filter((line) => line.length > 0 && !line.startsWith("#"));
 
