@@ -3,16 +3,16 @@ gsd_state_version: "1.0"
 current_phase: 01
 current_phase_name: Typed Agent Loop
 status: executing
-stopped_at: Completed UAOS-01-05-PLAN.md
-last_updated: "2026-09-30T13:18:03.981Z"
+stopped_at: Completed UAOS-01-06-PLAN.md
+last_updated: "2026-09-30T14:29:21.571Z"
 last_activity: 2026-09-29
 last_activity_desc: Phase UAOS-01 execution started
-state_head: 42b1d24a51bd615b9335a12ce5982b3e56dbf99a
+state_head: d1b93c5710fba80ae06abea5436e907cb34cc9ff
 progress:
   total_phases: 10
   completed_phases: 0
   total_plans: 9
-  completed_plans: 5
+  completed_plans: 6
   percent: 0
 ---
 
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-09-28)
 ## Current Position
 
 Phase: UAOS-01 (Typed Agent Loop) — EXECUTING
-Plan: 6 of 9
+Plan: 7 of 9
 Status: Executing Phase UAOS-01
 Last activity: 2026-09-29 — Phase UAOS-01 execution started
 
@@ -49,6 +49,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase UAOS-01 P03 | 34min | 2 tasks | 7 files |
 | Phase UAOS-01 P04 | 26min | 2 tasks | 10 files |
 | Phase UAOS-01 P05 | 16min | 2 tasks | 7 files |
+| Phase UAOS-01 P06 | 38min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,10 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase UAOS-01]: Search matches require at least one normalized matched term; successful no-match behavior remains matches: [].
 - [Phase UAOS-01]: Public error messages are trimmed and whitespace-only values are rejected without changing the D-10 vocabulary.
 - [Phase UAOS-01]: Controlled Markdown fixtures require the first non-empty line to be the canonical H1 title.
+- [Phase UAOS-01]: Deadline and caller cancellation use invocation-local tagged origins; exact-deadline races resolve to TIMEOUT.
+- [Phase UAOS-01]: Model/tool usage increments at attempt start, and evidence must persist before the corresponding or later effect.
+- [Phase UAOS-01]: Aborted-run terminal evidence uses an independent policy-bounded signal; append failure maps to JOURNAL_FAILURE.
+- [Phase UAOS-01]: Core independence is enforced by strict no-emit domain/application compilation plus forbidden-import and process-access scans.
 
 ### Pending Todos
 
@@ -92,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-09-30T13:18:03.944Z
-Stopped at: Completed UAOS-01-05-PLAN.md
+Last session: 2026-09-30T14:29:21.526Z
+Stopped at: Completed UAOS-01-06-PLAN.md
 Resume file: None
