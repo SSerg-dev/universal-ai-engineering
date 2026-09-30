@@ -58,168 +58,6 @@ const ERROR_MESSAGES: Record<AgentErrorCode, string> = {
   INTERNAL_ERROR: "The agent run failed unexpectedly.",
 };
 
-function createLegacyRunAgentUseCase(
-  dependencies: RunAgentDependencies,
-): RunAgentUseCase {
-  const { clock, ids, journal, model, policy, searchDocs } = dependencies;
-
-  return async (input: unknown, callerSignal?: AbortSignal) => {
-    const runId = ids.next("run");
-    const signal = callerSignal ?? new AbortController().signal;
-    let sequence = 0;
-    let modelCalls = 0;
-    let toolCalls = 0;
-
-    const appendEvent = async (
-      eventType: AgentEventType,
-      payload: unknown,
-    ): Promise<void> => {
-      const event = AgentEventEnvelopeSchema.parse({
-        schemaVersion: "1.0",
-        eventId: ids.next("event"),
-        runId,
-        sequence: ++sequence,
-        occurredAt: clock.now(),
-        eventType,
-        payload,
-      });
-
-      await journal.append(event, signal);
-    };
-
-    const fail = async (
-      code: AgentErrorCode,
-      stage: AgentError["stage"],
-    ): Promise<RunAgentResult> => {
-      const error: AgentError = {
-        code,
-        message: ERROR_MESSAGES[code],
-        stage,
-        retryable: false,
-      };
-
-      await appendEvent("run.failed", {
-        errorCode: code,
-        stage,
-        modelCalls,
-        toolCalls,
-      });
-
-      return RunAgentResultSchema.parse({ ok: false, runId, error });
-    };
-
-    const parsedInput = RunAgentInputSchema.safeParse(input);
-    if (!parsedInput.success) {
-      return fail("INVALID_REQUEST", "request");
-    }
-
-    const { question } = parsedInput.data;
-    let state: LoopState = "awaiting_tool";
-    let toolResult: SearchDocsOutput | undefined;
-
-    await appendEvent("run.started", {});
-
-    while (true) {
-      if (modelCalls >= policy.maxModelCalls) {
-        return fail("LIMIT_EXCEEDED", "model");
-      }
-
-      const modelCallId = ids.next("model");
-      const modelStep = modelCalls + 1;
-      await appendEvent("model.requested", {
-        step: modelStep,
-        callId: modelCallId,
-      });
-
-      const modelRequest: ModelRequest =
-        state === "awaiting_tool"
-          ? { state, question }
-          : { state, question, toolResult: toolResult as SearchDocsOutput };
-      const unknownAction = await model.request(modelRequest, signal);
-      modelCalls += 1;
-
-      const parsedAction = ModelActionSchema.safeParse(unknownAction);
-      if (!parsedAction.success) {
-        return fail("INVALID_MODEL_ACTION", "model");
-      }
-
-      const action = parsedAction.data;
-      await appendEvent("model.responded", {
-        step: modelStep,
-        callId: modelCallId,
-        actionKind: action.type,
-        durationMs: 0,
-      });
-
-      if (state === "awaiting_tool") {
-        if (action.type !== "call_tool") {
-          return fail("INVALID_TRANSITION", "orchestration");
-        }
-        if (toolCalls >= policy.maxToolCalls) {
-          return fail("LIMIT_EXCEEDED", "tool");
-        }
-
-        const toolCallId = ids.next("tool");
-        await appendEvent("tool.requested", {
-          step: 1,
-          callId: toolCallId,
-          toolName: "search_docs",
-        });
-
-        const unknownToolResult = await searchDocs.search(action.arguments, signal);
-        toolCalls += 1;
-        toolResult = SearchDocsOutputSchema.parse(unknownToolResult);
-
-        await appendEvent("tool.succeeded", {
-          step: 1,
-          callId: toolCallId,
-          toolName: "search_docs",
-          durationMs: 0,
-          resultCount: toolResult.matches.length,
-          sourceIds: toolResult.matches.map(({ documentId }) => documentId),
-        });
-
-        state = "awaiting_final";
-        continue;
-      }
-
-      if (action.type !== "final_answer") {
-        return fail("INVALID_TRANSITION", "orchestration");
-      }
-
-      const matchesById = new Map(
-        (toolResult?.matches ?? []).map((match) => [match.documentId, match]),
-      );
-      if (action.sourceIds.some((sourceId) => !matchesById.has(sourceId))) {
-        return fail("INVALID_TRANSITION", "orchestration");
-      }
-
-      const sources = action.sourceIds.map((sourceId) => {
-        const match = matchesById.get(sourceId);
-        if (match === undefined) {
-          throw new Error("Validated source membership became inconsistent.");
-        }
-        return { documentId: match.documentId, title: match.title };
-      });
-
-      await appendEvent("run.succeeded", {
-        answerLength: action.answer.length,
-        sourceIds: action.sourceIds,
-        modelCalls,
-        toolCalls,
-      });
-
-      return RunAgentResultSchema.parse({
-        ok: true,
-        runId,
-        answer: action.answer,
-        sources,
-        usage: { modelCalls, toolCalls },
-      });
-    }
-  };
-}
-
 type CancellationCode = "TIMEOUT" | "CANCELLED";
 
 class JournalWriteFailure extends Error {
@@ -356,6 +194,20 @@ export function createRunAgentUseCase(
       } catch {
         return false;
       }
+    };
+
+    const appendSuccessTerminalEvent = async (payload: unknown): Promise<void> => {
+      const event = createEvent("run.succeeded", payload);
+      try {
+        await journal.append(event, abortContext.signal);
+      } catch {
+        if (abortContext.signal.aborted) {
+          throw abortContext.cancellation();
+        }
+        throw new JournalWriteFailure();
+      }
+      sequence = event.sequence;
+      terminalAttempted = true;
     };
 
     const terminalize = async (
@@ -521,13 +373,12 @@ export function createRunAgentUseCase(
           sources,
           usage: { modelCalls, toolCalls },
         });
-        await appendOrdinaryEvent("run.succeeded", {
+        await appendSuccessTerminalEvent({
           answerLength: action.answer.length,
           sourceIds: action.sourceIds,
           modelCalls,
           toolCalls,
         });
-        terminalAttempted = true;
         return result;
       }
     } catch (error) {
