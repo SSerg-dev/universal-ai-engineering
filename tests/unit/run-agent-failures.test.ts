@@ -151,8 +151,8 @@ describe("RunAgentUseCase typed failure matrix", () => {
       ok: false,
       error: { code: "INVALID_REQUEST", stage: "request", retryable: false },
     });
-    expect(harness.model).not.toHaveBeenCalled();
-    expect(harness.searchDocs).not.toHaveBeenCalled();
+    expect(harness.model.request).not.toHaveBeenCalled();
+    expect(harness.searchDocs.search).not.toHaveBeenCalled();
     expect(eventTypes(harness.events)).toEqual(["run.failed"]);
     expect(terminalEvents(harness.events)).toHaveLength(1);
   });
@@ -202,7 +202,7 @@ describe("RunAgentUseCase typed failure matrix", () => {
       ok: false,
       error: { code: "INVALID_TRANSITION", stage: "orchestration" },
     });
-    expect(harness.searchDocs).not.toHaveBeenCalled();
+    expect(harness.searchDocs.search).not.toHaveBeenCalled();
   });
 
   it("rejects a second tool call without executing a second tool effect", async () => {
@@ -214,8 +214,8 @@ describe("RunAgentUseCase typed failure matrix", () => {
       ok: false,
       error: { code: "INVALID_TRANSITION", stage: "orchestration" },
     });
-    expect(harness.model).toHaveBeenCalledTimes(2);
-    expect(harness.searchDocs).toHaveBeenCalledTimes(1);
+    expect(harness.model.request).toHaveBeenCalledTimes(2);
+    expect(harness.searchDocs.search).toHaveBeenCalledTimes(1);
   });
 
   it("records tool.failed and normalizes a tool exception after counting the attempt", async () => {
@@ -288,7 +288,7 @@ describe("RunAgentUseCase typed failure matrix", () => {
       ok: false,
       error: { code: "LIMIT_EXCEEDED", stage: "model" },
     });
-    expect(harness.model).not.toHaveBeenCalled();
+    expect(harness.model.request).not.toHaveBeenCalled();
   });
 
   it("enforces the tool-call limit before the tool request", async () => {
@@ -303,7 +303,7 @@ describe("RunAgentUseCase typed failure matrix", () => {
       ok: false,
       error: { code: "LIMIT_EXCEEDED", stage: "tool" },
     });
-    expect(harness.searchDocs).not.toHaveBeenCalled();
+    expect(harness.searchDocs.search).not.toHaveBeenCalled();
   });
 
   it("lets work finishing just before the overall deadline succeed", async () => {
@@ -336,7 +336,7 @@ describe("RunAgentUseCase typed failure matrix", () => {
       ok: false,
       error: { code: "TIMEOUT", stage: "orchestration", retryable: false },
     });
-    expect(harness.searchDocs).not.toHaveBeenCalled();
+    expect(harness.searchDocs.search).not.toHaveBeenCalled();
     expect(terminalEvents(harness.events)).toHaveLength(1);
   });
 
@@ -432,8 +432,8 @@ describe("RunAgentUseCase typed failure matrix", () => {
       ok: false,
       error: { code: "JOURNAL_FAILURE", stage: "journal" },
     });
-    expect(harness.model).not.toHaveBeenCalled();
-    expect(harness.searchDocs).not.toHaveBeenCalled();
+    expect(harness.model.request).not.toHaveBeenCalled();
+    expect(harness.searchDocs.search).not.toHaveBeenCalled();
     expect(harness.attempts).toHaveLength(1);
   });
 
@@ -447,8 +447,8 @@ describe("RunAgentUseCase typed failure matrix", () => {
     const result = await harness.runAgent({ question: "How does the loop work?" });
 
     expect(result).toMatchObject({ ok: false, error: { code: "JOURNAL_FAILURE" } });
-    expect(harness.model).not.toHaveBeenCalled();
-    expect(harness.searchDocs).not.toHaveBeenCalled();
+    expect(harness.model.request).not.toHaveBeenCalled();
+    expect(harness.searchDocs.search).not.toHaveBeenCalled();
   });
 
   it("does not make the second model call when tool observation evidence is rejected", async () => {
@@ -461,8 +461,8 @@ describe("RunAgentUseCase typed failure matrix", () => {
     const result = await harness.runAgent({ question: "How does the loop work?" });
 
     expect(result).toMatchObject({ ok: false, error: { code: "JOURNAL_FAILURE" } });
-    expect(harness.model).toHaveBeenCalledTimes(1);
-    expect(harness.searchDocs).toHaveBeenCalledTimes(1);
+    expect(harness.model.request).toHaveBeenCalledTimes(1);
+    expect(harness.searchDocs.search).toHaveBeenCalledTimes(1);
   });
 
   it("turns a failed success-terminal append into JOURNAL_FAILURE without a duplicate terminal", async () => {

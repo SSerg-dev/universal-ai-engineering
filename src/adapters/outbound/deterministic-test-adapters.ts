@@ -17,9 +17,31 @@ import {
   type AgentEventEnvelope,
 } from "../../domain/agent-events.js";
 
-interface CallFailureOptions {
+export interface CallFailureOptions {
   readonly failAtCall?: number;
   readonly error?: Error;
+  readonly delayMs?: number;
+}
+
+async function waitForDelay(delayMs: number | undefined, signal: AbortSignal) {
+  if (delayMs === undefined || delayMs === 0) return;
+  await new Promise<void>((resolve, reject) => {
+    const complete = () => {
+      signal.removeEventListener("abort", abort);
+      resolve();
+    };
+    const timeout = setTimeout(complete, delayMs);
+    const abort = () => {
+      clearTimeout(timeout);
+      signal.removeEventListener("abort", abort);
+      reject(signal.reason);
+    };
+    if (signal.aborted) {
+      abort();
+      return;
+    }
+    signal.addEventListener("abort", abort, { once: true });
+  });
 }
 
 export class ScriptedModel implements ModelPort {
@@ -36,6 +58,7 @@ export class ScriptedModel implements ModelPort {
     signal.throwIfAborted();
     this.#requests.push(structuredClone(input));
     const callNumber = this.#requests.length;
+    await waitForDelay(this.#options.delayMs, signal);
 
     if (this.#options.failAtCall === callNumber) {
       throw this.#options.error ?? new Error(`Scripted model failed at call ${callNumber}.`);
@@ -70,6 +93,7 @@ export class FakeSearchDocs implements SearchDocsPort {
     signal.throwIfAborted();
     this.#calls.push(SearchDocsInputSchema.parse(input));
     const callNumber = this.#calls.length;
+    await waitForDelay(this.#options.delayMs, signal);
 
     if (this.#options.failAtCall === callNumber) {
       throw this.#options.error ?? new Error(`Fake search failed at call ${callNumber}.`);
@@ -132,6 +156,7 @@ export class SequenceIdGenerator implements IdGeneratorPort {
 export interface InMemoryJournalOptions {
   readonly failAtAppend?: number;
   readonly error?: Error;
+  readonly delayMs?: number;
 }
 
 export class InMemoryJournal implements JournalPort {
@@ -148,6 +173,7 @@ export class InMemoryJournal implements JournalPort {
     const parsedEvent = AgentEventEnvelopeSchema.parse(event);
     this.#attemptedEvents.push(parsedEvent);
     const appendNumber = this.#attemptedEvents.length;
+    await waitForDelay(this.#options.delayMs, signal);
 
     if (this.#options.failAtAppend === appendNumber) {
       throw this.#options.error ?? new Error(`In-memory journal failed at append ${appendNumber}.`);
