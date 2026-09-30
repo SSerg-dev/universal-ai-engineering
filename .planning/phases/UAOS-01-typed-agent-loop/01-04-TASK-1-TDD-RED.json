@@ -1,0 +1,9 @@
+{
+  "command": "npm run test -- tests/integration/teaching-scenario.test.ts --reporter=tap",
+  "exitCode": 1,
+  "targetTest": "shows question → real Markdown search → answer with stable source references",
+  "targetFile": "tests/integration/teaching-scenario.test.ts",
+  "expected": "MarkdownSearchDocs loads the controlled Markdown fixtures and the teaching run returns stable lexical source references",
+  "actual": "MarkdownSearchDocs is undefined before the controlled lexical adapter is implemented",
+  "output": "TAP version 13\nnot ok 1 - tests/integration/teaching-scenario.test.ts\nnot ok 1 - shows question → real Markdown search → answer with stable source references\nAssertionError: MarkdownSearchDocs should load the controlled Markdown corpus: expected undefined to be type of 'function'\n# tests 2\n# pass 0\n# fail 2"
+}
