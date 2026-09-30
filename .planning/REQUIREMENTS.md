@@ -20,7 +20,7 @@
 
 - [x] **CORE-01**: Learner can run a typed agent loop that accepts a question, asks a model for the next action, executes one tool, and returns a terminal answer or typed failure.
 - [ ] **CORE-02**: Learner can invoke the same application use case through a Node CLI and Fastify HTTP API.
-- [ ] **CORE-03**: Learner can inspect a correlated JSONL journal of loop, model, tool, error, and result events.
+- [x] **CORE-03**: Learner can inspect a correlated JSONL journal of loop, model, tool, error, and result events.
 - [x] **CORE-04**: Learner can run deterministic success, failure, timeout, cancellation, and limit tests without network access.
 
 ### Tool System
@@ -65,7 +65,7 @@
 ### Quality Attributes
 
 - [x] **NFR-01**: Core domain and application modules compile without provider SDK, Fastify, Angular, PostgreSQL client, or MCP transport imports.
-- [ ] **NFR-02**: Infrastructure adapters can be replaced through stable ports without changing agent-loop behavior.
+- [x] **NFR-02**: Infrastructure adapters can be replaced through stable ports without changing agent-loop behavior.
 - [x] **NFR-03**: Every phase produces reproducible tests, traceability updates, reviewable evidence, and an explicit human approval state.
 
 ## v2 Requirements
@@ -97,7 +97,7 @@
 | EDU-03 | Phase 1 | Pending |
 | CORE-01 | Phase 1 | Complete |
 | CORE-02 | Phase 1 | Pending |
-| CORE-03 | Phase 1 | Pending |
+| CORE-03 | Phase 1 | Complete |
 | CORE-04 | Phase 1 | Complete |
 | TOOL-01 | Phase 2 | Pending |
 | TOOL-02 | Phase 2 | Pending |
@@ -112,7 +112,7 @@
 | GUARD-01 | Phase 9 | Pending |
 | ROUTER-01 | Phase 10 | Pending |
 | NFR-01 | Phase 1 | Complete |
-| NFR-02 | Phase 1 | Pending |
+| NFR-02 | Phase 1 | Complete |
 | NFR-03 | Phase 1 | Complete |
 
 **Coverage:**
