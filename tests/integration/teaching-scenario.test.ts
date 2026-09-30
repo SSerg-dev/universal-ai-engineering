@@ -1,3 +1,6 @@
+import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
@@ -32,6 +35,45 @@ async function loadDeterministicAdapters() {
 }
 
 describe("Iteration 1 teaching scenario", () => {
+  it("runs the same scenario through default composition and persisted evidence", async () => {
+    const runtimeModule = await import(
+      "../../src/composition/create-runtime.js"
+    ).catch(() => undefined);
+    expect(
+      runtimeModule?.createRuntime,
+      "createRuntime should be the single default adapter wiring site",
+    ).toBeTypeOf("function");
+    const journalRoot = await mkdtemp(join(tmpdir(), "uaos-teaching-runtime-"));
+    const fixtureRoot = fileURLToPath(
+      new URL("../../fixtures/docs", import.meta.url),
+    );
+
+    try {
+      const runtime = await runtimeModule!.createRuntime({
+        fixtureRoot,
+        journalRoot,
+      });
+      const result = await runtime.runAgent({
+        question: "How are runs recorded?",
+      });
+
+      expect(result).toMatchObject({
+        ok: true,
+        usage: { modelCalls: 2, toolCalls: 1 },
+      });
+      const files = await readdir(journalRoot);
+      expect(files).toHaveLength(1);
+      const lines = (
+        await readFile(join(journalRoot, files[0]!), "utf8")
+      )
+        .trimEnd()
+        .split("\n");
+      expect(lines).toHaveLength(8);
+    } finally {
+      await rm(journalRoot, { recursive: true, force: true });
+    }
+  });
+
   it("shows question → search_docs → answer with exact reproducible evidence", async () => {
     const {
       DeterministicTeachingModel,

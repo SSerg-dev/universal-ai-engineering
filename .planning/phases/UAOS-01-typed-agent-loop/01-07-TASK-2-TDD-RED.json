@@ -1,0 +1,9 @@
+{
+  "command": "npm run test -- tests/smoke/cli.test.ts --reporter=tap -t \"declares one uaos binary and script that target the compiled CLI\"",
+  "exitCode": 1,
+  "targetTest": "declares one uaos binary and script that target the compiled CLI",
+  "targetFile": "tests/smoke/cli.test.ts",
+  "expected": "The package exposes one compiled uaos binary and script backed by the thin runCli adapter",
+  "actual": "The target assertion failed because runCli was not exported: expected function, received undefined",
+  "output": "TAP version 13\n1..1\nnot ok 1 - tests/smoke/cli.test.ts\nnot ok 1 - uaos ask CLI\nnot ok 1 - declares one uaos binary and script that target the compiled CLI\nAssertionError: runCli should expose the thin uaos ask translation adapter: expected undefined to be type of 'function'\n# tests 4\n# pass 0\n# fail 1"
+}
