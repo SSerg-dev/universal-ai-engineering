@@ -307,37 +307,51 @@ describe("RunAgentUseCase typed failure matrix", () => {
   });
 
   it("lets work finishing just before the overall deadline succeed", async () => {
-    const harness = createHarness({
-      policy: { timeoutMs: 80 },
-      modelRequest: async (input) => {
-        await sleep(5);
-        return input.state === "awaiting_tool" ? toolAction : finalAction;
-      },
-    });
+    vi.useFakeTimers();
+    try {
+      const harness = createHarness({
+        policy: { timeoutMs: 20 },
+        modelRequest: async (input) => {
+          await sleep(5);
+          return input.state === "awaiting_tool" ? toolAction : finalAction;
+        },
+      });
 
-    const result = await harness.runAgent({ question: "How does the loop work?" });
+      const pending = harness.runAgent({ question: "How does the loop work?" });
+      await vi.advanceTimersByTimeAsync(19);
+      const result = await pending;
 
-    expect(result).toMatchObject({ ok: true, usage: { modelCalls: 2, toolCalls: 1 } });
-    expect(terminalEvents(harness.events)).toHaveLength(1);
+      expect(result).toMatchObject({ ok: true, usage: { modelCalls: 2, toolCalls: 1 } });
+      expect(terminalEvents(harness.events)).toHaveLength(1);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("times out work completing at the exact deadline boundary", async () => {
-    const harness = createHarness({
-      policy: { timeoutMs: 20 },
-      modelRequest: async () => {
-        await sleep(20);
-        return toolAction;
-      },
-    });
+    vi.useFakeTimers();
+    try {
+      const harness = createHarness({
+        policy: { timeoutMs: 20 },
+        modelRequest: async () => {
+          await sleep(20);
+          return toolAction;
+        },
+      });
 
-    const result = await harness.runAgent({ question: "How does the loop work?" });
+      const pending = harness.runAgent({ question: "How does the loop work?" });
+      await vi.advanceTimersByTimeAsync(20);
+      const result = await pending;
 
-    expect(result).toMatchObject({
-      ok: false,
-      error: { code: "TIMEOUT", stage: "orchestration", retryable: false },
-    });
-    expect(harness.searchDocs.search).not.toHaveBeenCalled();
-    expect(terminalEvents(harness.events)).toHaveLength(1);
+      expect(result).toMatchObject({
+        ok: false,
+        error: { code: "TIMEOUT", stage: "orchestration", retryable: false },
+      });
+      expect(harness.searchDocs.search).not.toHaveBeenCalled();
+      expect(terminalEvents(harness.events)).toHaveLength(1);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("keeps explicit caller cancellation distinct from timeout", async () => {
@@ -390,33 +404,40 @@ describe("RunAgentUseCase typed failure matrix", () => {
   });
 
   it("bounds cancellation evidence to the configured cleanup window", async () => {
-    const controller = new AbortController();
-    const startedAt = performance.now();
-    const harness = createHarness({
-      policy: { terminalEvidenceTimeoutMs: 25 },
-      modelRequest: async (_input, signal) => {
-        controller.abort();
-        signal.throwIfAborted();
-        return toolAction;
-      },
-      append: async (event, signal) => {
-        if (event.eventType !== "run.cancelled") return;
-        await new Promise<void>((_resolve, reject) => {
-          signal.addEventListener("abort", () => reject(signal.reason), { once: true });
-        });
-      },
-    });
+    vi.useFakeTimers();
+    try {
+      const controller = new AbortController();
+      const harness = createHarness({
+        policy: { terminalEvidenceTimeoutMs: 250 },
+        modelRequest: async (_input, signal) => {
+          controller.abort();
+          signal.throwIfAborted();
+          return toolAction;
+        },
+        append: async (event, signal) => {
+          if (event.eventType !== "run.cancelled") return;
+          await new Promise<void>((_resolve, reject) => {
+            signal.addEventListener("abort", () => reject(signal.reason), {
+              once: true,
+            });
+          });
+        },
+      });
 
-    const result = await harness.runAgent(
-      { question: "How does the loop work?" },
-      controller.signal,
-    );
+      const pending = harness.runAgent(
+        { question: "How does the loop work?" },
+        controller.signal,
+      );
+      await vi.advanceTimersByTimeAsync(250);
+      const result = await pending;
 
-    expect(result).toMatchObject({
-      ok: false,
-      error: { code: "JOURNAL_FAILURE", stage: "journal" },
-    });
-    expect(performance.now() - startedAt).toBeLessThan(250);
+      expect(result).toMatchObject({
+        ok: false,
+        error: { code: "JOURNAL_FAILURE", stage: "journal" },
+      });
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("returns JOURNAL_FAILURE and performs no model or tool effect after a rejected append", async () => {
