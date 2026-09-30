@@ -6,15 +6,23 @@ import { describe, expect, it } from "vitest";
 const coreRoots = ["src/domain", "src/application"] as const;
 const forbiddenImports = [
   "fastify",
-  "@angular/",
+  "@angular",
   "pg",
   "postgres",
-  "@modelcontextprotocol/",
+  "@modelcontextprotocol",
   "openai",
-  "@anthropic-ai/",
+  "@anthropic-ai",
+  "fs",
+  "fs/promises",
   "node:fs",
   "node:process",
 ] as const;
+
+function importedModules(source: string): string[] {
+  return [...source.matchAll(/(?:from\s+|import\s*\(|require\s*\()\s*["']([^"']+)["']/gu)]
+    .map((match) => match[1])
+    .filter((moduleName): moduleName is string => moduleName !== undefined);
+}
 
 function sourceFiles(root: string): string[] {
   return readdirSync(root).flatMap((entry) => {
@@ -36,14 +44,21 @@ describe("core dependency boundaries", () => {
         /from\s+["'][^"']*\/adapters\//u,
       );
 
+      const modules = importedModules(source);
       for (const forbiddenImport of forbiddenImports) {
-        expect(source, `${file} imports ${forbiddenImport}`).not.toContain(
-          `from "${forbiddenImport}`,
-        );
-        expect(source, `${file} imports ${forbiddenImport}`).not.toContain(
-          `from '${forbiddenImport}`,
-        );
+        expect(
+          modules.some(
+            (moduleName) =>
+              moduleName === forbiddenImport ||
+              moduleName.startsWith(`${forbiddenImport}/`),
+          ),
+          `${file} imports ${forbiddenImport}`,
+        ).toBe(false);
       }
+
+      expect(source, `${file} accesses the Node process global`).not.toMatch(
+        /\bprocess\s*\./u,
+      );
     }
   });
 
