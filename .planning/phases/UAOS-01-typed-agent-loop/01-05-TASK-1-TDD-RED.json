@@ -1,0 +1,9 @@
+{
+  "command": "npm run test -- tests/contracts/schemas.test.ts --reporter=tap",
+  "exitCode": 1,
+  "targetTest": "rejects semantically empty search matches and malformed match values",
+  "targetFile": "tests/contracts/schemas.test.ts",
+  "expected": "The strict D-02 boundary rejects a search match with no matched terms",
+  "actual": "SearchDocsOutputSchema accepted matchedTerms: []; the related D-10 case also showed AgentErrorSchema accepting a whitespace-only message",
+  "output": "TAP version 13\nnot ok 1 - tests/contracts/schemas.test.ts\nnot ok 4 - rejects semantically empty search matches and malformed match values\nAssertionError: expected true to be false\nnot ok 2 - rejects blank or extended public error values\nAssertionError: expected true to be false\n# tests 9\n# pass 7\n# fail 2"
+}
