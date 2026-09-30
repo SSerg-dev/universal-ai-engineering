@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -48,6 +48,10 @@ describe("core dependency boundaries", () => {
   });
 
   it("defines a strict, no-emit, core-only TypeScript project", () => {
+    expect(
+      existsSync("tsconfig.core.json"),
+      "tsconfig.core.json must make the domain/application compilation boundary executable",
+    ).toBe(true);
     const config = JSON.parse(readFileSync("tsconfig.core.json", "utf8")) as {
       compilerOptions?: { noEmit?: boolean; strict?: boolean };
       include?: string[];

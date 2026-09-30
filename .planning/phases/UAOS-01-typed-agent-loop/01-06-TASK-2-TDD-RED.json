@@ -1,0 +1,9 @@
+{
+  "command": "npm run test -- tests/contracts/dependency-boundaries.test.ts --reporter=tap -t \"defines a strict, no-emit, core-only TypeScript project\"",
+  "exitCode": 1,
+  "targetTest": "defines a strict, no-emit, core-only TypeScript project",
+  "targetFile": "tests/contracts/dependency-boundaries.test.ts",
+  "expected": "A dedicated strict no-emit tsconfig.core.json exists for domain/application compilation only",
+  "actual": "tsconfig.core.json was absent, so the executable core compilation boundary did not exist",
+  "output": "TAP version 13\n1..1\nnot ok 1 - tests/contracts/dependency-boundaries.test.ts\nnot ok 2 - defines a strict, no-emit, core-only TypeScript project\nAssertionError: tsconfig.core.json must make the domain/application compilation boundary executable: expected false to be true\n# tests 3\n# pass 0\n# fail 1"
+}
