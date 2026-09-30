@@ -32,7 +32,7 @@ One internal-documentation assistant evolves through ten runnable vertical slice
 4. Learner can inspect correlated JSONL events and run deterministic success and failure tests offline.
 5. Evidence distinguishes implemented, reviewed, and approved states.
 
-**Plans:** 4/9 plans executed
+**Plans:** 5/9 plans executed
 
 Plans:
 **Wave 1**
@@ -48,7 +48,7 @@ Plans:
 - [x] 01-04-PLAN.md — Add controlled Markdown search, deterministic teaching model, and deterministic test adapters.
 
 **Wave 5** *(blocked on Wave 4 completion)*
-- [ ] 01-05-PLAN.md — Exhaust strict schema and lexical search boundaries without changing the teaching path.
+- [x] 01-05-PLAN.md — Exhaust strict schema and lexical search boundaries without changing the teaching path.
 
 **Wave 6** *(blocked on Wave 5 completion)*
 - [ ] 01-06-PLAN.md — Close typed failures, deadlines, cancellation, limits, core compilation, and adapter substitution with fail-fast verification.
@@ -223,7 +223,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Typed Agent Loop | 4/9 | In Progress|  |
+| 1. Typed Agent Loop | 5/9 | In Progress|  |
 | 2. Typed Tool System | 0/2 | Not started | - |
 | 3. MCP Boundary | 0/2 | Not started | - |
 | 4. Grounded Retrieval | 0/2 | Not started | - |
