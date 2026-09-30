@@ -32,7 +32,7 @@ One internal-documentation assistant evolves through ten runnable vertical slice
 4. Learner can inspect correlated JSONL events and run deterministic success and failure tests offline.
 5. Evidence distinguishes implemented, reviewed, and approved states.
 
-**Plans:** 2/9 plans executed
+**Plans:** 3/9 plans executed
 
 Plans:
 **Wave 1**
@@ -42,7 +42,7 @@ Plans:
 - [x] 01-02-PLAN.md — Define strict schemas and five narrow ports, then complete the blocking package-legitimacy and Architecture Review Gate.
 
 **Wave 3** *(blocked on Wave 2 completion)*
-- [ ] 01-03-PLAN.md — Activate only the human-approved Node.js 24 workspace and prove the provider-neutral core happy tracer.
+- [x] 01-03-PLAN.md — Activate only the human-approved Node.js 24 workspace and prove the provider-neutral core happy tracer.
 
 **Wave 4** *(blocked on Wave 3 completion)*
 - [ ] 01-04-PLAN.md — Add controlled Markdown search, deterministic teaching model, and deterministic test adapters.
@@ -223,7 +223,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Typed Agent Loop | 2/9 | In Progress|  |
+| 1. Typed Agent Loop | 3/9 | In Progress|  |
 | 2. Typed Tool System | 0/2 | Not started | - |
 | 3. MCP Boundary | 0/2 | Not started | - |
 | 4. Grounded Retrieval | 0/2 | Not started | - |
