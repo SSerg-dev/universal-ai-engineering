@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { createRunAgentUseCase } from "../../src/application/run-agent.js";
 import type { ClockPort } from "../../src/application/ports/clock-port.js";
 import type { IdGeneratorPort } from "../../src/application/ports/id-generator-port.js";
 import type { JournalPort } from "../../src/application/ports/journal-port.js";
@@ -13,6 +12,28 @@ const policy = {
   maxModelCalls: 2,
   maxToolCalls: 1,
 } as const;
+
+type RunAgentFactory = (dependencies: {
+  clock: ClockPort;
+  ids: IdGeneratorPort;
+  journal: JournalPort;
+  model: ModelPort;
+  searchDocs: SearchDocsPort;
+  policy: typeof policy;
+}) => (input: unknown) => Promise<unknown>;
+
+async function loadRunAgentFactory(): Promise<RunAgentFactory> {
+  const runAgentModule: Record<string, unknown> = await import(
+    "../../src/application/run-agent.js"
+  ).catch(() => ({}));
+
+  expect(
+    runAgentModule.createRunAgentUseCase,
+    "createRunAgentUseCase must provide the reviewed core state machine",
+  ).toBeTypeOf("function");
+
+  return runAgentModule.createRunAgentUseCase as RunAgentFactory;
+}
 
 function deterministicPorts(options?: { sourceIds?: string[] }) {
   const returnedSourceIds = options?.sourceIds ?? ["agentic-os"];
@@ -71,6 +92,7 @@ function deterministicPorts(options?: { sourceIds?: string[] }) {
 describe("RunAgentUseCase happy state machine", () => {
   it("moves awaiting_tool to awaiting_final with exactly 2/1 calls and eight events", async () => {
     const ports = deterministicPorts();
+    const createRunAgentUseCase = await loadRunAgentFactory();
     const runAgent = createRunAgentUseCase({ ...ports, policy });
 
     const result = await runAgent({ question: "How does the agent journal work?" });
@@ -103,6 +125,7 @@ describe("RunAgentUseCase happy state machine", () => {
 
   it("rejects a final answer whose source IDs are not a subset of search results", async () => {
     const ports = deterministicPorts({ sourceIds: ["agentic-os", "invented-source"] });
+    const createRunAgentUseCase = await loadRunAgentFactory();
     const runAgent = createRunAgentUseCase({ ...ports, policy });
 
     const result = await runAgent({ question: "How does the agent journal work?" });

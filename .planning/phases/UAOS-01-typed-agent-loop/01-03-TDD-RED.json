@@ -1,0 +1,9 @@
+{
+  "command": "npm run test -- tests/unit/run-agent.test.ts --reporter=tap (Vitest nested TAP normalized to Node TAP summary)",
+  "exitCode": 1,
+  "targetTest": "moves awaiting_tool to awaiting_final with exactly 2/1 calls and eight events",
+  "targetFile": "tests/unit/run-agent.test.ts",
+  "expected": "createRunAgentUseCase drives the reviewed two-state happy path and emits eight ordered events",
+  "actual": "createRunAgentUseCase is undefined before production implementation",
+  "output": "TAP version 13\nnot ok 1 - tests/unit/run-agent.test.ts\nnot ok 1 - moves awaiting_tool to awaiting_final with exactly 2/1 calls and eight events\n# tests 2\n# pass 0\n# fail 2"
+}
