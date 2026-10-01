@@ -3,16 +3,16 @@ gsd_state_version: "1.0"
 current_phase: 01
 current_phase_name: Typed Agent Loop
 status: executing
-stopped_at: Completed UAOS-01-06-PLAN.md
-last_updated: "2026-09-30T14:29:21.571Z"
+stopped_at: Completed UAOS-01-07-PLAN.md
+last_updated: "2026-10-01T08:59:06.304Z"
 last_activity: 2026-09-29
 last_activity_desc: Phase UAOS-01 execution started
-state_head: d1b93c5710fba80ae06abea5436e907cb34cc9ff
+state_head: 182c505683b2a041a1a8a66c97dba6097949baae
 progress:
   total_phases: 10
   completed_phases: 0
   total_plans: 9
-  completed_plans: 6
+  completed_plans: 7
   percent: 0
 ---
 
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-09-28)
 ## Current Position
 
 Phase: UAOS-01 (Typed Agent Loop) — EXECUTING
-Plan: 7 of 9
+Plan: 8 of 9
 Status: Executing Phase UAOS-01
 Last activity: 2026-09-29 — Phase UAOS-01 execution started
 
@@ -50,6 +50,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase UAOS-01 P04 | 26min | 2 tasks | 10 files |
 | Phase UAOS-01 P05 | 16min | 2 tasks | 7 files |
 | Phase UAOS-01 P06 | 38min | 2 tasks | 8 files |
+| Phase UAOS-01 P07 | 38min | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,10 @@ Progress: [░░░░░░░░░░] 0%
 - [Phase UAOS-01]: Model/tool usage increments at attempt start, and evidence must persist before the corresponding or later effect.
 - [Phase UAOS-01]: Aborted-run terminal evidence uses an independent policy-bounded signal; append failure maps to JOURNAL_FAILURE.
 - [Phase UAOS-01]: Core independence is enforced by strict no-emit domain/application compilation plus forbidden-import and process-access scans.
+- [Phase UAOS-01]: JSONL persistence schema-validates every envelope, accepts only filename-safe generated run IDs, proves configured-root containment, and syncs each awaited UTF-8 line.
+- [Phase UAOS-01]: createRuntime is the only default wiring site for the offline teaching adapters and the reviewed 5000 ms, 250 ms, and two-model/one-tool policies.
+- [Phase UAOS-01]: runCli owns only argv, stdio, exit status, and one finally-cleaned SIGINT AbortController; RunAgentUseCase retains semantic and evidence policy.
+- [Phase UAOS-01]: Plan 01-07 added no dependency and preserved the approved package lock unchanged.
 
 ### Pending Todos
 
@@ -97,6 +102,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-09-30T14:29:21.526Z
-Stopped at: Completed UAOS-01-06-PLAN.md
+Last session: 2026-10-01T08:59:06.259Z
+Stopped at: Completed UAOS-01-07-PLAN.md
 Resume file: None
