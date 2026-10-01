@@ -1,0 +1,9 @@
+{
+  "command": "npm run test -- tests/integration/http.test.ts --reporter=tap -t \"maps a request disconnect to CANCELLED before the use-case deadline\"",
+  "exitCode": 1,
+  "targetTest": "maps a request disconnect to CANCELLED before the use-case deadline",
+  "targetFile": "tests/integration/http.test.ts",
+  "expected": "A request close aborts Fastify request.signal early enough for RunAgentUseCase to return CANCELLED with HTTP 499 before its deadline",
+  "actual": "The target assertion received HTTP 408 TIMEOUT because Fastify's lazy request.signal subscription missed the earlier simulated close event",
+  "output": "TAP version 13\n1..1\nnot ok 1 - tests/integration/http.test.ts\nnot ok 1 - Fastify agent-runs adapter\nnot ok 1 - maps a request disconnect to CANCELLED before the use-case deadline\nAssertionError: expected 408 to be 499\nactual: 408\nexpected: 499\n# tests 19\n# pass 0\n# fail 1"
+}

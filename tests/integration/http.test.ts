@@ -1,11 +1,44 @@
-import { describe, expect, it, vi } from "vitest";
+import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-import type { RunAgentUseCase } from "../../src/application/run-agent.js";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+import { runCli } from "../../src/adapters/inbound/cli.js";
+import {
+  createRunAgentUseCase,
+  type RunAgentUseCase,
+} from "../../src/application/run-agent.js";
+import { createRuntime } from "../../src/composition/create-runtime.js";
 import type { RunAgentResult } from "../../src/domain/agent-contracts.js";
 import type {
   AgentErrorCode,
   AgentErrorStage,
 } from "../../src/domain/agent-errors.js";
+import { AgentEventEnvelopeSchema } from "../../src/domain/agent-events.js";
+import {
+  FakeSearchDocs,
+  FixedClock,
+  InMemoryJournal,
+  SequenceIdGenerator,
+} from "../../src/adapters/outbound/deterministic-test-adapters.js";
+
+const temporaryPaths: string[] = [];
+
+async function makeTemporaryPath(name: string): Promise<string> {
+  const root = await mkdtemp(join(tmpdir(), `uaos-http-${name}-`));
+  temporaryPaths.push(root);
+  return root;
+}
+
+afterEach(async () => {
+  await Promise.all(
+    temporaryPaths.splice(0).map((path) =>
+      rm(path, { recursive: true, force: true }),
+    ),
+  );
+});
 
 async function loadHttpAdapter() {
   const module = await import("../../src/adapters/inbound/http.js").catch(
@@ -207,6 +240,244 @@ describe("Fastify agent-runs adapter", () => {
       expect(response.headers["content-type"]).toContain("application/json");
       expect(response.body).not.toContain("secret");
       expect(response.body).not.toMatch(/stack|cause|node_modules|[A-Z]:\\/i);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it("maps a request disconnect to CANCELLED before the use-case deadline", async () => {
+    const { buildHttpApp } = await loadHttpAdapter();
+    const journal = new InMemoryJournal();
+    const sharedRunAgent = createRunAgentUseCase({
+      model: {
+        request: async (_input, signal) => {
+          await new Promise<never>((_resolve, reject) => {
+            const abort = () => reject(signal.reason);
+            if (signal.aborted) abort();
+            else signal.addEventListener("abort", abort, { once: true });
+          });
+        },
+      },
+      searchDocs: new FakeSearchDocs({ matches: [] }),
+      journal,
+      clock: new FixedClock("2026-01-01T00:00:00.000Z", 10),
+      ids: new SequenceIdGenerator("disconnect"),
+      policy: {
+        timeoutMs: 100,
+        terminalEvidenceTimeoutMs: 250,
+        maxModelCalls: 2,
+        maxToolCalls: 1,
+      },
+    });
+    const app = buildHttpApp({ runAgent: sharedRunAgent });
+
+    try {
+      const response = await app.inject({
+        method: "POST",
+        url: "/api/v1/agent-runs",
+        payload: { question: "Disconnect this request" },
+        simulate: { close: true },
+      });
+
+      expect(response.statusCode).toBe(499);
+      expect(response.json()).toMatchObject({
+        ok: false,
+        error: { code: "CANCELLED", stage: "orchestration" },
+      });
+    } finally {
+      await app.close();
+    }
+
+    expect(journal.events().map(({ eventType }) => eventType)).toEqual([
+      "run.cancelled",
+    ]);
+  });
+
+  it("keeps the shared use-case deadline distinct from request disconnect", async () => {
+    const { buildHttpApp } = await loadHttpAdapter();
+    const journal = new InMemoryJournal();
+    const runAgent = createRunAgentUseCase({
+      model: {
+        request: async (_input, signal) => {
+          await new Promise<never>((_resolve, reject) => {
+            const abort = () => reject(signal.reason);
+            if (signal.aborted) abort();
+            else signal.addEventListener("abort", abort, { once: true });
+          });
+        },
+      },
+      searchDocs: new FakeSearchDocs({ matches: [] }),
+      journal,
+      clock: new FixedClock("2026-01-01T00:00:00.000Z", 10),
+      ids: new SequenceIdGenerator("timeout"),
+      policy: {
+        timeoutMs: 20,
+        terminalEvidenceTimeoutMs: 250,
+        maxModelCalls: 2,
+        maxToolCalls: 1,
+      },
+    });
+    const app = buildHttpApp({ runAgent });
+
+    try {
+      const response = await app.inject({
+        method: "POST",
+        url: "/api/v1/agent-runs",
+        payload: { question: "Let the use-case deadline win" },
+      });
+
+      expect(response.statusCode).toBe(408);
+      expect(response.json()).toMatchObject({
+        ok: false,
+        error: { code: "TIMEOUT", stage: "orchestration" },
+      });
+      expect(journal.events().map(({ eventType }) => eventType).at(-1)).toBe(
+        "run.failed",
+      );
+    } finally {
+      await app.close();
+    }
+  });
+
+  it("exposes equivalent logical fields through the default CLI and HTTP adapters", async () => {
+    const { buildHttpApp } = await loadHttpAdapter();
+    const fixtureRoot = fileURLToPath(
+      new URL("../../fixtures/docs", import.meta.url),
+    );
+    const cliJournalRoot = await makeTemporaryPath("cli-parity");
+    const httpJournalRoot = await makeTemporaryPath("api-parity");
+    const cliRuntime = await createRuntime({ fixtureRoot, journalRoot: cliJournalRoot });
+    const httpRuntime = await createRuntime({ fixtureRoot, journalRoot: httpJournalRoot });
+    const stdout: string[] = [];
+    const stderr: string[] = [];
+    let cliResult: RunAgentResult | undefined;
+    const question = "How are runs recorded?";
+
+    const exitCode = await runCli({
+      argv: ["ask", question],
+      stdout: { write: (value) => stdout.push(value) },
+      stderr: { write: (value) => stderr.push(value) },
+      runtimeFactory: async () => ({
+        runAgent: async (input, signal) => {
+          cliResult = await cliRuntime.runAgent(input, signal);
+          return cliResult;
+        },
+      }),
+    });
+    const app = buildHttpApp(httpRuntime);
+
+    try {
+      const response = await app.inject({
+        method: "POST",
+        url: "/api/v1/agent-runs",
+        payload: { question },
+      });
+      const httpResult = response.json<RunAgentResult>();
+
+      expect(exitCode).toBe(0);
+      expect(stderr).toEqual([]);
+      expect(response.statusCode).toBe(200);
+      expect(cliResult).toMatchObject({ ok: true });
+      expect(httpResult).toMatchObject({ ok: true });
+      if (cliResult === undefined || !cliResult.ok || !httpResult.ok) {
+        throw new Error("Both adapters must expose a successful logical result.");
+      }
+      const { runId: cliRunId, ...cliLogicalResult } = cliResult;
+      const { runId: httpRunId, ...httpLogicalResult } = httpResult;
+      expect(httpLogicalResult).toEqual(cliLogicalResult);
+      expect(cliRunId).not.toBe(httpRunId);
+      expect(stdout.join("")).toContain(cliRunId);
+      expect(stdout.join("")).toContain(cliResult.answer);
+      for (const source of cliResult.sources) {
+        expect(stdout.join("")).toContain(source.documentId);
+        expect(stdout.join("")).toContain(source.title);
+      }
+      expect(stdout.join("")).toContain(
+        `modelCalls=${cliResult.usage.modelCalls}, toolCalls=${cliResult.usage.toolCalls}`,
+      );
+    } finally {
+      await app.close();
+    }
+  });
+
+  it("isolates concurrent default-composition IDs, counters, signals, events, terminals, and JSONL files", async () => {
+    const { buildHttpApp } = await loadHttpAdapter();
+    const fixtureRoot = fileURLToPath(
+      new URL("../../fixtures/docs", import.meta.url),
+    );
+    const journalRoot = await makeTemporaryPath("concurrent-runs");
+    const runtime = await createRuntime({ fixtureRoot, journalRoot });
+    const app = buildHttpApp(runtime);
+
+    try {
+      const [cancelledResponse, healthyResponse] = await Promise.all([
+        app.inject({
+          method: "POST",
+          url: "/api/v1/agent-runs",
+          payload: { question: "Cancel only this request" },
+          simulate: { close: true },
+        }),
+        app.inject({
+          method: "POST",
+          url: "/api/v1/agent-runs",
+          payload: { question: "How are runs recorded?" },
+        }),
+      ]);
+      const cancelled = cancelledResponse.json<RunAgentResult>();
+      const healthy = healthyResponse.json<RunAgentResult>();
+
+      expect(cancelledResponse.statusCode).toBe(499);
+      expect(cancelled).toMatchObject({
+        ok: false,
+        error: { code: "CANCELLED" },
+      });
+      expect(healthyResponse.statusCode).toBe(200);
+      expect(healthy).toMatchObject({
+        ok: true,
+        usage: { modelCalls: 2, toolCalls: 1 },
+      });
+      expect(cancelled.runId).not.toBe(healthy.runId);
+
+      const files = (await readdir(journalRoot)).sort();
+      expect(files).toEqual(
+        [`${cancelled.runId}.jsonl`, `${healthy.runId}.jsonl`].sort(),
+      );
+      const allEventIds = new Set<string>();
+      for (const result of [cancelled, healthy]) {
+        const content = await readFile(
+          join(journalRoot, `${result.runId}.jsonl`),
+          "utf8",
+        );
+        const events = content
+          .trimEnd()
+          .split("\n")
+          .map((line) =>
+            AgentEventEnvelopeSchema.parse(JSON.parse(line) as unknown),
+          );
+        expect(events.every(({ runId }) => runId === result.runId)).toBe(true);
+        expect(events.map(({ sequence }) => sequence)).toEqual(
+          events.map((_, index) => index + 1),
+        );
+        const terminals = events.filter(({ eventType }) =>
+          ["run.succeeded", "run.failed", "run.cancelled"].includes(eventType),
+        );
+        expect(terminals).toHaveLength(1);
+        for (const { eventId } of events) {
+          expect(allEventIds.has(eventId)).toBe(false);
+          allEventIds.add(eventId);
+        }
+        if (result.ok) {
+          expect(events).toHaveLength(8);
+          expect(terminals[0]?.eventType).toBe("run.succeeded");
+        } else {
+          expect(events).toHaveLength(1);
+          expect(terminals[0]?.eventType).toBe("run.cancelled");
+          expect(terminals[0]?.payload).toMatchObject({
+            modelCalls: 0,
+            toolCalls: 0,
+          });
+        }
+      }
     } finally {
       await app.close();
     }
