@@ -1,0 +1,9 @@
+{
+  "command": "npm run test -- tests/integration/http.test.ts --reporter=tap -t \"exports a bounded app builder and keeps server startup separate\"",
+  "exitCode": 1,
+  "targetTest": "exports a bounded app builder and keeps server startup separate",
+  "targetFile": "tests/integration/http.test.ts",
+  "expected": "The HTTP boundary exports buildHttpApp and the composition boundary separately exports startServer",
+  "actual": "The target assertion failed because buildHttpApp was not exported: expected function, received undefined",
+  "output": "TAP version 13\n1..1\nnot ok 1 - tests/integration/http.test.ts\nnot ok 1 - Fastify agent-runs adapter\nnot ok 1 - exports a bounded app builder and keeps server startup separate\nAssertionError: buildHttpApp should expose the bounded Fastify adapter: expected undefined to be type of 'function'\n# tests 15\n# pass 0\n# fail 1"
+}
