@@ -33,7 +33,7 @@ One internal-documentation assistant evolves through ten runnable vertical slice
 **Plans:** 3 plans
 
 Plans:
-- [ ] 01-01: Finalize reset evidence, Iteration 1 ADR, package boundaries, schemas, ports, and acceptance tests.
+- [x] 01-01: Finalize reset evidence, Iteration 1 ADR, package boundaries, schemas, ports, and acceptance test specification.
 - [ ] 01-02: Scaffold the minimal TypeScript workspace and implement the domain/application loop with deterministic adapters.
 - [ ] 01-03: Add CLI, Fastify API, JSONL journal, automated tests, documentation, and review evidence.
 
@@ -180,7 +180,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Typed Agent Loop | 0/3 | Not started | - |
+| 1. Typed Agent Loop | 1/3 | In progress | - |
 | 2. Typed Tool System | 0/2 | Not started | - |
 | 3. MCP Boundary | 0/2 | Not started | - |
 | 4. Grounded Retrieval | 0/2 | Not started | - |

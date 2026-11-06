@@ -104,4 +104,4 @@ All deletions are recoverable from Git commit `e4a25e9`.
 ## Residual Notes
 
 - `.codex/.gsd-staging/` could not be removed because the host denied access. It is local GSD state under the Git-ignored `.codex/` directory and does not affect repository contents.
-- The working tree remains uncommitted pending roadmap review and explicit acceptance of the reset result.
+- The reset was committed as b8650a3. Comparing it with e4a25e9 confirms 23 tracked baseline files and the deleted and migrated paths listed above. The old brownfield .planning projection and .gsd-ingest-manifest.yaml were untracked at the recovery commit. The external ZIP is the recorded recovery source for that material; its availability was not verified in 01-01. Architectural review and explicit approval of the reset remain pending.

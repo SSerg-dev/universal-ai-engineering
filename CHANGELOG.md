@@ -11,6 +11,7 @@ All notable project changes are recorded here. Work remains unapproved unless an
 - Consolidated legacy baseline index and RESET-0001 evidence record.
 - Minimal repository agent instructions.
 - Greenfield GSD planning structure.
+- Iteration 1 contracts and Phase 1 acceptance scenarios.
 
 ### Changed
 
