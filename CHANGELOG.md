@@ -12,6 +12,7 @@ All notable project changes are recorded here. Work remains unapproved unless an
 - Minimal repository agent instructions.
 - Greenfield GSD planning structure.
 - Iteration 1 contracts and Phase 1 acceptance scenarios.
+- Typed loop with a local fixture, deterministic model, and offline tests.
 
 ### Changed
 

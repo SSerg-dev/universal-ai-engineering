@@ -44,4 +44,14 @@ React and Next.js are not part of the selected architecture.
 
 ## Status
 
-Greenfield planning. No implementation capability has been approved or shipped yet.
+Phase 1 is in progress. The typed loop and deterministic fixture adapters are implemented. CLI, Fastify HTTP, and file-backed JSONL integration are planned for 01-03. Formal architectural review and phase approval are pending.
+
+From the repository root with Node.js 24:
+
+```sh
+npm ci
+npm run build
+npm test
+```
+
+After dependency installation, the build and tests run offline.
