@@ -34,7 +34,9 @@ The existing JSONL run journal remains unchanged and metadata-only. A state audi
 
 Expired conversation content and expired memory are excluded from reads and model context immediately. An explicit purge command physically deletes expired content and records safe tombstone metadata; it also removes expired audit metadata. Logical expiry is not a claim that physical deletion already occurred. No background automation is created by this phase.
 
-The adapter uses fixed schema/table names, parameterized values, one bounded owned client per operation, row locks, version checks, and atomic audit insertion. Existing PostgreSQL dependencies are reused. Each live test uses the established owner-verified disposable database runner. A fresh store instance must resume persisted history and cached results.
+The adapter uses fixed schema/table names, parameterized values, one bounded owned client per operation, row locks, version checks, and atomic audit insertion. A bounded typed snapshot occupies one JSONB conversation row; the active request ID and private lease token occupy separate columns. Safe audit records occupy a separate metadata table. Existing PostgreSQL dependencies are reused. Each live test uses the established owner-verified disposable database runner. A fresh store instance must resume persisted history and cached results.
+
+To keep maintenance bounded, a purge invocation handles at most 100 expired conversations, 100 non-running conversations with expired memory, and 1000 expired audit records. Repeat until the relevant counters reach zero. Audit inspection returns the most recent 1000 records for one conversation, ordered by sequence. A broader paged audit API is deferred. Expired memory in a running conversation remains excluded from new reads but physical removal waits for settlement or a later purge.
 
 ## Compatibility and evidence
 
