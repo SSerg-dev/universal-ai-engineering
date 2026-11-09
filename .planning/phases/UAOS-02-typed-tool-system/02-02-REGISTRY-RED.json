@@ -1,0 +1,8 @@
+{
+  "runtime": "Node.js 24.22.1",
+  "command": "node node_modules/vitest/vitest.mjs run tests/unit/tool-registry.test.ts -t \"rejects duplicate registrations\"",
+  "targetTest": "rejects duplicate registrations before any handler executes",
+  "exitCode": 1,
+  "actual": "ToolRegistry must enforce typed invocation policy: expected undefined to be type of function",
+  "resolution": "ToolRegistry and defineTool now implement normalized bounded invocation; the full registry suite passes"
+}
