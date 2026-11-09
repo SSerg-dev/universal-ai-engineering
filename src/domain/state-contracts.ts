@@ -76,7 +76,7 @@ export const TurnReservationSchema = z.discriminatedUnion("kind", [
 export const StateBoundaryCodeSchema = z.enum([
   "STATE_INPUT_INVALID", "STATE_INVALID", "CONVERSATION_NOT_FOUND", "CONVERSATION_EXPIRED",
   "VERSION_CONFLICT", "CONVERSATION_BUSY", "REQUEST_KEY_REUSED", "TURN_INTERRUPTED", "TURN_FENCED",
-  "MEMORY_NOT_FOUND", "RETENTION_INVALID", "STATE_REPOSITORY_FAILURE", "STATE_CAPACITY_EXCEEDED",
+  "MEMORY_NOT_FOUND", "RETENTION_INVALID", "STATE_REPOSITORY_FAILURE", "STATE_EXECUTION_FAILURE", "STATE_CAPACITY_EXCEEDED",
 ]);
 export type StateBoundaryCode = z.infer<typeof StateBoundaryCodeSchema>;
 export class StateBoundaryError extends Error {
