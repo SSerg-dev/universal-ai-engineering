@@ -18,7 +18,9 @@ The revision is SHA-256 over JSON.stringify of the parsed EvaluationDatasetBodyS
 
 Schema validates the dedicated grounded result and allocated run identity. Outcome compares answered/abstained/error expectation. Retrieval compares expected required/forbidden document IDs with the actual tool-success evidence; abstention expects no retrieved document IDs. Grounding independently resolves every actual answered citation and checks full identity, exact quote, duplicates, canonical answer rendering, and final source membership/title. Tool usage checks event attempts, tool name, terminal counts, and successful result usage. Evidence checks strict metadata envelopes, run ID, contiguous sequence, and exactly one matching terminal event at the end.
 
-The evaluator does not trust the engine's grounding validator as its only oracle. A known regression that adds unsupported prose to an otherwise schema-valid result must fail the grounding gate. A resolver error or malformed evidence fails closed. Expected operational failures are distinguishable from execution harness failure.
+The executor also returns bounded validated observed passage IDs from host instrumentation, separate from document-level journal references. Grounding requires each cited passage ID to appear in that invocation's observation; a valid stored passage alone does not prove it was retrieved. These identifiers contain no passage text and are not copied into report diagnostics.
+
+The evaluator does not trust the engine's grounding validator as its only oracle. A known regression that adds unsupported prose to an otherwise schema-valid result must fail the grounding gate. A resolver error or malformed evidence fails closed. Successful evidence must follow the established eight-event grammar; failure traces may terminate with an outstanding operation. Expected operational failures are distinguishable from execution harness failure.
 
 ## Gate and reporting
 

@@ -38,7 +38,7 @@ export type EvaluationDataset = z.infer<typeof EvaluationDatasetSchema>;
 
 export const EvaluationFailureCodeSchema = z.enum([
   "INVALID_RESULT", "EXECUTION_FAILURE", "OUTCOME_MISMATCH", "RETRIEVAL_MISMATCH",
-  "CITATION_UNRESOLVED", "CITATION_INVALID", "QUOTE_MISMATCH", "DUPLICATE_CITATION",
+  "CITATION_UNRESOLVED", "CITATION_INVALID", "UNOBSERVED_CITATION", "QUOTE_MISMATCH", "DUPLICATE_CITATION",
   "UNSUPPORTED_ANSWER", "SOURCE_MISMATCH", "TOOL_USAGE_MISMATCH", "INVALID_EVIDENCE",
 ]);
 export type EvaluationFailureCode = z.infer<typeof EvaluationFailureCodeSchema>;

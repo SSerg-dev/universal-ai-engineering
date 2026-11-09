@@ -1,0 +1,11 @@
+{
+  "phase": "UAOS-06",
+  "plan": "06-02",
+  "date": "2026-11-09",
+  "runtime": "Node.js 24.22.1",
+  "command": "node node_modules/vitest/vitest.mjs run tests/unit/evaluation.test.ts",
+  "test": "rejects a failed trace missing its run.started even when counts and IDs are valid",
+  "exitCode": 1,
+  "observed": "Expected evidence failed/INVALID_EVIDENCE but received passed",
+  "result": "1 failed, 9 passed before trace-start validation was added"
+}
