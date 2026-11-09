@@ -1,19 +1,19 @@
 ---
 gsd_state_version: "1.0"
-current_phase: 04
-current_phase_name: Grounded Retrieval
-status: executing
-stopped_at: Completed UAOS-04-01; implementing ingestion and repository
+current_phase: 05
+current_phase_name: Durable State and Memory
+status: planning
+stopped_at: Completed UAOS-04-02; preparing state and memory contracts
 last_updated: "2026-11-09"
 last_activity: 2026-11-09
-last_activity_desc: Retrieval contracts passed 206 tests; ingestion/retrieval unit checks added
-state_head: 8d6914e
+last_activity_desc: Grounded retrieval closed with 242 offline tests and 11 real database tests
+state_head: 0f93ffc
 progress:
   total_phases: 10
   completed_phases: 1
   total_plans: 27
-  completed_plans: 14
-  percent: 51
+  completed_plans: 15
+  percent: 55
 ---
 
 # Project State
@@ -23,20 +23,20 @@ progress:
 See: .planning/PROJECT.md (updated 2026-11-09)
 
 **Core value:** A learner can understand, build, test, and review a reusable Agentic OS one working iteration at a time.
-**Current focus:** Phase UAOS-04 — Grounded Retrieval
+**Current focus:** Phase UAOS-05 — Durable State and Memory
 
 ## Current Position
 
-Phase: UAOS-04 (Grounded Retrieval) — EXECUTING
-Plan: 1 of 2 complete in current phase
-Status: Implementing 04-02 ingestion and PostgreSQL/pgvector
-Last activity: 2026-11-09 — Phase 4 contracts passed 206 tests; ingestion/retrieval checks added
+Phase: UAOS-05 (Durable State and Memory) — PLANNING
+Plan: 0 of 2 complete in current phase
+Status: Preparing 05-01 state, checkpoint, memory, retention, and concurrency contracts
+Last activity: 2026-11-09 — Phase 4 closure passed 242 offline tests and 11 real database tests
 
-Progress: 14/27 roadmap plans (51%); Phase 1 approved; Phase 2 and Phase 3 review pending
+Progress: 15/27 roadmap plans (55%); Phase 1 approved; Phase 2–4 review pending
 
 ## Performance Metrics
 
-- Total plans completed: 14
+- Total plans completed: 15
 - Average duration: -
 - Total execution time: 0.0 hours
 
@@ -91,7 +91,7 @@ Progress: 14/27 roadmap plans (51%); Phase 1 approved; Phase 2 and Phase 3 revie
 
 ### Pending Todos
 
-Review Phase 2 and Phase 3 evidence. Execute Phase 4 plan 04-02 and require real database evidence before closure.
+Review Phase 2–4 evidence. Define Phase 5 state and memory contracts. The proposed seven-day local conversation retention policy was presented to the user; preference feedback is pending.
 
 ### Blockers/Concerns
 
@@ -107,11 +107,13 @@ Review Phase 2 and Phase 3 evidence. Execute Phase 4 plan 04-02 and require real
 ## Session Continuity
 
 Last session: 2026-11-09
-Stopped at: Phase 4 contracts complete; implementing 04-02
-Resume file: .planning/phases/UAOS-04-grounded-retrieval/04-01-SUMMARY.md
+Stopped at: Phase 4 implemented; preparing Phase 5 contracts
+Resume file: .planning/phases/UAOS-04-grounded-retrieval/04-02-SUMMARY.md
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 
 Phase 2 closure on 2026-11-09 passed 144 tests in 16 files, project/core compilation, and build. Iteration 2 is selected explicitly, both versions share the loop, and the original package pins remain unchanged. Human approval of Phase 2 is pending.
 
 Phase 3 closure on 2026-11-09 passed 195 tests in 19 files, project/core compilation, build, links, package admission/integrity, and requirement/threat traceability. One consented stdio MCP capability uses pinned modern negotiation and matching host correlation receipts. Human architectural review, approval, and stability remain pending independently.
+
+Phase 4 closure on 2026-11-09 passed 242 tests in 24 files, strict project/core compilation, build, links, package integrity, and requirement/threat coverage. An explicit disposable PostgreSQL 18 / pgvector 0.8.7 suite passed 11 cases and removed its exact owned container. Human review, approval, and stability remain pending.

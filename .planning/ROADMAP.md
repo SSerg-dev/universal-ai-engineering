@@ -111,7 +111,7 @@ Plans:
 
 Plans:
 - [x] 04-01: Define ingestion, chunk, embedding, retrieval, citation, and repository contracts.
-- [ ] 04-02: Implement grounded answering with fixtures, quality checks, and evidence.
+- [x] 04-02: Implement grounded answering with fixtures, quality checks, and evidence.
 
 ### Phase 5: Durable State and Memory
 
@@ -226,7 +226,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 | 1. Typed Agent Loop | 9/9 | Approved | 2026-11-09 |
 | 2. Typed Tool System | 2/2 | Implemented; review pending | - |
 | 3. MCP Boundary | 2/2 | Implemented; review pending | - |
-| 4. Grounded Retrieval | 1/2 | In progress | - |
+| 4. Grounded Retrieval | 2/2 | Implemented; review pending | - |
 | 5. Durable State and Memory | 0/2 | Not started | - |
 | 6. Evaluation System | 0/2 | Not started | - |
 | 7. End-to-End Observability | 0/2 | Not started | - |
