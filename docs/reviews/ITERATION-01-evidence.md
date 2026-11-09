@@ -8,11 +8,13 @@ The first executable slice accepts a question, performs one lexical documentatio
 |---|---|
 | Planned | Complete |
 | Implemented | Complete |
-| Architecturally Reviewed | Contracts reviewed on 2026-09-30; implementation review pending |
-| Approved | Pending |
+| Architecturally Reviewed | Contracts reviewed on 2026-09-30; implementation accepted on 2026-11-09 |
+| Approved | Complete |
 | Stable | Pending |
 
 The user explicitly selected the current ADR-0003 on 2026-11-09, including search_docs and fail-closed JOURNAL_FAILURE behavior. This selection authorizes continuation of implementation. The earlier package and contract review is preserved in [ARCH-0001](ARCH-0001-iteration-01-gate.md). Phase approval and stability require separate explicit human decisions.
+
+The user subsequently approved the completed Phase 1 and authorized continuation to Phase 2. The [human approval record](ITERATION-01-approval.json) identifies approved commit 885242eacacbd03e8035548928801eae48bb75cd and preserves the explicit approval statement. No manual walkthrough execution was reported. Stability remains Pending as a separate decision. Earlier summaries preserve the states at their original capture time.
 
 ## Reproduction
 
@@ -52,17 +54,17 @@ The final validate result and count are recorded after the closure checks in [01
 
 | Requirement | Executable evidence | Implementation status |
 |---|---|---|
-| FOUND-01 | [Recovery inventory](../../tests/integration/reset-evidence.test.ts) | Implemented — review pending |
-| ARCH-01 | [Dependency boundaries](../../tests/contracts/dependency-boundaries.test.ts), [ports](../../tests/contracts/ports.test.ts), [package and review integrity](../../tests/integration/iteration-evidence.test.ts) | Implemented — review pending |
-| EDU-02 | [Teaching scenario](../../tests/integration/teaching-scenario.test.ts), [search boundaries](../../tests/integration/search-docs.test.ts) | Implemented — review pending |
-| EDU-03 | [Guide and evidence integrity](../../tests/integration/iteration-evidence.test.ts) | Implemented — review pending |
-| CORE-01 | [Loop success](../../tests/unit/run-agent.test.ts), [typed failures](../../tests/unit/run-agent-failures.test.ts) | Implemented — review pending |
-| CORE-02 | [HTTP and CLI parity](../../tests/integration/http.test.ts), [CLI child processes](../../tests/smoke/cli.test.ts) | Implemented — review pending |
-| CORE-03 | [Safe JSONL](../../tests/integration/jsonl-journal.test.ts), [event contracts](../../tests/contracts/agent-events.test.ts) | Implemented — review pending |
-| CORE-04 | [Failure and cancellation matrix](../../tests/unit/run-agent-failures.test.ts), [real HTTP lifecycle](../../tests/integration/http.test.ts) | Implemented — review pending |
-| NFR-01 | [Core compilation and forbidden imports](../../tests/contracts/dependency-boundaries.test.ts) | Implemented — review pending |
-| NFR-02 | [Port substitution](../../tests/contracts/ports.test.ts), [default composition](../../tests/integration/teaching-scenario.test.ts) | Implemented — review pending |
-| NFR-03 | [Traceability and governance integrity](../../tests/integration/iteration-evidence.test.ts) | Implemented — review pending |
+| FOUND-01 | [Recovery inventory](../../tests/integration/reset-evidence.test.ts) | Validated — human approved |
+| ARCH-01 | [Dependency boundaries](../../tests/contracts/dependency-boundaries.test.ts), [ports](../../tests/contracts/ports.test.ts), [package and review integrity](../../tests/integration/iteration-evidence.test.ts) | Validated — human approved |
+| EDU-02 | [Teaching scenario](../../tests/integration/teaching-scenario.test.ts), [search boundaries](../../tests/integration/search-docs.test.ts) | Validated — human approved |
+| EDU-03 | [Guide and evidence integrity](../../tests/integration/iteration-evidence.test.ts) | Validated — human approved |
+| CORE-01 | [Loop success](../../tests/unit/run-agent.test.ts), [typed failures](../../tests/unit/run-agent-failures.test.ts) | Validated — human approved |
+| CORE-02 | [HTTP and CLI parity](../../tests/integration/http.test.ts), [CLI child processes](../../tests/smoke/cli.test.ts) | Validated — human approved |
+| CORE-03 | [Safe JSONL](../../tests/integration/jsonl-journal.test.ts), [event contracts](../../tests/contracts/agent-events.test.ts) | Validated — human approved |
+| CORE-04 | [Failure and cancellation matrix](../../tests/unit/run-agent-failures.test.ts), [real HTTP lifecycle](../../tests/integration/http.test.ts) | Validated — human approved |
+| NFR-01 | [Core compilation and forbidden imports](../../tests/contracts/dependency-boundaries.test.ts) | Validated — human approved |
+| NFR-02 | [Port substitution](../../tests/contracts/ports.test.ts), [default composition](../../tests/integration/teaching-scenario.test.ts) | Validated — human approved |
+| NFR-03 | [Traceability and governance integrity](../../tests/integration/iteration-evidence.test.ts) | Validated — human approved |
 
 ## Threat traceability
 

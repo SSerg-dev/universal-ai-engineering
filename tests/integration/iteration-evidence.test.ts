@@ -37,10 +37,10 @@ describe("Iteration 1 review evidence", () => {
     expect(coverage.map((row) => row[0]).sort()).toEqual(
       requirements.map((row) => row[0]).sort(),
     );
-    for (const row of requirements) expect(row[2]).toBe("Implemented — review pending");
+    for (const row of requirements) expect(row[2]).toBe("Validated — human approved");
     for (const row of coverage) {
       expect(row[1]).toMatch(/\]\(.*\.test\.ts\)/u);
-      expect(row[2]).toBe("Implemented — review pending");
+      expect(row[2]).toBe("Validated — human approved");
     }
   });
 
@@ -66,21 +66,32 @@ describe("Iteration 1 review evidence", () => {
     }
   });
 
-  it("keeps phase approval and stability pending while preserving prior human review", () => {
+  it("requires explicit human approval and keeps stability separate", () => {
+    const approval = z.strictObject({
+      phase: z.literal("UAOS-01"),
+      commit: z.string().regex(/^[a-f0-9]{40}$/u),
+      approvedOn: z.literal("2026-11-09"),
+      approvedBy: z.literal("Project Founder"),
+      decision: z.literal("Approved"),
+      scope: z.literal("Phase 1 implementation and continuation to Phase 2"),
+      source: z.literal("Explicit user approval in the Codex conversation"),
+      statement: z.string().min(1),
+    }).parse(JSON.parse(read("docs/reviews/ITERATION-01-approval.json")));
+    expect(() => execFileSync("git", ["merge-base", "--is-ancestor", approval.commit, "HEAD"])).not.toThrow();
     const stateRows = rows(read(evidencePath), "Review state");
     expect(stateRows).toHaveLength(5);
     const states = new Map(stateRows.map((row) => [row[0], row[1]]));
     expect(states.size).toBe(5);
     expect(states.get("Planned")).toBe("Complete");
     expect(states.get("Implemented")).toBe("Complete");
-    expect(states.get("Architecturally Reviewed")).toContain("implementation review pending");
-    expect(states.get("Approved")).toBe("Pending");
+    expect(states.get("Architecturally Reviewed")).toContain("implementation accepted on 2026-11-09");
+    expect(states.get("Approved")).toBe("Complete");
     expect(states.get("Stable")).toBe("Pending");
 
     const gate = read("docs/reviews/ARCH-0001-iteration-01-gate.md");
     expect(gate).toContain("**Review date:** 2026-09-30");
     const gateStates = new Map(rows(gate, "Gate State").map((row) => [row[0], row[1]]));
-    expect(gateStates.get("Approved")).toBe("**Pending**");
+    expect(gateStates.get("Approved")).toBe("**Complete**");
     expect(gateStates.get("Stable")).toBe("**Pending**");
     expect(gateStates.get("Implemented")).toBe("**Complete**");
     expect(read("docs/reviews/RESET-0001-evidence.md")).toContain("Git commit: `e4a25e9`");

@@ -6,7 +6,7 @@ One internal-documentation assistant evolves through ten runnable vertical slice
 
 ## Phases
 
-- [ ] **Phase 1: Typed Agent Loop** - Establish contracts and deliver one agent, one tool, shared CLI/API, journal, and deterministic tests.
+- [x] **Phase 1: Typed Agent Loop** - Establish contracts and deliver one agent, one tool, shared CLI/API, journal, and deterministic tests.
 - [ ] **Phase 2: Typed Tool System** - Generalize the tool boundary with validation and resilience.
 - [ ] **Phase 3: MCP Boundary** - Connect one approved MCP capability safely.
 - [ ] **Phase 4: Grounded Retrieval** - Add PostgreSQL/pgvector ingestion, retrieval, and citations.
@@ -32,7 +32,7 @@ One internal-documentation assistant evolves through ten runnable vertical slice
 4. Learner can inspect correlated JSONL events and run deterministic success and failure tests offline.
 5. Evidence distinguishes implemented, reviewed, and approved states.
 
-**Plans:** 9/9 implementation plans executed; final review and approval pending
+**Plans:** 9/9 implementation plans executed; user approved Phase 1 on 2026-11-09
 
 Plans:
 **Wave 1**
@@ -223,7 +223,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Typed Agent Loop | 9/9 | Implementation complete; review pending | - |
+| 1. Typed Agent Loop | 9/9 | Approved | 2026-11-09 |
 | 2. Typed Tool System | 0/2 | Not started | - |
 | 3. MCP Boundary | 0/2 | Not started | - |
 | 4. Grounded Retrieval | 0/2 | Not started | - |

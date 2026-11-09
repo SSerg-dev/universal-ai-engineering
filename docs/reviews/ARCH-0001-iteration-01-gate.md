@@ -7,7 +7,7 @@
 | Package Legitimacy | **Accepted** | Human accepted every exact package name/version and category on 2026-09-30. |
 | Implemented | **Complete** | Phase 1 contracts, use case, adapters, tests, and iteration evidence are implemented. Implementation review remains pending. |
 | Architecturally Reviewed | **Reviewed** | Human reviewed ADR-0003, dependency direction, schemas, ports, tests, package record, and findings on 2026-09-30. |
-| Approved | **Pending** | Explicit human approval after blocking findings are resolved. |
+| Approved | **Complete** | Explicit user approval of Phase 1 on 2026-11-09, recorded with the approved commit. |
 | Stable | **Pending** | Explicit stability decision after implementation, validation, review, and approval. |
 
 These states are independent. Package acceptance authorizes only the accepted dependency set. Implementation is not architectural review; architectural review is not approval; approval is not stability.
@@ -94,3 +94,7 @@ This record must not be rewritten to imply that a generated artifact, passing te
 The implemented CLI, HTTP, lexical search, typed loop, and JSONL boundaries are covered by the [iteration evidence](ITERATION-01-evidence.md) and [learner walkthrough](../iterations/01-typed-agent-loop.md). The accepted package set and the historical 2026-09-30 contract review remain intact. Historical prepared-evidence sections above describe the pre-install gate at that time.
 
 The real HTTP body-completion defect F-HTTP-01 and CLI smoke compilation timing defect F-CLI-01 were resolved with regression coverage. The iteration record retains both findings. Review of the final implementation is pending. The Approved and Stable gate states remain Pending.
+
+## 2026-11-09 Human Approval
+
+After delivery of the complete evidence, the Project Founder explicitly approved Phase 1 and continuation to Phase 2. The [approval record](ITERATION-01-approval.json) identifies the exact implementation commit and the user statement. The current Approved gate state is Complete. The preceding prepared-state records remain historical evidence. Stability is Pending, and no unreported manual execution is claimed.

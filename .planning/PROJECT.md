@@ -14,12 +14,12 @@ A learner can understand, build, test, and review a reusable Agentic OS one work
 
 ### Validated
 
-(None yet — ship to validate.)
+Phase 1 was explicitly approved on 2026-11-09 after the typed loop, CLI/HTTP adapters, JSONL, and 90-test validation were delivered.
 
 ### Active
 
 - [ ] Deliver ten runnable and comparable versions of one documentation assistant.
-- [ ] Begin with one agent, one tool, a typed agent loop, shared CLI/API use case, JSONL journal, and deterministic tests.
+- [x] Begin with one agent, one tool, a typed agent loop, shared CLI/API use case, JSONL journal, and deterministic tests. Phase 1 approved on 2026-11-09.
 - [ ] Add tools, MCP, RAG, memory, evaluations, observability, streaming UI, guardrails, and routing progressively.
 - [ ] Preserve a provider-neutral domain and application core behind explicit ports.
 - [ ] Produce explanation, tests, traceability, and review evidence for every iteration.
@@ -37,7 +37,7 @@ A learner can understand, build, test, and review a reusable Agentic OS one work
 - Primary user and learner: Sergei.
 - Scenario: an assistant answers questions from internal documentation and progressively gains retrieval, state, quality, and governance capabilities.
 - The previous documentation-heavy Draft foundation was retired by ADR-0002 and remains recoverable from Git commit `e4a25e9`.
-- Phase 1 now has a Node.js 24 package, a typed one-tool loop, deterministic local adapters, shared CLI/HTTP entry points, JSONL persistence, and offline verification. Implementation review and phase approval remain pending.
+- Phase 1 now has a Node.js 24 package, a typed one-tool loop, deterministic local adapters, shared CLI/HTTP entry points, JSONL persistence, and offline verification. Phase 1 received explicit user approval on 2026-11-09. Phase 2 generalizes the tool boundary.
 - Open GSD Core 1.15.0 provides the operational planning workflow and is installed locally under ignored `.codex/`.
 
 ## Constraints

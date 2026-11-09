@@ -90,15 +90,15 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | Phase 1 | Implemented — review pending |
-| ARCH-01 | Phase 1 | Implemented — review pending |
+| FOUND-01 | Phase 1 | Validated — human approved |
+| ARCH-01 | Phase 1 | Validated — human approved |
 | EDU-01 | Phase 10 | Pending |
-| EDU-02 | Phase 1 | Implemented — review pending |
-| EDU-03 | Phase 1 | Implemented — review pending |
-| CORE-01 | Phase 1 | Implemented — review pending |
-| CORE-02 | Phase 1 | Implemented — review pending |
-| CORE-03 | Phase 1 | Implemented — review pending |
-| CORE-04 | Phase 1 | Implemented — review pending |
+| EDU-02 | Phase 1 | Validated — human approved |
+| EDU-03 | Phase 1 | Validated — human approved |
+| CORE-01 | Phase 1 | Validated — human approved |
+| CORE-02 | Phase 1 | Validated — human approved |
+| CORE-03 | Phase 1 | Validated — human approved |
+| CORE-04 | Phase 1 | Validated — human approved |
 | TOOL-01 | Phase 2 | Pending |
 | TOOL-02 | Phase 2 | Pending |
 | MCP-01 | Phase 3 | Pending |
@@ -111,9 +111,9 @@
 | UI-01 | Phase 8 | Pending |
 | GUARD-01 | Phase 9 | Pending |
 | ROUTER-01 | Phase 10 | Pending |
-| NFR-01 | Phase 1 | Implemented — review pending |
-| NFR-02 | Phase 1 | Implemented — review pending |
-| NFR-03 | Phase 1 | Implemented — review pending |
+| NFR-01 | Phase 1 | Validated — human approved |
+| NFR-02 | Phase 1 | Validated — human approved |
+| NFR-03 | Phase 1 | Validated — human approved |
 
 **Coverage:**
 - v1 requirements: 24 total

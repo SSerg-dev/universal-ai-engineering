@@ -95,7 +95,7 @@ All twenty rows are green. Historical pre-workspace static predicates remain rec
 - [x] Feedback latency is below 30 seconds.
 - [x] `nyquist_compliant: true` is set only after validation evidence exists.
 
-**Approval:** pending
+**Approval:** explicitly granted by the user on 2026-11-09; see ITERATION-01-approval.json
 
 ## Final execution evidence
 
@@ -104,3 +104,5 @@ Verified on 2026-11-09 with bundled Node.js 24.22.1 and the accepted package loc
 Real HTTP lifecycle tests use an ephemeral loopback port. They require local connection permission on a restricted host. Fixtures, fake adapters, and all model execution remain local and credential-free. Package installation is the separate registry-access step.
 
 The 2026-09-30 manual package and contract review is historical evidence. Final implementation review, phase approval, and stability are pending.
+
+The user subsequently approved Phase 1 at commit 885242e on 2026-11-09. The human approval record supersedes pending approval statements at earlier capture times. Stability remains a separate pending decision.
