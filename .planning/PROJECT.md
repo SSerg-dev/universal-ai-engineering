@@ -38,6 +38,7 @@ Phase 1 was explicitly approved on 2026-11-09 after the typed loop, CLI/HTTP ada
 - Scenario: an assistant answers questions from internal documentation and progressively gains retrieval, state, quality, and governance capabilities.
 - The previous documentation-heavy Draft foundation was retired by ADR-0002 and remains recoverable from Git commit `e4a25e9`.
 - Phase 1 now has a Node.js 24 package, a typed one-tool loop, deterministic local adapters, shared CLI/HTTP entry points, JSONL persistence, and offline verification. Phase 1 received explicit user approval on 2026-11-09. Phase 2 implements the typed registry, read_doc, bounded invocation, and explicit iteration 2 selection. Phase 2 review and approval are pending.
+- Phase 3 implements a consented stdio MCP read_doc boundary with pinned modern negotiation, strict result validation, CLI/HTTP selection, and safe correlated journal evidence. Phase 3 review and approval are pending.
 - Open GSD Core 1.15.0 provides the operational planning workflow and is installed locally under ignored `.codex/`.
 
 ## Constraints
@@ -80,4 +81,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update context with evidence and lessons.
 
 ---
-*Last updated: 2026-11-09 after Phase 1 implementation and evidence closure*
+*Last updated: 2026-11-09 after Phase 3 implementation and evidence closure*

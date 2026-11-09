@@ -171,7 +171,8 @@ describe("Iteration 1 review evidence", () => {
   it("resolves repository Markdown links and keeps the teaching commands runnable", () => {
     const tracked = execFileSync("git", ["ls-files", "--", "*.md"], { encoding: "utf8" })
       .trim().split(/\r?\n/u);
-    const files = new Set([...tracked, evidencePath, guidePath]);
+    const files = new Set([...tracked, evidencePath, guidePath,
+      "docs/iterations/03-mcp-boundary.md", "docs/reviews/ITERATION-03-evidence.md"]);
     const broken: string[] = [];
     for (const file of files) {
       const markdown = read(file)
@@ -220,5 +221,34 @@ describe("Iteration 2 review evidence", () => {
       Approved: "Pending", Stable: "Pending",
     });
     expect(read("docs/architecture/decisions/ADR-0004-typed-tool-registry.md")).toContain("final architectural review pending");
+  });
+});
+
+describe("Iteration 3 review evidence", () => {
+  const evidence = "docs/reviews/ITERATION-03-evidence.md";
+
+  it("traces MCP scope and six trust boundaries to executable checks", () => {
+    const requirements = rows(read(".planning/REQUIREMENTS.md"), "Traceability")
+      .filter((row) => row[1] === "Phase 3");
+    const coverage = rows(read(evidence), "Requirement traceability");
+    expect(coverage.map((row) => row[0])).toEqual(["MCP-01"]);
+    expect(coverage.map((row) => row[0])).toEqual(requirements.map((row) => row[0]));
+    for (const row of [...requirements, ...coverage]) expect(row[2]).toBe("Implemented — review pending");
+    const threats = rows(read(evidence), "Threat traceability");
+    expect(threats.map((row) => row[0])).toEqual([
+      "T-03-01", "T-03-02", "T-03-03", "T-03-04", "T-03-05", "T-03-06",
+    ]);
+    for (const row of threats) expect(row[2]).toMatch(/\]\(.*\.test\.ts\)/u);
+  });
+
+  it("keeps review and approval pending and exposes reproducible teaching commands", () => {
+    expect(Object.fromEntries(rows(read(evidence), "Review state").map((row) => [row[0], row[1]]))).toEqual({
+      Planned: "Complete", Implemented: "Complete", "Architecturally Reviewed": "Pending",
+      Approved: "Pending", Stable: "Pending",
+    });
+    const guide = read("docs/iterations/03-mcp-boundary.md");
+    for (const command of ["npm ci", "npm run build", "UAOS_ITERATION", "UAOS_MCP_CONSENT", "npm run uaos -- ask",
+      "startServer", "/api/v1/agent-runs", "npm run validate"]) expect(guide).toContain(command);
+    expect(read("docs/architecture/decisions/ADR-0005-mcp-boundary.md")).toContain("architectural review pending");
   });
 });

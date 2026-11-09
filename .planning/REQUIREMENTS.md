@@ -30,7 +30,7 @@
 
 ### MCP Integration
 
-- [ ] **MCP-01**: Developer can expose one allow-listed MCP capability through the tool contract with validation, consent, cancellation, and audit events.
+- [x] **MCP-01**: Developer can expose one allow-listed MCP capability through the tool contract with validation, consent, cancellation, and audit events.
 
 ### Grounded Retrieval
 
@@ -101,7 +101,7 @@
 | CORE-04 | Phase 1 | Validated — human approved |
 | TOOL-01 | Phase 2 | Implemented — review pending |
 | TOOL-02 | Phase 2 | Implemented — review pending |
-| MCP-01 | Phase 3 | Pending |
+| MCP-01 | Phase 3 | Implemented — review pending |
 | RAG-01 | Phase 4 | Pending |
 | RAG-02 | Phase 4 | Pending |
 | MEM-01 | Phase 5 | Pending |
@@ -122,4 +122,4 @@
 
 ---
 *Requirements defined: 2026-09-28*
-*Last updated: 2026-11-09 after Phase 1 implementation. Checked requirements indicate implementation coverage; approval remains separate.*
+*Last updated: 2026-11-09 after Phase 3 implementation. Checked requirements indicate implementation coverage; approval remains separate.*

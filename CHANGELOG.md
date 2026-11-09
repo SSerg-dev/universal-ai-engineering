@@ -6,6 +6,10 @@ All notable project changes are recorded here. Work remains unapproved unless an
 
 ### Added
 
+- Phase 3 consented local stdio MCP read_doc capability, pinned modern protocol, exact-schema discovery, validated correlation receipts, and SDK-owned session cleanup.
+- Explicit iteration 3 CLI/HTTP composition, adversarial boundary tests, real protocol/cancellation tests, and teaching/review evidence.
+- Separate admission for official MCP client/server SDK 2.4.0, preserving the original workspace pins.
+
 - Phase 2 typed tool registry with explicit allow-lists, asynchronous schema validation, bounded invocation, and seven normalized tool outcomes.
 - read_doc against the controlled startup snapshot and explicit CLI/server iteration selection.
 - A shared loop behind the compatible Phase 1 facade and the registered-tool Phase 2 facade.
