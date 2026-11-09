@@ -1,0 +1,19 @@
+{
+  "phase": "UAOS-03",
+  "decision": "Selected for implementation",
+  "installState": "planned",
+  "selectedOn": "2026-11-09",
+  "selectedBy": "Codex under the user's roadmap implementation authorization",
+  "protocolVersion": "2026-07-28",
+  "dependencies": [
+    ["@modelcontextprotocol/client", "2.4.0"],
+    ["@modelcontextprotocol/server", "2.4.0"]
+  ],
+  "devDependencies": [],
+  "repository": "https://github.com/modelcontextprotocol/typescript-sdk",
+  "nodeEngine": ">=20",
+  "integrity": {
+    "@modelcontextprotocol/client": "sha512-LgrD2OphHuG12vfKFKz6SOnq7bKHQmhGJIAYdD+MZBn2npHEyry6uD8zvktodtl5CQM85MO0anUyD9JwmUmxww==",
+    "@modelcontextprotocol/server": "sha512-rgR9yxSaAJ+bcsi/XroT/S2AfPiIWloXAnrdfYSCms9ivVju0ishu/wW0J21Ho6+ZOR1r7RyeRbjiRuF87ix5Q=="
+  }
+}

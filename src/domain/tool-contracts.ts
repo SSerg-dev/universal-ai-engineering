@@ -16,6 +16,13 @@ export const ToolInvocationSchema = z.strictObject({
 });
 export type ToolInvocation = z.infer<typeof ToolInvocationSchema>;
 
+const OpaqueCallIdSchema = z.string().regex(/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/u);
+export const ToolCallContextSchema = z.strictObject({
+  runId: OpaqueCallIdSchema,
+  callId: OpaqueCallIdSchema,
+});
+export type ToolCallContext = z.infer<typeof ToolCallContextSchema>;
+
 export const ToolErrorCodeSchema = z.enum([
   "TOOL_NOT_FOUND",
   "TOOL_PERMISSION_DENIED",

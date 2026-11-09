@@ -97,7 +97,7 @@ describe("Iteration 1 review evidence", () => {
     expect(read("docs/reviews/RESET-0001-evidence.md")).toContain("Git commit: `e4a25e9`");
   });
 
-  it("runs under Node.js 24 with exactly the human-accepted direct package pins", () => {
+  it("runs under Node.js 24 with accepted original pins and separately recorded MCP additions", () => {
     expect(process.versions.node.split(".")[0]).toBe("24");
     const records = [...read(`${phase}/01-02-SUMMARY.md`).matchAll(/<!-- accepted-package-pins: (.+?) -->/gu)];
     expect(records).toHaveLength(1);
@@ -120,16 +120,44 @@ describe("Iteration 1 review evidence", () => {
 
     const manifest = JSON.parse(read("package.json"));
     const lock = JSON.parse(read("package-lock.json"));
+    const additionalPins: Record<"dependencies" | "devDependencies", [string, string][]> = {
+      dependencies: [], devDependencies: [],
+    };
+    const admissionPath = "docs/reviews/DEPENDENCIES-03.json";
+    if (existsSync(admissionPath)) {
+      const admission = z.strictObject({
+        phase: z.literal("UAOS-03"), decision: z.literal("Selected for implementation"),
+        installState: z.enum(["planned", "active"]), selectedOn: z.literal("2026-11-09"),
+        selectedBy: z.literal("Codex under the user's roadmap implementation authorization"),
+        protocolVersion: z.literal("2026-07-28"),
+        dependencies: z.array(tuple), devDependencies: z.array(tuple),
+        repository: z.literal("https://github.com/modelcontextprotocol/typescript-sdk"),
+        nodeEngine: z.literal(">=20"), integrity: z.record(z.string(), z.string().startsWith("sha512-")),
+      }).parse(JSON.parse(read(admissionPath)));
+      const additions = [...admission.dependencies, ...admission.devDependencies];
+      const combinedNames = [...names, ...additions.map(([name]) => name)];
+      expect(new Set(combinedNames).size).toBe(combinedNames.length);
+      expect(admission.dependencies).toEqual([
+        ["@modelcontextprotocol/client", "2.4.0"], ["@modelcontextprotocol/server", "2.4.0"],
+      ]);
+      expect(admission.devDependencies).toEqual([]);
+      if (admission.installState === "active") {
+        additionalPins.dependencies = admission.dependencies;
+        for (const [name] of additions) {
+          expect(lock.packages[`node_modules/${name}`].integrity).toBe(admission.integrity[name]);
+        }
+      }
+    }
     for (const holder of [manifest, lock.packages[""]]) {
       for (const category of ["optionalDependencies", "peerDependencies", "peerDependenciesMeta", "bundleDependencies", "bundledDependencies"]) {
         expect(Object.hasOwn(holder, category)).toBe(false);
       }
     }
     for (const category of ["dependencies", "devDependencies"] as const) {
-      const pins = Object.fromEntries(accepted[category]);
+      const pins = Object.fromEntries([...accepted[category], ...additionalPins[category]]);
       expect(manifest[category]).toEqual(pins);
       expect(lock.packages[""][category]).toEqual(pins);
-      for (const [name, version] of accepted[category]) {
+      for (const [name, version] of [...accepted[category], ...additionalPins[category]]) {
         expect(lock.packages[`node_modules/${name}`].version).toBe(version);
       }
     }

@@ -22,6 +22,7 @@ export interface RegisteredRunAgentDependencies {
   readonly tools: ToolDispatcherPort;
   readonly policy: RunAgentPolicy;
   readonly toolPolicy: Pick<ToolInvocationOptions, "allowedTools" | "timeoutMs">;
+  readonly includeCallContext?: boolean;
 }
 
 export function createRegisteredRunAgentUseCase(dependencies: RegisteredRunAgentDependencies): RunAgentUseCase {
@@ -32,13 +33,16 @@ export function createRegisteredRunAgentUseCase(dependencies: RegisteredRunAgent
     schemaVersion: "1.1",
     eventSchema: RegisteredAgentEventEnvelopeSchema,
     actionSchema: RegisteredModelActionSchema,
-    executeTool: async (action, signal) => {
+    executeTool: async (action, signal, context) => {
       let rawResult: unknown;
       try {
         rawResult = await dependencies.tools.invoke({
           toolName: action.toolName,
           arguments: action.arguments,
-        }, { allowedTools, timeoutMs, signal });
+        }, {
+          allowedTools, timeoutMs, signal,
+          ...(dependencies.includeCallContext ? { context } : {}),
+        });
       } catch {
         return { ok: false, code: "TOOL_EXECUTION_FAILED" };
       }

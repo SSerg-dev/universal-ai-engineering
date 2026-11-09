@@ -6,7 +6,7 @@ import {
 } from "../domain/agent-contracts.js";
 import type { AgentEventType } from "../domain/agent-events.js";
 import type { ExecutionEventEnvelope } from "../domain/tool-events.js";
-import type { RegisteredModelAction, ToolErrorCode } from "../domain/tool-contracts.js";
+import type { RegisteredModelAction, ToolErrorCode, ToolCallContext } from "../domain/tool-contracts.js";
 import type {
   AgentError,
   AgentErrorCode,
@@ -42,6 +42,7 @@ export interface AgentLoopDependencies<TObservation, TEvent extends ExecutionEve
   executeTool(
     action: Extract<RegisteredModelAction, { type: "call_tool" }>,
     signal: AbortSignal,
+    context: ToolCallContext,
   ): Promise<ToolEffectResult<TObservation>>;
 }
 
@@ -325,7 +326,7 @@ export function createAgentLoop<TObservation, TEvent extends ExecutionEventEnvel
 
           let effect: ToolEffectResult<TObservation>;
           try {
-            effect = await executeTool(action, abortContext.signal);
+            effect = await executeTool(action, abortContext.signal, { runId, callId: toolCallId });
             abortContext.signal.throwIfAborted();
           } catch {
             if (abortContext.signal.aborted) throw abortContext.cancellation();

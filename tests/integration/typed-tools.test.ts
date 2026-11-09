@@ -103,6 +103,19 @@ describe("registered tools through the shared loop", () => {
     expect(await runAgent({ question: "Policy snapshot" })).toMatchObject({ ok: false, error: { code: "TOOL_FAILURE" } });
   });
 
+  it("preserves two-argument Phase 2 handlers and existing in-memory identifier formats", async () => {
+    const execute = vi.fn(async (input: { value: string }) => input);
+    const runAgent = createRegisteredRunAgentUseCase({
+      model: new ScriptedModel<ToolObservation>([call("echo", { value: "a" }), final]),
+      tools: new ToolRegistry([echoTool(execute)]), journal: { append: async () => {} },
+      clock: new FixedClock("2026-11-09T00:00:00Z"), ids: new SequenceIdGenerator("legacy.ids"),
+      policy: { timeoutMs: 5000, terminalEvidenceTimeoutMs: 250, maxModelCalls: 2, maxToolCalls: 1 },
+      toolPolicy: { allowedTools: new Set(["echo"]), timeoutMs: 100 },
+    });
+    expect(await runAgent({ question: "Preserve existing callers" })).toMatchObject({ ok: true });
+    expect(execute.mock.calls[0]).toHaveLength(2);
+  });
+
   it("rejects invented source references after a valid registered result", async () => {
     const { runAgent } = harness([echoTool()], [call("echo", { value: "a" }), { ...final, sourceIds: ["invented"] }]);
     expect(await runAgent({ question: "Use only observed sources" })).toMatchObject({
