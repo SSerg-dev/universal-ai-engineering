@@ -195,7 +195,8 @@ describe("Iteration 1 review evidence", () => {
       .trim().split(/\r?\n/u);
     const files = new Set([...tracked, evidencePath, guidePath,
       "docs/iterations/03-mcp-boundary.md", "docs/reviews/ITERATION-03-evidence.md",
-      "docs/iterations/04-grounded-retrieval.md", "docs/reviews/ITERATION-04-evidence.md"]);
+      "docs/iterations/04-grounded-retrieval.md", "docs/reviews/ITERATION-04-evidence.md",
+      "docs/iterations/05-durable-state-memory.md", "docs/reviews/ITERATION-05-evidence.md"]);
     const broken: string[] = [];
     for (const file of files) {
       const markdown = read(file)
@@ -305,5 +306,30 @@ describe("Iteration 4 review evidence", () => {
     expect(infrastructure.image).toMatch(/^pgvector\/pgvector@sha256:[a-f0-9]{64}$/u);
     expect(read("compose.retrieval.yaml")).toContain(infrastructure.image);
     expect(read("docs/architecture/decisions/ADR-0006-grounded-retrieval.md")).toContain("architectural review pending");
+  });
+});
+
+describe("Iteration 5 review evidence", () => {
+  const evidence = "docs/reviews/ITERATION-05-evidence.md";
+
+  it("traces durable memory and seven state/audit boundaries", () => {
+    const requirements = rows(read(".planning/REQUIREMENTS.md"), "Traceability").filter((row) => row[1] === "Phase 5");
+    const coverage = rows(read(evidence), "Requirement traceability");
+    expect(coverage.map((row) => row[0])).toEqual(["MEM-01"]);
+    expect(coverage.map((row) => row[0])).toEqual(requirements.map((row) => row[0]));
+    for (const row of [...requirements, ...coverage]) expect(row[2]).toBe("Implemented — review pending");
+    const threats = rows(read(evidence), "Threat traceability");
+    expect(threats.map((row) => row[0])).toEqual(Array.from({ length: 7 }, (_, i) => `T-05-${String(i + 1).padStart(2, "0")}`));
+    for (const row of threats) expect(row[2]).toMatch(/\]\(.*\.test\.ts\)/u);
+  });
+
+  it("requires explicit content retention and keeps review/approval pending", () => {
+    expect(Object.fromEntries(rows(read(evidence), "Review state").map((row) => [row[0], row[1]]))).toEqual({
+      Planned: "Complete", Implemented: "Complete", "Architecturally Reviewed": "Pending", Approved: "Pending", Stable: "Pending",
+    });
+    const guide = read("docs/iterations/05-durable-state-memory.md");
+    for (const command of ["npm ci", "npm run build", "npm run ingest", "state $json", "retentionSeconds",
+      "run_turn", "write_memory", "recover", "purge", "/api/v1/conversation-commands", "npm run validate", "npm run test:database"]) expect(guide).toContain(command);
+    expect(read("docs/architecture/decisions/ADR-0007-durable-conversation-state.md")).toContain("architectural review pending");
   });
 });

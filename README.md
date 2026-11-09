@@ -33,6 +33,8 @@ React and Next.js are not part of the selected architecture.
 
 ## Documentation
 
+- [Iteration 5 durable state and memory](docs/iterations/05-durable-state-memory.md)
+- [Iteration 5 evidence](docs/reviews/ITERATION-05-evidence.md)
 - [Iteration 4 grounded retrieval](docs/iterations/04-grounded-retrieval.md)
 - [Iteration 4 evidence](docs/reviews/ITERATION-04-evidence.md)
 - [Iteration 3 MCP boundary](docs/iterations/03-mcp-boundary.md)
@@ -52,4 +54,4 @@ React and Next.js are not part of the selected architecture.
 
 ## Status
 
-Phase 1 implementation is complete with offline CLI, Fastify HTTP, JSONL evidence, and deterministic tests. See the walkthrough for Node.js 24 installation, execution, and validation. Phase 1 was explicitly approved on 2026-11-09. Phase 2 adds a typed registry and a second tool. Phase 3 adds a consented local stdio MCP capability. Phase 4 adds PostgreSQL/pgvector ingestion, extractive grounding, and immutable passage citations. Select iterations explicitly through composition; iteration 1 remains the default. Phase 2–4 review and approval are pending. Stability remains a separate decision.
+Phase 1 implementation is complete with offline CLI, Fastify HTTP, JSONL evidence, and deterministic tests. See the walkthrough for Node.js 24 installation, execution, and validation. Phase 1 was explicitly approved on 2026-11-09. Phase 2 adds a typed registry and a second tool. Phase 3 adds a consented local stdio MCP capability. Phase 4 adds PostgreSQL/pgvector ingestion, extractive grounding, and immutable passage citations. Phase 5 adds explicit durable conversation commands, idempotent replay, fenced recovery, and scoped TTL memory. Select iterations explicitly through composition; iteration 1 remains the default. Phase 2–5 review and approval are pending. Stability remains a separate decision.

@@ -39,7 +39,7 @@
 
 ### State and Memory
 
-- [ ] **MEM-01**: User can resume a conversation from durable state while memory writes remain explicit, scoped, retained, and inspectable.
+- [x] **MEM-01**: User can resume a conversation from durable state while memory writes remain explicit, scoped, retained, and inspectable.
 
 ### Evaluation
 
@@ -104,7 +104,7 @@
 | MCP-01 | Phase 3 | Implemented — review pending |
 | RAG-01 | Phase 4 | Implemented — review pending |
 | RAG-02 | Phase 4 | Implemented — review pending |
-| MEM-01 | Phase 5 | Pending |
+| MEM-01 | Phase 5 | Implemented — review pending |
 | EVAL-01 | Phase 6 | Pending |
 | OBS-01 | Phase 7 | Pending |
 | STREAM-01 | Phase 8 | Pending |
@@ -122,4 +122,4 @@
 
 ---
 *Requirements defined: 2026-09-28*
-*Last updated: 2026-11-09 after Phase 4 implementation. Checked requirements indicate implementation coverage; approval remains separate.*
+*Last updated: 2026-11-09 after Phase 5 implementation. Checked requirements indicate implementation coverage; approval remains separate.*

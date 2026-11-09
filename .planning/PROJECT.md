@@ -40,6 +40,7 @@ Phase 1 was explicitly approved on 2026-11-09 after the typed loop, CLI/HTTP ada
 - Phase 1 now has a Node.js 24 package, a typed one-tool loop, deterministic local adapters, shared CLI/HTTP entry points, JSONL persistence, and offline verification. Phase 1 received explicit user approval on 2026-11-09. Phase 2 implements the typed registry, read_doc, bounded invocation, and explicit iteration 2 selection. Phase 2 review and approval are pending.
 - Phase 3 implements a consented stdio MCP read_doc boundary with pinned modern negotiation, strict result validation, CLI/HTTP selection, and safe correlated journal evidence. Phase 3 review and approval are pending.
 - Phase 4 implements controlled PostgreSQL/pgvector ingestion, immutable passage citations, exact extractive grounding, explicit CLI/HTTP selection, and read-only citation resolution. Its deterministic lexical embedding fixture proves mechanics; semantic provider selection remains open. Phase 4 review and approval are pending.
+- Phase 5 implements explicit durable conversations with bounded retention input, idempotent request replay, private leases/fencing, explicit TTL memory, safe transactional audit, and CLI/HTTP commands. Turn-boundary resume is supported; mid-turn effect replay is not claimed. Phase 5 review and approval are pending.
 - Open GSD Core 1.15.0 provides the operational planning workflow and is installed locally under ignored `.codex/`.
 
 ## Constraints
@@ -82,4 +83,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update context with evidence and lessons.
 
 ---
-*Last updated: 2026-11-09 after Phase 4 implementation and evidence closure*
+*Last updated: 2026-11-09 after Phase 5 implementation and evidence closure*

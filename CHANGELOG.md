@@ -6,6 +6,10 @@ All notable project changes are recorded here. Work remains unapproved unless an
 
 ### Added
 
+- Phase 5 explicit durable conversation commands, idempotent turn replay, preallocated journal correlation, private leases/fencing, and optimistic concurrency.
+- Conversation-scoped TTL memory with explicit writes/deletion, bounded contextual teaching examples, atomic metadata audit, and logical/physical retention handling.
+- Real restart, concurrent reservation, late-worker recovery, audit rollback, purge, and shared CLI/HTTP persistence tests, plus teaching/review evidence.
+
 - Phase 4 controlled Markdown ingestion with canonical Unicode spans, profile-tagged vectors, PostgreSQL/pgvector transactional active revisions, and retained exact citations.
 - Request-scoped extractive grounding, iteration 4 CLI/HTTP, ingestion and citation resolver commands, and explicit no-evidence abstention.
 - A digest-pinned teaching Compose service and an owner-verified disposable database test runner with rollback, concurrency, corruption, cancellation, deadline, and full CLI/HTTP checks.
