@@ -1,0 +1,11 @@
+{
+  "command": "node node_modules/vitest/vitest.mjs run tests/integration/http.test.ts -t \"completes a real HTTP request\"",
+  "runtime": "Node.js 24.22.1",
+  "exitCode": 1,
+  "targetTest": "completes a real HTTP request after its body has been fully read",
+  "targetFile": "tests/integration/http.test.ts",
+  "expected": "A complete JSON POST over a real loopback connection returns HTTP 200 with the shared successful result",
+  "actual": "The adapter returned HTTP 499 because its eager Fastify request.signal subscription treated normal IncomingMessage completion as client cancellation",
+  "output": "AssertionError: expected 499 to be 200; expected: 200; received: 499",
+  "resolution": "Use a request-scoped caller signal driven by incomplete request close or unfinished response close, with response-finish listener cleanup"
+}

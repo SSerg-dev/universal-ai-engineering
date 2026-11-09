@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
 import { AgentEventEnvelopeSchema } from "../../src/domain/agent-events.js";
 
@@ -36,6 +36,8 @@ function buildForChildProcess(): void {
   });
   expect(result.status, result.stderr || result.stdout).toBe(0);
 }
+
+beforeAll(buildForChildProcess, 30_000);
 
 async function runChild(
   command: readonly string[],
@@ -94,7 +96,6 @@ describe("uaos ask CLI", () => {
 
   it("prints the shared result and creates one eight-line journal in a child process", async () => {
     await loadCli();
-    buildForChildProcess();
     const temporaryRoot = await mkdtemp(join(tmpdir(), "uaos-cli-success-"));
     const journalRoot = join(temporaryRoot, "journal");
     try {
@@ -131,7 +132,6 @@ describe("uaos ask CLI", () => {
 
   it("prints only the normalized failure and run ID for invalid input", async () => {
     await loadCli();
-    buildForChildProcess();
     const temporaryRoot = await mkdtemp(join(tmpdir(), "uaos-cli-invalid-"));
     const journalRoot = join(temporaryRoot, "journal");
     try {
@@ -166,7 +166,6 @@ describe("uaos ask CLI", () => {
 
   it("maps SIGINT to one caller signal, one cancellation event, and listener cleanup", async () => {
     await loadCli();
-    buildForChildProcess();
     const temporaryRoot = await mkdtemp(join(tmpdir(), "uaos-cli-sigint-"));
     const journalRoot = join(temporaryRoot, "journal");
     const cliUrl = pathToFileURL(

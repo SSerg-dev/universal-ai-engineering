@@ -154,6 +154,96 @@ describe("Fastify agent-runs adapter", () => {
     }
   });
 
+  it("completes a real HTTP request after its body has been fully read", async () => {
+    const { buildHttpApp } = await loadHttpAdapter();
+    const runtime = await createRuntime({
+      fixtureRoot: fileURLToPath(new URL("../../fixtures/docs", import.meta.url)),
+      journalRoot: await makeTemporaryPath("real-http"),
+    });
+    const app = buildHttpApp(runtime);
+
+    try {
+      const address = await app.listen({ host: "127.0.0.1", port: 0 });
+      const response = await fetch(`${address}/api/v1/agent-runs`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ question: "How are runs recorded?" }),
+      });
+
+      expect(response.status).toBe(200);
+      expect(await response.json()).toMatchObject({
+        ok: true,
+        usage: { modelCalls: 2, toolCalls: 1 },
+      });
+    } finally {
+      await app.close();
+    }
+  });
+
+  it("cancels an active model when the real HTTP client disconnects", async () => {
+    const { buildHttpApp } = await loadHttpAdapter();
+    const journal = new InMemoryJournal();
+    const started = Promise.withResolvers<void>();
+    const completed = Promise.withResolvers<RunAgentResult>();
+    const caller = new AbortController();
+    const runAgent = createRunAgentUseCase({
+      model: {
+        request: async (_input, signal) => {
+          started.resolve();
+          return new Promise<never>((_resolve, reject) => {
+            const abort = () => reject(signal.reason);
+            if (signal.aborted) abort();
+            else signal.addEventListener("abort", abort, { once: true });
+          });
+        },
+      },
+      searchDocs: new FakeSearchDocs({ matches: [] }),
+      journal,
+      clock: new FixedClock("2026-01-01T00:00:00.000Z", 10),
+      ids: new SequenceIdGenerator("real-disconnect"),
+      policy: {
+        timeoutMs: 5_000,
+        terminalEvidenceTimeoutMs: 250,
+        maxModelCalls: 2,
+        maxToolCalls: 1,
+      },
+    });
+    const app = buildHttpApp({
+      runAgent: async (input, signal) => {
+        const result = await runAgent(input, signal);
+        completed.resolve(result);
+        return result;
+      },
+    });
+
+    try {
+      const address = await app.listen({ host: "127.0.0.1", port: 0 });
+      const response = fetch(`${address}/api/v1/agent-runs`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ question: "Cancel after the model starts" }),
+        signal: caller.signal,
+      }).then(
+        () => "unexpected response",
+        (error: Error) => error.name,
+      );
+
+      await started.promise;
+      caller.abort();
+      expect(await response).toBe("AbortError");
+      expect(await completed.promise).toMatchObject({
+        ok: false,
+        error: { code: "CANCELLED", stage: "orchestration" },
+      });
+      expect(journal.events().map(({ eventType }) => eventType)).toEqual([
+        "run.started", "model.requested", "run.cancelled",
+      ]);
+    } finally {
+      caller.abort();
+      await app.close();
+    }
+  });
+
   it.each([
     ["INVALID_REQUEST", "request", 400],
     ["TIMEOUT", "orchestration", 408],
@@ -276,7 +366,7 @@ describe("Fastify agent-runs adapter", () => {
         method: "POST",
         url: "/api/v1/agent-runs",
         payload: { question: "Disconnect this request" },
-        simulate: { close: true },
+        simulate: { end: true, split: false, error: false, close: true },
       });
 
       expect(response.statusCode).toBe(499);
@@ -415,7 +505,7 @@ describe("Fastify agent-runs adapter", () => {
           method: "POST",
           url: "/api/v1/agent-runs",
           payload: { question: "Cancel only this request" },
-          simulate: { close: true },
+          simulate: { end: true, split: false, error: false, close: true },
         }),
         app.inject({
           method: "POST",

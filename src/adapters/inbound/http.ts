@@ -91,6 +91,7 @@ function transportMessage(status: 400 | 413 | 415 | 500): string {
 
 export function buildHttpApp(options: BuildHttpAppOptions): FastifyInstance {
   const app = Fastify({ bodyLimit: HTTP_BODY_LIMIT_BYTES, logger: false });
+  app.decorateRequest("agentRunSignal", null);
 
   app.removeContentTypeParser("text/plain");
   app.setErrorHandler((error, _request, reply) => {
@@ -113,10 +114,41 @@ export function buildHttpApp(options: BuildHttpAppOptions): FastifyInstance {
     }),
   );
 
-  app.post("/api/v1/agent-runs", async (request, reply) => {
-    const result = await options.runAgent(request.body, request.signal);
-    return reply.status(resultStatus(result)).send(result);
-  });
+  app.post(
+    "/api/v1/agent-runs",
+    {
+      onRequest: async (request, reply) => {
+        const controller = new AbortController();
+        request.setDecorator("agentRunSignal", controller.signal);
+
+        // IncomingMessage closes after a complete body, even while the client
+        // is still waiting for its answer. Only an incomplete body is a cancel.
+        const onRequestClose = () => {
+          if (!request.raw.complete) controller.abort();
+        };
+        const cleanup = () => {
+          request.raw.removeListener("close", onRequestClose);
+          reply.raw.removeListener("close", onResponseClose);
+          reply.raw.removeListener("finish", cleanup);
+        };
+        const onResponseClose = () => {
+          if (!reply.raw.writableFinished) controller.abort();
+          cleanup();
+        };
+
+        request.raw.once("close", onRequestClose);
+        reply.raw.once("close", onResponseClose);
+        reply.raw.once("finish", cleanup);
+      },
+    },
+    async (request, reply) => {
+      const result = await options.runAgent(
+        request.body,
+        request.getDecorator<AbortSignal>("agentRunSignal"),
+      );
+      return reply.status(resultStatus(result)).send(result);
+    },
+  );
 
   return app;
 }
