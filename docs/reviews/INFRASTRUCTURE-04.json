@@ -1,0 +1,10 @@
+{
+  "phase": "UAOS-04",
+  "selectedOn": "2026-11-09",
+  "imageTag": "pgvector/pgvector:0.8.7-pg18-trixie",
+  "image": "pgvector/pgvector@sha256:5895949dfcdf308eb0cd31c950c93c14895c77f33fbedfecf1fa511ab1d4bcd2",
+  "storage": "Disposable tmpfs; no host data directory",
+  "network": "Random port bound to 127.0.0.1",
+  "ownerLabel": "org.uaos.test-owner",
+  "containerPrefix": "uaos-retrieval-test-"
+}

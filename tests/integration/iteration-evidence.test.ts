@@ -97,7 +97,7 @@ describe("Iteration 1 review evidence", () => {
     expect(read("docs/reviews/RESET-0001-evidence.md")).toContain("Git commit: `e4a25e9`");
   });
 
-  it("runs under Node.js 24 with accepted original pins and separately recorded MCP additions", () => {
+  it("runs under Node.js 24 with accepted original pins and separately recorded adapter additions", () => {
     expect(process.versions.node.split(".")[0]).toBe("24");
     const records = [...read(`${phase}/01-02-SUMMARY.md`).matchAll(/<!-- accepted-package-pins: (.+?) -->/gu)];
     expect(records).toHaveLength(1);
@@ -148,6 +148,28 @@ describe("Iteration 1 review evidence", () => {
         }
       }
     }
+    const retrievalAdmissionPath = "docs/reviews/DEPENDENCIES-04.json";
+    if (existsSync(retrievalAdmissionPath)) {
+      const admission = z.strictObject({
+        phase: z.literal("UAOS-04"), decision: z.literal("Selected for implementation"),
+        installState: z.enum(["planned", "active"]), selectedOn: z.literal("2026-11-09"),
+        selectedBy: z.literal("Codex under the user's roadmap implementation authorization"),
+        dependencies: z.array(tuple), devDependencies: z.array(tuple),
+        repository: z.literal("https://github.com/brianc/node-postgres"),
+        typesRepository: z.literal("https://github.com/DefinitelyTyped/DefinitelyTyped"),
+        nodeEngine: z.literal(">=16"), integrity: z.record(z.string(), z.string().startsWith("sha512-")),
+      }).parse(JSON.parse(read(retrievalAdmissionPath)));
+      expect(admission.dependencies).toEqual([["pg", "8.23.1"]]);
+      expect(admission.devDependencies).toEqual([["@types/pg", "8.23.1"]]);
+      if (admission.installState === "active") {
+        for (const category of ["dependencies", "devDependencies"] as const) {
+          additionalPins[category].push(...admission[category]);
+          for (const [name] of admission[category]) expect(lock.packages[`node_modules/${name}`].integrity).toBe(admission.integrity[name]);
+        }
+      }
+    }
+    const allNames = [...names, ...additionalPins.dependencies.map(([name]) => name), ...additionalPins.devDependencies.map(([name]) => name)];
+    expect(new Set(allNames).size).toBe(allNames.length);
     for (const holder of [manifest, lock.packages[""]]) {
       for (const category of ["optionalDependencies", "peerDependencies", "peerDependenciesMeta", "bundleDependencies", "bundledDependencies"]) {
         expect(Object.hasOwn(holder, category)).toBe(false);

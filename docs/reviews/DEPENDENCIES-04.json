@@ -1,7 +1,7 @@
 {
   "phase": "UAOS-04",
   "decision": "Selected for implementation",
-  "installState": "planned",
+  "installState": "active",
   "selectedOn": "2026-11-09",
   "selectedBy": "Codex under the user's roadmap implementation authorization",
   "dependencies": [["pg", "8.23.1"]],
