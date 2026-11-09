@@ -1,6 +1,6 @@
 import type { SearchDocsOutput } from "../../domain/agent-contracts.js";
 
-export type ModelRequest =
+export type ModelRequest<TObservation = SearchDocsOutput> =
   | {
       readonly state: "awaiting_tool";
       readonly question: string;
@@ -8,9 +8,9 @@ export type ModelRequest =
   | {
       readonly state: "awaiting_final";
       readonly question: string;
-      readonly toolResult: SearchDocsOutput;
+      readonly toolResult: TObservation;
     };
 
-export interface ModelPort {
-  request(input: ModelRequest, signal: AbortSignal): Promise<unknown>;
+export interface ModelPort<TObservation = SearchDocsOutput> {
+  request(input: ModelRequest<TObservation>, signal: AbortSignal): Promise<unknown>;
 }
