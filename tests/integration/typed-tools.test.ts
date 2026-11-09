@@ -235,7 +235,7 @@ describe("Iteration 2 composition", () => {
   });
 
   it("rejects an unsupported iteration instead of selecting a fallback", async () => {
-    expect(() => createIterationRuntime({ fixtureRoot, journalRoot: "unused", iteration: "3" })).toThrow(/unsupported/u);
+    expect(() => createIterationRuntime({ fixtureRoot, journalRoot: "unused", iteration: "99" })).toThrow(/unsupported/u);
   });
 
   it("selects iteration 2 through real HTTP server composition", async () => {

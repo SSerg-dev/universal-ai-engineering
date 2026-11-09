@@ -10,7 +10,8 @@ export interface StartServerOptions {
   readonly host?: string;
   readonly journalRoot?: string;
   readonly port?: number;
-  readonly iteration?: 1 | 2;
+  readonly iteration?: 1 | 2 | 3;
+  readonly mcpConsent?: "read_doc";
 }
 
 export async function startServer(
@@ -18,6 +19,7 @@ export async function startServer(
 ): Promise<FastifyInstance> {
   const runtime = await createIterationRuntime({
     iteration: options.iteration,
+    mcpConsent: options.mcpConsent,
     fixtureRoot:
       options.fixtureRoot ?? resolve(process.cwd(), "fixtures", "docs"),
     journalRoot:

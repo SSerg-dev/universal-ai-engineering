@@ -21,6 +21,7 @@ export interface RunCliOptions {
 function defaultRuntimeFactory(): Promise<Runtime> {
   return createIterationRuntime({
     iteration: process.env.UAOS_ITERATION,
+    mcpConsent: process.env.UAOS_MCP_CONSENT,
     fixtureRoot:
       process.env.UAOS_FIXTURE_ROOT ?? resolve(process.cwd(), "fixtures", "docs"),
     journalRoot:

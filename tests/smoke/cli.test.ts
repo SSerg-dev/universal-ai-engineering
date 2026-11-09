@@ -1,7 +1,7 @@
 import { spawn, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { beforeAll, describe, expect, it } from "vitest";
@@ -47,7 +47,7 @@ async function runChild(
   return await new Promise((resolveResult, reject) => {
     const child = spawn(process.execPath, [...command], {
       cwd: options.cwd ?? repositoryRoot,
-      env: { ...process.env, UAOS_ITERATION: "1", ...options.env },
+      env: { ...process.env, UAOS_ITERATION: "1", UAOS_MCP_CONSENT: "", ...options.env },
       stdio: ["ignore", "pipe", "pipe"],
     });
     let stdout = "";
@@ -194,6 +194,44 @@ describe("uaos ask CLI", () => {
     expect(result.stdout).toBe("");
     expect(result.stderr).toBe("Error: The CLI runtime could not be started.\n");
   });
+
+  it.each([true, false])("runs iteration 3 from another directory with MCP consent=%s", async (granted) => {
+    const root = await mkdtemp(join(tmpdir(), "uaos-cli-mcp-"));
+    const journalRoot = join(root, "journal");
+    try {
+      const result = await runChild([join(repositoryRoot, "dist/src/adapters/inbound/cli.js"), "ask", "doc:execution-journal"], {
+        cwd: root,
+        env: {
+          UAOS_ITERATION: "3", UAOS_MCP_CONSENT: granted ? "read_doc" : "",
+          UAOS_FIXTURE_ROOT: fixtureRoot, UAOS_JOURNAL_ROOT: journalRoot,
+        },
+      });
+      expect(result.exitCode).toBe(granted ? 0 : 1);
+      const files = await readdir(journalRoot);
+      expect(files).toHaveLength(1);
+      const content = await readFile(join(journalRoot, files[0]!), "utf8");
+      const events = content.trimEnd().split("\n")
+        .map((line) => RegisteredAgentEventEnvelopeSchema.parse(JSON.parse(line)));
+      expect(content).not.toContain("doc:execution-journal");
+      expect(content).not.toContain("The execution journal preserves evidence");
+      if (granted) {
+        expect(result.stderr).toBe("");
+        expect(result.stdout).toContain("The execution journal preserves evidence");
+        expect(result.stdout).toContain("Usage: modelCalls=2, toolCalls=1");
+        expect(events).toHaveLength(8);
+        expect(events.at(-1)?.eventType).toBe("run.succeeded");
+      } else {
+        expect(result.stdout).toBe("");
+        expect(result.stderr).toContain("Error [TOOL_FAILURE] (tool)");
+        expect(events.find(({ eventType }) => eventType === "tool.failed")?.payload)
+          .toMatchObject({ toolName: "mcp_read_doc", toolErrorCode: "TOOL_PERMISSION_DENIED" });
+      }
+    } finally {
+      expect(dirname(resolve(root))).toBe(resolve(tmpdir()));
+      expect(basename(root)).toMatch(/^uaos-cli-mcp-/u);
+      await rm(root, { recursive: true, force: true });
+    }
+  }, 10_000);
 
   it("maps SIGINT to one caller signal, one cancellation event, and listener cleanup", async () => {
     await loadCli();
