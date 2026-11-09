@@ -152,8 +152,8 @@ export function createConversationService(deps: {
   }
 
   async function audit(conversationId: unknown, signal?: AbortSignal) {
-    const selected = input(StateIdSchema, conversationId), activeSignal = caller(signal);
-    const events = internal(z.array(StateAuditEventSchema).max(1000), await storeCall(() => deps.store.audit(selected, activeSignal), activeSignal));
+    const selected = input(StateIdSchema, conversationId), activeSignal = caller(signal), at = now();
+    const events = internal(z.array(StateAuditEventSchema).max(1000), await storeCall(() => deps.store.audit(selected, at, activeSignal), activeSignal));
     if (events.some((event, index) => event.conversationId !== selected ||
       (index > 0 && event.sequence <= events[index - 1]!.sequence))) throw new StateBoundaryError("STATE_INVALID");
     return events;

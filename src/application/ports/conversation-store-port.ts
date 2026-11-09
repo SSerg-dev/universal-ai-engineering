@@ -17,5 +17,5 @@ export interface ConversationStorePort {
   writeMemory(input: StateMutationMetadata & { conversationId: string; expectedVersion: number; key: string; value: string; expiresAt: string }, signal: AbortSignal): Promise<unknown>;
   deleteMemory(input: StateMutationMetadata & { conversationId: string; expectedVersion: number; key: string }, signal: AbortSignal): Promise<unknown>;
   purge(input: StateMutationMetadata, signal: AbortSignal): Promise<{ conversations: number; memories: number; audits: number }>;
-  audit(conversationId: string, signal: AbortSignal): Promise<readonly StateAuditEvent[]>;
+  audit(conversationId: string, now: string, signal: AbortSignal): Promise<readonly StateAuditEvent[]>;
 }

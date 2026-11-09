@@ -157,4 +157,14 @@ describe("Durable conversation service semantics", () => {
       .rejects.toMatchObject({ code: "STATE_INVALID" });
     expect(execute).not.toHaveBeenCalled();
   });
+
+  it("uses the injected clock to hide expired audit before physical removal", async () => {
+    const { service, store, advance } = harness();
+    const created = await service.create({ retentionSeconds: 60 });
+    advance(31 * 86400_000);
+    expect(await service.audit(created.conversationId)).toEqual([]);
+    expect(store.events).toHaveLength(1);
+    expect(await service.purge()).toMatchObject({ audits: 1 });
+    expect((await service.audit(created.conversationId)).map(({ eventType }) => eventType)).toEqual(["conversation.purged"]);
+  });
 });

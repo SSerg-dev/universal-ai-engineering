@@ -124,7 +124,8 @@ export class FakeConversationStore implements ConversationStorePort {
     }
     return { conversations, memories, audits };
   }
-  async audit(id: string, signal: AbortSignal) {
-    signal.throwIfAborted(); return structuredClone(this.events.filter(({ conversationId }) => conversationId === id));
+  async audit(id: string, now: string, signal: AbortSignal) {
+    signal.throwIfAborted(); return structuredClone(this.events.filter(({ conversationId, occurredAt }) =>
+      conversationId === id && Date.parse(occurredAt) + 30 * 86400_000 > Date.parse(now)));
   }
 }

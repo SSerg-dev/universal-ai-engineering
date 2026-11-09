@@ -199,6 +199,7 @@ describe("PostgreSQL durable conversation state", () => {
     const { service } = harness();
     const created = await service.create({ retentionSeconds: 60 });
     time += 31 * 86400_000;
+    expect(await service.audit(created.conversationId)).toEqual([]);
     expect((await service.purge()).audits).toBeGreaterThan(0);
     const audit = await service.audit(created.conversationId);
     expect(audit.map(({ eventType }) => eventType)).toEqual(["conversation.purged"]);

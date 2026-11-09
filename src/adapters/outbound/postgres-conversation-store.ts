@@ -240,12 +240,12 @@ export class PostgresConversationStore implements ConversationStorePort {
     });
   }
 
-  async audit(id: string, signal: AbortSignal): Promise<readonly StateAuditEvent[]> {
-    StateIdSchema.parse(id);
+  async audit(id: string, now: string, signal: AbortSignal): Promise<readonly StateAuditEvent[]> {
+    StateIdSchema.parse(id); StateTimestampSchema.parse(now);
     return this.#withClient(signal, async (client) => {
       const result = await client.query(`SELECT metadata FROM
-        (SELECT sequence,metadata FROM uaos_state.audit WHERE conversation_id=$1 AND expires_at > clock_timestamp() ORDER BY sequence DESC LIMIT 1000) recent
-        ORDER BY sequence`, [id]);
+        (SELECT sequence,metadata FROM uaos_state.audit WHERE conversation_id=$1 AND expires_at > $2 ORDER BY sequence DESC LIMIT 1000) recent
+        ORDER BY sequence`, [id, now]);
       return result.rows.map(({ metadata }) => StateAuditEventSchema.parse(metadata));
     }, false);
   }
