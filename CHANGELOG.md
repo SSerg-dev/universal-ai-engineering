@@ -6,6 +6,12 @@ All notable project changes are recorded here. Work remains unapproved unless an
 
 ### Added
 
+- Phase 2 typed tool registry with explicit allow-lists, asynchronous schema validation, bounded invocation, and seven normalized tool outcomes.
+- read_doc against the controlled startup snapshot and explicit CLI/server iteration selection.
+- A shared loop behind the compatible Phase 1 facade and the registered-tool Phase 2 facade.
+- Version 1.1 metadata-only journal events with tool diagnostics alongside strict version 1.0 compatibility.
+- Iteration 2 teaching and review evidence, with registry, third-tool, CLI, and real HTTP tests.
+
 - ADR-0003 contracts, strict Zod boundaries, and five provider-neutral ports.
 - A two-state typed agent loop with one lexical search tool and a deterministic local teaching model.
 - Controlled Markdown fixtures, shared runtime composition, uaos ask CLI, and bounded Fastify HTTP.

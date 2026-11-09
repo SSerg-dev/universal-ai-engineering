@@ -33,6 +33,8 @@ React and Next.js are not part of the selected architecture.
 
 ## Documentation
 
+- [Iteration 2 typed tools](docs/iterations/02-typed-tool-system.md)
+- [Iteration 2 evidence](docs/reviews/ITERATION-02-evidence.md)
 - [Iteration 1 walkthrough](docs/iterations/01-typed-agent-loop.md)
 - [Iteration 1 evidence](docs/reviews/ITERATION-01-evidence.md)
 - [Project brief](docs/PROJECT-BRIEF.md)
@@ -46,4 +48,4 @@ React and Next.js are not part of the selected architecture.
 
 ## Status
 
-Phase 1 implementation is complete with offline CLI, Fastify HTTP, JSONL evidence, and deterministic tests. See the walkthrough for Node.js 24 installation, execution, and validation. Phase 1 was explicitly approved on 2026-11-09. Phase 2 is next; stability remains a separate pending decision.
+Phase 1 implementation is complete with offline CLI, Fastify HTTP, JSONL evidence, and deterministic tests. See the walkthrough for Node.js 24 installation, execution, and validation. Phase 1 was explicitly approved on 2026-11-09. Phase 2 implements a typed registry, a second tool, and explicit iteration selection; its review and approval are pending. Stability remains a separate decision.

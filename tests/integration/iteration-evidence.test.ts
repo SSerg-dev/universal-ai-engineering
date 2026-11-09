@@ -164,3 +164,33 @@ describe("Iteration 1 review evidence", () => {
     }
   });
 });
+
+describe("Iteration 2 review evidence", () => {
+  const evidence = "docs/reviews/ITERATION-02-evidence.md";
+
+  it("covers both typed-tool requirements and six distinct control boundaries", () => {
+    const requirements = rows(read(".planning/REQUIREMENTS.md"), "Traceability")
+      .filter((row) => row[1] === "Phase 2");
+    const coverage = rows(read(evidence), "Requirement traceability");
+    expect(coverage.map((row) => row[0]).sort()).toEqual(["TOOL-01", "TOOL-02"]);
+    expect(coverage.map((row) => row[0]).sort()).toEqual(requirements.map((row) => row[0]).sort());
+    for (const row of [...requirements, ...coverage]) {
+      expect(row[2]).toBe("Implemented — review pending");
+    }
+    const threats = rows(read(evidence), "Threat traceability");
+    expect(threats.map((row) => row[0])).toEqual([
+      "T-02-01", "T-02-02", "T-02-03", "T-02-04", "T-02-05", "T-02-06",
+    ]);
+    for (const row of threats) expect(row[2]).toMatch(/\]\(.*\.test\.ts\)/u);
+  });
+
+  it("records implementation independently of architectural review and human approval", () => {
+    const stateRows = rows(read(evidence), "Review state");
+    expect(stateRows).toHaveLength(5);
+    expect(Object.fromEntries(stateRows.map((row) => [row[0], row[1]]))).toEqual({
+      Planned: "Complete", Implemented: "Complete", "Architecturally Reviewed": "Pending",
+      Approved: "Pending", Stable: "Pending",
+    });
+    expect(read("docs/architecture/decisions/ADR-0004-typed-tool-registry.md")).toContain("final architectural review pending");
+  });
+});

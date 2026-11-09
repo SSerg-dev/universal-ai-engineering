@@ -25,8 +25,8 @@
 
 ### Tool System
 
-- [ ] **TOOL-01**: Developer can register and execute multiple Zod-validated tools without changing the loop algorithm.
-- [ ] **TOOL-02**: Developer receives typed validation, timeout, cancellation, permission, and execution-failure results.
+- [x] **TOOL-01**: Developer can register and execute multiple Zod-validated tools without changing the loop algorithm.
+- [x] **TOOL-02**: Developer receives typed validation, timeout, cancellation, permission, and execution-failure results.
 
 ### MCP Integration
 
@@ -99,8 +99,8 @@
 | CORE-02 | Phase 1 | Validated — human approved |
 | CORE-03 | Phase 1 | Validated — human approved |
 | CORE-04 | Phase 1 | Validated — human approved |
-| TOOL-01 | Phase 2 | Pending |
-| TOOL-02 | Phase 2 | Pending |
+| TOOL-01 | Phase 2 | Implemented — review pending |
+| TOOL-02 | Phase 2 | Implemented — review pending |
 | MCP-01 | Phase 3 | Pending |
 | RAG-01 | Phase 4 | Pending |
 | RAG-02 | Phase 4 | Pending |
