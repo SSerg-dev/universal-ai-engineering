@@ -71,9 +71,11 @@ export class PostgresPassageRepository implements PassageRepositoryPort {
       if (error instanceof RetrievalBoundaryError) throw error;
       throw new RetrievalBoundaryError("REPOSITORY_FAILURE");
     } finally {
-      clearTimeout(timer);
-      signal.removeEventListener("abort", disconnect);
-      await client.end().catch(() => {});
+      try { await client.end().catch(() => {}); }
+      finally {
+        clearTimeout(timer);
+        signal.removeEventListener("abort", disconnect);
+      }
     }
   }
 

@@ -10,8 +10,10 @@ export interface StartServerOptions {
   readonly host?: string;
   readonly journalRoot?: string;
   readonly port?: number;
-  readonly iteration?: 1 | 2 | 3;
+  readonly iteration?: 1 | 2 | 3 | 4;
   readonly mcpConsent?: "read_doc";
+  readonly databaseUrl?: string;
+  readonly indexId?: string;
 }
 
 export async function startServer(
@@ -20,6 +22,8 @@ export async function startServer(
   const runtime = await createIterationRuntime({
     iteration: options.iteration,
     mcpConsent: options.mcpConsent,
+    databaseUrl: options.databaseUrl,
+    indexId: options.indexId,
     fixtureRoot:
       options.fixtureRoot ?? resolve(process.cwd(), "fixtures", "docs"),
     journalRoot:

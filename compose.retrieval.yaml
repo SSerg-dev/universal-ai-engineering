@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: pgvector/pgvector@sha256:5895949dfcdf308eb0cd31c950c93c14895c77f33fbedfecf1fa511ab1d4bcd2
+    environment:
+      POSTGRES_USER: uaos
+      POSTGRES_DB: uaos_course
+      POSTGRES_PASSWORD: ${UAOS_POSTGRES_PASSWORD:?Set UAOS_POSTGRES_PASSWORD for the local teaching database}
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - retrieval-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U uaos -d uaos_course"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+volumes:
+  retrieval-data:

@@ -1,12 +1,34 @@
-import Fastify, { type FastifyInstance } from "fastify";
+import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from "fastify";
 
 import type { RunAgentUseCase } from "../../application/run-agent.js";
 import type { RunAgentResult } from "../../domain/agent-contracts.js";
+import type { ResolveCitationUseCase } from "../../application/resolve-citation.js";
+import { RetrievalBoundaryError } from "../../domain/retrieval-contracts.js";
 
 const HTTP_BODY_LIMIT_BYTES = 16 * 1024;
 
 export interface BuildHttpAppOptions {
   readonly runAgent: RunAgentUseCase;
+  readonly resolveCitation?: ResolveCitationUseCase;
+}
+
+async function bindCallerSignal(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+  const controller = new AbortController();
+  request.setDecorator("agentRunSignal", controller.signal);
+  // A complete request body may close while its response is still being computed.
+  const onRequestClose = () => { if (!request.raw.complete) controller.abort(); };
+  const cleanup = () => {
+    request.raw.removeListener("close", onRequestClose);
+    reply.raw.removeListener("close", onResponseClose);
+    reply.raw.removeListener("finish", cleanup);
+  };
+  const onResponseClose = () => {
+    if (!reply.raw.writableFinished) controller.abort();
+    cleanup();
+  };
+  request.raw.once("close", onRequestClose);
+  reply.raw.once("close", onResponseClose);
+  reply.raw.once("finish", cleanup);
 }
 
 function resultStatus(result: RunAgentResult): number {
@@ -117,29 +139,7 @@ export function buildHttpApp(options: BuildHttpAppOptions): FastifyInstance {
   app.post(
     "/api/v1/agent-runs",
     {
-      onRequest: async (request, reply) => {
-        const controller = new AbortController();
-        request.setDecorator("agentRunSignal", controller.signal);
-
-        // IncomingMessage closes after a complete body, even while the client
-        // is still waiting for its answer. Only an incomplete body is a cancel.
-        const onRequestClose = () => {
-          if (!request.raw.complete) controller.abort();
-        };
-        const cleanup = () => {
-          request.raw.removeListener("close", onRequestClose);
-          reply.raw.removeListener("close", onResponseClose);
-          reply.raw.removeListener("finish", cleanup);
-        };
-        const onResponseClose = () => {
-          if (!reply.raw.writableFinished) controller.abort();
-          cleanup();
-        };
-
-        request.raw.once("close", onRequestClose);
-        reply.raw.once("close", onResponseClose);
-        reply.raw.once("finish", cleanup);
-      },
+      onRequest: bindCallerSignal,
     },
     async (request, reply) => {
       const result = await options.runAgent(
@@ -149,6 +149,24 @@ export function buildHttpApp(options: BuildHttpAppOptions): FastifyInstance {
       return reply.status(resultStatus(result)).send(result);
     },
   );
+
+  const resolveCitation = options.resolveCitation;
+  if (resolveCitation) {
+    app.post("/api/v1/citations/resolve", { onRequest: bindCallerSignal }, async (request, reply) => {
+      const signal = request.getDecorator<AbortSignal>("agentRunSignal");
+      try {
+        const passage = await resolveCitation(request.body, signal);
+        if (passage === null) return reply.status(404).send({ ok: false, error: { code: "CITATION_NOT_FOUND", message: "The indexed citation was not found." } });
+        return reply.status(200).send({ ok: true, passage });
+      } catch (error) {
+        if (signal.aborted) return reply.status(499).send({ ok: false, error: { code: "CANCELLED", message: "Citation resolution was cancelled." } });
+        const invalid = error instanceof RetrievalBoundaryError && error.code === "CITATION_INVALID";
+        return reply.status(invalid ? 400 : 500).send({ ok: false, error: {
+          code: invalid ? "INVALID_CITATION" : "CITATION_FAILURE", message: "The indexed citation could not be resolved.",
+        } });
+      }
+    });
+  }
 
   return app;
 }

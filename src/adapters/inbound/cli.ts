@@ -22,6 +22,8 @@ function defaultRuntimeFactory(): Promise<Runtime> {
   return createIterationRuntime({
     iteration: process.env.UAOS_ITERATION,
     mcpConsent: process.env.UAOS_MCP_CONSENT,
+    databaseUrl: process.env.UAOS_DATABASE_URL,
+    indexId: process.env.UAOS_INDEX_ID,
     fixtureRoot:
       process.env.UAOS_FIXTURE_ROOT ?? resolve(process.cwd(), "fixtures", "docs"),
     journalRoot:
@@ -71,6 +73,18 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
   process.on("SIGINT", abortFromSigint);
   try {
     const runtime = await runtimeFactory();
+    if (argv.length === 2 && argv[0] === "cite") {
+      try {
+        if (!runtime.resolveCitation) throw new Error("resolver unavailable");
+        const passage = await runtime.resolveCitation(JSON.parse(argv[1]!), controller.signal);
+        if (passage === null) { stderr.write("Error: The indexed citation was not found.\n"); return 1; }
+        stdout.write(`${JSON.stringify(passage)}\n`);
+        return 0;
+      } catch {
+        stderr.write("Error: The indexed citation could not be resolved.\n");
+        return 1;
+      }
+    }
     const result = await runtime.runAgent(cliInput(argv), controller.signal);
 
     if (result.ok) {

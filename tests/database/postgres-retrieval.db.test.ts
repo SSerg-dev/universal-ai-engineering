@@ -1,7 +1,12 @@
 import { randomUUID } from "node:crypto";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { basename, dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { Client } from "pg";
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import { PostgresPassageRepository } from "../../src/adapters/outbound/postgres-passage-repository.js";
 import { FixtureHashEmbedding } from "../../src/adapters/outbound/fixture-hash-embedding.js";
@@ -9,10 +14,28 @@ import { Sha256ContentIdentity } from "../../src/adapters/outbound/sha256-conten
 import { createIngestDocument, prepareDocument } from "../../src/application/ingest-document.js";
 import { createRetrievePassages } from "../../src/application/retrieve-passages.js";
 import { EmbeddingSchema, PassageSchema, RetrievalOutputSchema, type Citation } from "../../src/domain/retrieval-contracts.js";
+import { GroundedRunAgentResultSchema } from "../../src/domain/retrieval-contracts.js";
+import { RegisteredAgentEventEnvelopeSchema } from "../../src/domain/tool-events.js";
+import { ingestFixtures } from "../../src/composition/ingest-fixtures.js";
+import { startServer } from "../../src/composition/server.js";
 
 const connectionString = process.env.UAOS_TEST_DATABASE_URL;
 if (!connectionString || !process.env.UAOS_TEST_DATABASE_OWNER) throw new Error("Use npm run test:database for an owned disposable database");
 const repo = new PostgresPassageRepository({ connectionString });
+const repositoryRoot = fileURLToPath(new URL("../../", import.meta.url));
+const fixtureRoot = join(repositoryRoot, "fixtures/docs");
+const temporaryRoots: string[] = [];
+async function temporaryRoot() {
+  const root = await mkdtemp(join(tmpdir(), "uaos-retrieval-"));
+  temporaryRoots.push(root); return root;
+}
+afterEach(async () => {
+  for (const root of temporaryRoots.splice(0)) {
+    expect(dirname(resolve(root))).toBe(resolve(tmpdir()));
+    expect(basename(root)).toMatch(/^uaos-retrieval-/u);
+    await rm(root, { recursive: true, force: true });
+  }
+});
 const embeddings = new FixtureHashEmbedding();
 const identity = new Sha256ContentIdentity();
 const signal = () => new AbortController().signal;
@@ -27,7 +50,13 @@ async function admin<T>(work: (client: Client) => Promise<T>): Promise<T> {
   try { await client.connect(); return await work(client); } finally { await client.end(); }
 }
 
-beforeAll(async () => { await repo.initialize(signal()); });
+beforeAll(async () => {
+  execFileSync(process.execPath, ["node_modules/typescript/bin/tsc"], { cwd: repositoryRoot });
+  await repo.initialize(signal());
+  const versions = await admin((client) => client.query("SELECT current_setting('server_version_num') AS postgres, extversion FROM pg_extension WHERE extname='vector'"));
+  expect(versions.rows[0]?.postgres).toMatch(/^18\d{4}$/u);
+  expect(versions.rows[0]?.extversion).toBe("0.8.7");
+});
 
 describe("Real PostgreSQL/pgvector repository", () => {
   it("ingests idempotently, retrieves ranked passages, and resolves exact text", async () => {
@@ -162,5 +191,80 @@ describe("Real PostgreSQL/pgvector repository", () => {
       caller.abort(reason);
       await lock.end();
     }
+  });
+
+  it("serves grounded HTTP results, exact resolution, and safe persisted journals", async () => {
+    const selected = manifest();
+    await ingestFixtures({ databaseUrl: connectionString, indexId: selected.indexId, fixtureRoot }, signal());
+    const journalRoot = await temporaryRoot();
+    const app = await startServer({ iteration: 4, databaseUrl: connectionString, indexId: selected.indexId, fixtureRoot, journalRoot, port: 0 });
+    try {
+      const address = app.server.address();
+      if (!address || typeof address === "string") throw new Error("Expected TCP address");
+      const base = `http://127.0.0.1:${address.port}`;
+      const response = await fetch(`${base}/api/v1/agent-runs`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: "execution journal" }) });
+      expect(response.status).toBe(200);
+      const result = GroundedRunAgentResultSchema.parse(await response.json());
+      expect(result).toMatchObject({ ok: true, grounding: { status: "answered" }, usage: { modelCalls: 2, toolCalls: 1 } });
+      if (!result.ok || result.grounding.status !== "answered") throw new Error("Expected supported answer");
+      const claim = result.grounding.claims[0]!;
+      const resolveResponse = (body: unknown) => fetch(`${base}/api/v1/citations/resolve`, {
+        method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body),
+      });
+      const resolved = await resolveResponse(claim.citation);
+      expect(resolved.status).toBe(200);
+      expect(await resolved.json()).toMatchObject({ ok: true, passage: { text: claim.quote } });
+      expect((await resolveResponse({ ...claim.citation, indexId: "other-index" })).status).toBe(400);
+      expect((await resolveResponse({ ...claim.citation, passageId: "f".repeat(64) })).status).toBe(404);
+      expect(await readdir(journalRoot)).toEqual([`${result.runId}.jsonl`]);
+      const raw = await readFile(join(journalRoot, `${result.runId}.jsonl`), "utf8");
+      const events = raw.trimEnd().split("\n").map((line) => RegisteredAgentEventEnvelopeSchema.parse(JSON.parse(line)));
+      expect(events).toHaveLength(8);
+      expect(raw).not.toContain("execution journal");
+      expect(raw).not.toContain(claim.quote);
+      expect(raw).not.toContain(connectionString!);
+    } finally { await app.close(); }
+  });
+
+  it("bounds a blocked operation before the longer PostgreSQL lock timeout", async () => {
+    const selected = manifest();
+    await createIngestDocument({ manifest: selected, identity, embeddings, repository: repo })(source, signal());
+    const lock = new Client({ connectionString, connectionTimeoutMillis: 1000, statement_timeout: 2000 });
+    await lock.connect();
+    try {
+      await lock.query("BEGIN");
+      await lock.query("LOCK TABLE uaos_retrieval.passages IN ACCESS EXCLUSIVE MODE");
+      const limited = new PostgresPassageRepository({ connectionString: connectionString!, operationTimeoutMs: 80 });
+      const vector = EmbeddingSchema.parse(await embeddings.embed("journal", signal()));
+      const started = Date.now();
+      await expect(limited.search(selected, vector, 1, 0, signal())).rejects.toMatchObject({ code: "REPOSITORY_FAILURE" });
+      expect(Date.now() - started).toBeLessThan(450);
+      await lock.query("ROLLBACK");
+    } finally { await lock.end(); }
+  });
+
+  it("runs real ingestion, ask, and cite CLI processes with persistent database evidence", async () => {
+    const selected = manifest();
+    const root = await temporaryRoot();
+    const env = { ...process.env, UAOS_ITERATION: "4", UAOS_DATABASE_URL: connectionString, UAOS_INDEX_ID: selected.indexId,
+      UAOS_FIXTURE_ROOT: fixtureRoot, UAOS_JOURNAL_ROOT: join(root, "journal") };
+    const ingestPath = join(repositoryRoot, "dist/src/composition/ingest-fixtures.js");
+    const cliPath = join(repositoryRoot, "dist/src/adapters/inbound/cli.js");
+    const ingested = spawnSync(process.execPath, [ingestPath], { cwd: root, env, encoding: "utf8", timeout: 10_000 });
+    expect(ingested.status, ingested.stderr).toBe(0);
+    expect(ingested.stdout).toMatch(/execution-journal [a-f0-9]{64} passages=1/u);
+    const asked = spawnSync(process.execPath, [cliPath, "ask", "execution journal"], { cwd: root, env, encoding: "utf8", timeout: 10_000 });
+    expect(asked.status, asked.stderr).toBe(0);
+    expect(asked.stdout).toContain("Usage: modelCalls=2, toolCalls=1");
+    const rawCitation = asked.stdout.match(/^Citation: (.+)$/mu)?.[1];
+    expect(rawCitation).toBeDefined();
+    const cited = spawnSync(process.execPath, [cliPath, "cite", rawCitation!], { cwd: root, env, encoding: "utf8", timeout: 10_000 });
+    expect(cited.status, cited.stderr).toBe(0);
+    expect(PassageSchema.parse(JSON.parse(cited.stdout)).text).toContain("execution journal");
+    expect(await readdir(join(root, "journal"))).toHaveLength(1);
+    const abstained = spawnSync(process.execPath, [cliPath, "ask", "!!!"], { cwd: root, env, encoding: "utf8", timeout: 10_000 });
+    expect(abstained.status, abstained.stderr).toBe(0);
+    expect(abstained.stdout).toContain("No supporting indexed passages were found.");
+    expect(abstained.stdout).toContain("Usage: modelCalls=2, toolCalls=1");
   });
 });
