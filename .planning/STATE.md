@@ -1,19 +1,19 @@
 ---
 gsd_state_version: "1.0"
-current_phase: 05
-current_phase_name: Durable State and Memory
-status: executing
-stopped_at: Completed UAOS-05-01; implementing conversation service semantics
+current_phase: 06
+current_phase_name: Evaluation System
+status: planning
+stopped_at: Completed UAOS-05-02; preparing evaluation contracts
 last_updated: "2026-11-09"
 last_activity: 2026-11-09
-last_activity_desc: Durable state contracts passed 253 tests before dependent implementation
-state_head: 392aa26
+last_activity_desc: Durable state closed with 273 offline tests and 19 real database tests
+state_head: 1b0b0fc
 progress:
   total_phases: 10
   completed_phases: 1
   total_plans: 27
-  completed_plans: 16
-  percent: 59
+  completed_plans: 17
+  percent: 62
 ---
 
 # Project State
@@ -23,20 +23,20 @@ progress:
 See: .planning/PROJECT.md (updated 2026-11-09)
 
 **Core value:** A learner can understand, build, test, and review a reusable Agentic OS one working iteration at a time.
-**Current focus:** Phase UAOS-05 — Durable State and Memory
+**Current focus:** Phase UAOS-06 — Evaluation System
 
 ## Current Position
 
-Phase: UAOS-05 (Durable State and Memory) — EXECUTING
-Plan: 1 of 2 complete in current phase
-Status: Implementing 05-02 conversation service semantics before PostgreSQL
-Last activity: 2026-11-09 — Phase 5 contracts passed 253 tests and strict project/core compilation
+Phase: UAOS-06 (Evaluation System) — PLANNING
+Plan: 0 of 2 complete in current phase
+Status: Preparing 06-01 versioned cases, scorers, thresholds, reports, and traceability
+Last activity: 2026-11-09 — Phase 5 passed 273 offline tests and 19 real database tests
 
-Progress: 16/27 roadmap plans (59%); Phase 1 approved; Phase 2–4 review pending
+Progress: 17/27 roadmap plans (62%); Phase 1 approved; Phase 2–5 review pending
 
 ## Performance Metrics
 
-- Total plans completed: 16
+- Total plans completed: 17
 - Average duration: -
 - Total execution time: 0.0 hours
 
@@ -91,7 +91,7 @@ Progress: 16/27 roadmap plans (59%); Phase 1 approved; Phase 2–4 review pendin
 
 ### Pending Todos
 
-Review Phase 2–4 evidence. Define Phase 5 state and memory contracts. The proposed seven-day local conversation retention policy was presented to the user; preference feedback is pending.
+Review Phase 2–5 evidence. Define Phase 6 evaluation contracts. The proposed seven-day local conversation retention preference remains open; Phase 5 requires explicit per-conversation retention and activates no automatic default.
 
 ### Blockers/Concerns
 
@@ -107,8 +107,8 @@ Review Phase 2–4 evidence. Define Phase 5 state and memory contracts. The prop
 ## Session Continuity
 
 Last session: 2026-11-09
-Stopped at: Phase 5 contracts complete; implementing 05-02
-Resume file: .planning/phases/UAOS-05-durable-state-memory/05-01-SUMMARY.md
+Stopped at: Phase 5 implemented; preparing Phase 6 contracts
+Resume file: .planning/phases/UAOS-05-durable-state-memory/05-02-SUMMARY.md
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 
@@ -117,3 +117,5 @@ Phase 2 closure on 2026-11-09 passed 144 tests in 16 files, project/core compila
 Phase 3 closure on 2026-11-09 passed 195 tests in 19 files, project/core compilation, build, links, package admission/integrity, and requirement/threat traceability. One consented stdio MCP capability uses pinned modern negotiation and matching host correlation receipts. Human architectural review, approval, and stability remain pending independently.
 
 Phase 4 closure on 2026-11-09 passed 242 tests in 24 files, strict project/core compilation, build, links, package integrity, and requirement/threat coverage. An explicit disposable PostgreSQL 18 / pgvector 0.8.7 suite passed 11 cases and removed its exact owned container. Human review, approval, and stability remain pending.
+
+Phase 5 closure on 2026-11-09 passed 273 tests in 27 files, strict project/core compilation, build, links, and requirement/threat coverage. The separate database suite passed 19 cases and removed its exact owned container. Durable state, scoped memory, replay, fencing, expiry/purge, safe atomic audit, and real CLI/HTTP correlation are implemented. Human review, approval, and stability remain pending.
