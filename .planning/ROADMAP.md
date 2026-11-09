@@ -127,7 +127,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 05-01: Define state, checkpoint, memory, retention, and concurrency contracts.
+- [x] 05-01: Define state, checkpoint, memory, retention, and concurrency contracts.
 - [ ] 05-02: Implement durable resume and controlled memory writes with evidence.
 
 ### Phase 6: Evaluation System
@@ -227,7 +227,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 | 2. Typed Tool System | 2/2 | Implemented; review pending | - |
 | 3. MCP Boundary | 2/2 | Implemented; review pending | - |
 | 4. Grounded Retrieval | 2/2 | Implemented; review pending | - |
-| 5. Durable State and Memory | 0/2 | Not started | - |
+| 5. Durable State and Memory | 1/2 | In progress | - |
 | 6. Evaluation System | 0/2 | Not started | - |
 | 7. End-to-End Observability | 0/2 | Not started | - |
 | 8. Streaming Angular UI | 0/2 | Not started | - |

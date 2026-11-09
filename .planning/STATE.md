@@ -2,18 +2,18 @@
 gsd_state_version: "1.0"
 current_phase: 05
 current_phase_name: Durable State and Memory
-status: planning
-stopped_at: Completed UAOS-04-02; preparing state and memory contracts
+status: executing
+stopped_at: Completed UAOS-05-01; implementing conversation service semantics
 last_updated: "2026-11-09"
 last_activity: 2026-11-09
-last_activity_desc: Grounded retrieval closed with 242 offline tests and 11 real database tests
-state_head: 0f93ffc
+last_activity_desc: Durable state contracts passed 253 tests before dependent implementation
+state_head: 392aa26
 progress:
   total_phases: 10
   completed_phases: 1
   total_plans: 27
-  completed_plans: 15
-  percent: 55
+  completed_plans: 16
+  percent: 59
 ---
 
 # Project State
@@ -27,16 +27,16 @@ See: .planning/PROJECT.md (updated 2026-11-09)
 
 ## Current Position
 
-Phase: UAOS-05 (Durable State and Memory) — PLANNING
-Plan: 0 of 2 complete in current phase
-Status: Preparing 05-01 state, checkpoint, memory, retention, and concurrency contracts
-Last activity: 2026-11-09 — Phase 4 closure passed 242 offline tests and 11 real database tests
+Phase: UAOS-05 (Durable State and Memory) — EXECUTING
+Plan: 1 of 2 complete in current phase
+Status: Implementing 05-02 conversation service semantics before PostgreSQL
+Last activity: 2026-11-09 — Phase 5 contracts passed 253 tests and strict project/core compilation
 
-Progress: 15/27 roadmap plans (55%); Phase 1 approved; Phase 2–4 review pending
+Progress: 16/27 roadmap plans (59%); Phase 1 approved; Phase 2–4 review pending
 
 ## Performance Metrics
 
-- Total plans completed: 15
+- Total plans completed: 16
 - Average duration: -
 - Total execution time: 0.0 hours
 
@@ -107,8 +107,8 @@ Review Phase 2–4 evidence. Define Phase 5 state and memory contracts. The prop
 ## Session Continuity
 
 Last session: 2026-11-09
-Stopped at: Phase 4 implemented; preparing Phase 5 contracts
-Resume file: .planning/phases/UAOS-04-grounded-retrieval/04-02-SUMMARY.md
+Stopped at: Phase 5 contracts complete; implementing 05-02
+Resume file: .planning/phases/UAOS-05-durable-state-memory/05-01-SUMMARY.md
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 
