@@ -32,7 +32,7 @@ One internal-documentation assistant evolves through ten runnable vertical slice
 4. Learner can inspect correlated JSONL events and run deterministic success and failure tests offline.
 5. Evidence distinguishes implemented, reviewed, and approved states.
 
-**Plans:** 7/9 plans executed
+**Plans:** 8/9 plans executed
 
 Plans:
 **Wave 1**
@@ -57,7 +57,7 @@ Plans:
 - [x] 01-07-PLAN.md — Add safe per-run JSONL persistence, runtime composition, `uaos ask`, and SIGINT cancellation.
 
 **Wave 8** *(blocked on Wave 7 completion)*
-- [ ] 01-08-PLAN.md — Add bounded Fastify parity, disconnect behavior, and concurrent persisted-run isolation.
+- [x] 01-08-PLAN.md — Add bounded Fastify parity, disconnect behavior, and concurrent persisted-run isolation.
 
 **Wave 9** *(blocked on Wave 8 completion)*
 - [ ] 01-09-PLAN.md — Close teaching documentation, validation, traceability, changelog, and review evidence.
