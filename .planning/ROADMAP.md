@@ -94,7 +94,7 @@ Plans:
 
 Plans:
 - [x] 03-01: Pin the MCP specification/SDK and define adapter, negotiation, consent, and audit contracts.
-- [ ] 03-02: Implement one capability with conformance, adversarial, and failure tests.
+- [x] 03-02: Implement one capability with conformance, adversarial, and failure tests.
 
 ### Phase 4: Grounded Retrieval
 
@@ -225,7 +225,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 |-------|----------------|--------|-----------|
 | 1. Typed Agent Loop | 9/9 | Approved | 2026-11-09 |
 | 2. Typed Tool System | 2/2 | Implemented; review pending | - |
-| 3. MCP Boundary | 1/2 | In progress | - |
+| 3. MCP Boundary | 2/2 | Implemented; review pending | - |
 | 4. Grounded Retrieval | 0/2 | Not started | - |
 | 5. Durable State and Memory | 0/2 | Not started | - |
 | 6. Evaluation System | 0/2 | Not started | - |
