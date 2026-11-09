@@ -32,7 +32,7 @@ One internal-documentation assistant evolves through ten runnable vertical slice
 4. Learner can inspect correlated JSONL events and run deterministic success and failure tests offline.
 5. Evidence distinguishes implemented, reviewed, and approved states.
 
-**Plans:** 8/9 plans executed
+**Plans:** 9/9 implementation plans executed; final review and approval pending
 
 Plans:
 **Wave 1**
@@ -60,7 +60,7 @@ Plans:
 - [x] 01-08-PLAN.md — Add bounded Fastify parity, disconnect behavior, and concurrent persisted-run isolation.
 
 **Wave 9** *(blocked on Wave 8 completion)*
-- [ ] 01-09-PLAN.md — Close teaching documentation, validation, traceability, changelog, and review evidence.
+- [x] 01-09-PLAN.md — Close teaching documentation, validation, traceability, changelog, and review evidence.
 
 ### Phase 2: Typed Tool System
 
@@ -223,7 +223,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Typed Agent Loop | 7/9 | In Progress|  |
+| 1. Typed Agent Loop | 9/9 | Implementation complete; review pending | - |
 | 2. Typed Tool System | 0/2 | Not started | - |
 | 3. MCP Boundary | 0/2 | Not started | - |
 | 4. Grounded Retrieval | 0/2 | Not started | - |
