@@ -234,9 +234,9 @@ export class PostgresConversationStore implements ConversationStorePort {
           await this.#save(client, snapshot, input, "memory.deleted", { key: memory.key }); memories += 1;
         }
       }
-      await client.query(`DELETE FROM uaos_state.audit WHERE (conversation_id,sequence) IN
+      const auditRemoval = await client.query(`DELETE FROM uaos_state.audit WHERE (conversation_id,sequence) IN
         (SELECT conversation_id,sequence FROM uaos_state.audit WHERE expires_at <= $1 ORDER BY expires_at LIMIT 1000)`, [input.now]);
-      return { conversations: expired.rowCount ?? 0, memories };
+      return { conversations: expired.rowCount ?? 0, memories, audits: auditRemoval.rowCount ?? 0 };
     });
   }
 
@@ -244,7 +244,7 @@ export class PostgresConversationStore implements ConversationStorePort {
     StateIdSchema.parse(id);
     return this.#withClient(signal, async (client) => {
       const result = await client.query(`SELECT metadata FROM
-        (SELECT sequence,metadata FROM uaos_state.audit WHERE conversation_id=$1 ORDER BY sequence DESC LIMIT 1000) recent
+        (SELECT sequence,metadata FROM uaos_state.audit WHERE conversation_id=$1 AND expires_at > clock_timestamp() ORDER BY sequence DESC LIMIT 1000) recent
         ORDER BY sequence`, [id]);
       return result.rows.map(({ metadata }) => StateAuditEventSchema.parse(metadata));
     }, false);

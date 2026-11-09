@@ -4,12 +4,26 @@ import type { RunAgentUseCase } from "../../application/run-agent.js";
 import type { RunAgentResult } from "../../domain/agent-contracts.js";
 import type { ResolveCitationUseCase } from "../../application/resolve-citation.js";
 import { RetrievalBoundaryError } from "../../domain/retrieval-contracts.js";
+import type { ConversationCommandHandler } from "../../application/conversation-command.js";
+import { StateBoundaryError, type StateBoundaryCode } from "../../domain/state-contracts.js";
 
 const HTTP_BODY_LIMIT_BYTES = 16 * 1024;
 
 export interface BuildHttpAppOptions {
   readonly runAgent: RunAgentUseCase;
   readonly resolveCitation?: ResolveCitationUseCase;
+  readonly conversationCommand?: ConversationCommandHandler;
+}
+
+function stateStatus(code: StateBoundaryCode): number {
+  switch (code) {
+    case "STATE_INPUT_INVALID": case "RETENTION_INVALID": return 400;
+    case "CONVERSATION_NOT_FOUND": case "MEMORY_NOT_FOUND": return 404;
+    case "CONVERSATION_EXPIRED": return 410;
+    case "VERSION_CONFLICT": case "CONVERSATION_BUSY": case "REQUEST_KEY_REUSED":
+    case "TURN_INTERRUPTED": case "TURN_FENCED": case "STATE_CAPACITY_EXCEEDED": return 409;
+    default: return 500;
+  }
 }
 
 async function bindCallerSignal(request: FastifyRequest, reply: FastifyReply): Promise<void> {
@@ -163,6 +177,20 @@ export function buildHttpApp(options: BuildHttpAppOptions): FastifyInstance {
         const invalid = error instanceof RetrievalBoundaryError && error.code === "CITATION_INVALID";
         return reply.status(invalid ? 400 : 500).send({ ok: false, error: {
           code: invalid ? "INVALID_CITATION" : "CITATION_FAILURE", message: "The indexed citation could not be resolved.",
+        } });
+      }
+    });
+  }
+
+  const conversationCommand = options.conversationCommand;
+  if (conversationCommand) {
+    app.post("/api/v1/conversation-commands", { onRequest: bindCallerSignal }, async (request, reply) => {
+      const signal = request.getDecorator<AbortSignal>("agentRunSignal");
+      try { return reply.status(200).send(await conversationCommand(request.body, signal)); }
+      catch (error) {
+        const code = error instanceof StateBoundaryError ? error.code : "STATE_REPOSITORY_FAILURE";
+        return reply.status(signal.aborted ? 499 : stateStatus(code)).send({ ok: false, error: {
+          code: signal.aborted ? "CANCELLED" : code, message: "The conversation state operation could not be completed.",
         } });
       }
     });

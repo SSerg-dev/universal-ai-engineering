@@ -18,5 +18,8 @@ export function createIterationRuntime(options: CreateIterationRuntimeOptions): 
   if (iteration === 4 || iteration === "4") {
     return import("./create-grounded-runtime.js").then(({ createGroundedRuntime }) => createGroundedRuntime(options));
   }
+  if (iteration === 5 || iteration === "5") {
+    return import("./create-conversation-runtime.js").then(({ createConversationRuntime }) => createConversationRuntime(options));
+  }
   throw new Error("The selected iteration is unsupported.");
 }

@@ -6,6 +6,7 @@ import { pathToFileURL } from "node:url";
 import type { RunAgentUseCase } from "../../application/run-agent.js";
 import type { Runtime } from "../../composition/create-runtime.js";
 import { createIterationRuntime } from "../../composition/create-iteration-runtime.js";
+import { StateBoundaryError } from "../../domain/state-contracts.js";
 
 interface TextWriter {
   write(value: string): unknown;
@@ -73,6 +74,20 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
   process.on("SIGINT", abortFromSigint);
   try {
     const runtime = await runtimeFactory();
+    if (argv.length === 2 && argv[0] === "state") {
+      try {
+        if (!runtime.conversationCommand) throw new StateBoundaryError("STATE_INPUT_INVALID");
+        let command: unknown;
+        try { command = JSON.parse(argv[1]!); } catch { throw new StateBoundaryError("STATE_INPUT_INVALID"); }
+        const result = await runtime.conversationCommand(command, controller.signal);
+        stdout.write(`${JSON.stringify(result)}\n`);
+        return 0;
+      } catch (error) {
+        const code = error instanceof StateBoundaryError ? error.code : "STATE_REPOSITORY_FAILURE";
+        stderr.write(`Error [${code}]: The conversation state operation could not be completed.\n`);
+        return 1;
+      }
+    }
     if (argv.length === 2 && argv[0] === "cite") {
       try {
         if (!runtime.resolveCitation) throw new Error("resolver unavailable");

@@ -1,4 +1,9 @@
 import { randomUUID } from "node:crypto";
+import { spawnSync } from "node:child_process";
+import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { basename, dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { Client } from "pg";
 import { beforeAll, describe, expect, it, vi } from "vitest";
@@ -7,6 +12,10 @@ import { PostgresConversationStore } from "../../src/adapters/outbound/postgres-
 import { Sha256ContentIdentity } from "../../src/adapters/outbound/sha256-content-identity.js";
 import { createConversationService } from "../../src/application/conversation-service.js";
 import type { TurnExecutionPort } from "../../src/application/ports/turn-execution-port.js";
+import { ConversationCommandSuccessSchema } from "../../src/domain/conversation-command-contracts.js";
+import { RegisteredAgentEventEnvelopeSchema } from "../../src/domain/tool-events.js";
+import { ingestFixtures } from "../../src/composition/ingest-fixtures.js";
+import { startServer } from "../../src/composition/server.js";
 
 const connectionString = process.env.UAOS_TEST_DATABASE_URL;
 if (!connectionString || !process.env.UAOS_TEST_DATABASE_OWNER) throw new Error("Use npm run test:database for an owned disposable database");
@@ -122,5 +131,76 @@ describe("PostgreSQL durable conversation state", () => {
     const audit = await service.audit(created.conversationId);
     expect(audit.at(-1)?.eventType).toBe("conversation.purged");
     expect(JSON.stringify(audit)).not.toContain("private expired question");
+  });
+
+  it("shares durable CLI/HTTP conversations, replay, follow-up context, and explicit memory", async () => {
+    const repositoryRoot = fileURLToPath(new URL("../../", import.meta.url));
+    const fixtureRoot = join(repositoryRoot, "fixtures/docs"), indexId = `test-${randomUUID()}`;
+    await ingestFixtures({ databaseUrl: connectionString, indexId, fixtureRoot }, signal());
+    const root = await mkdtemp(join(tmpdir(), "uaos-conversation-"));
+    const journalRoot = join(root, "journal");
+    const cliPath = join(repositoryRoot, "dist/src/adapters/inbound/cli.js");
+    const env = { ...process.env, UAOS_ITERATION: "5", UAOS_DATABASE_URL: connectionString, UAOS_INDEX_ID: indexId,
+      UAOS_FIXTURE_ROOT: fixtureRoot, UAOS_JOURNAL_ROOT: journalRoot };
+    const app = await startServer({ iteration: 5, databaseUrl: connectionString, indexId, fixtureRoot, journalRoot, port: 0 });
+    try {
+      const cli = spawnSync(process.execPath, [cliPath, "state", JSON.stringify({ operation: "create", retentionSeconds: 3600 })],
+        { cwd: root, env, encoding: "utf8", timeout: 10_000 });
+      expect(cli.status, cli.stderr).toBe(0);
+      const created = ConversationCommandSuccessSchema.parse(JSON.parse(cli.stdout));
+      if (created.operation !== "create") throw new Error("Expected create result");
+      const conversationId = created.value.conversationId;
+      const address = app.server.address();
+      if (!address || typeof address === "string") throw new Error("Expected TCP address");
+      const endpoint = `http://127.0.0.1:${address.port}/api/v1/conversation-commands`;
+      const send = async (command: unknown) => {
+        const response = await fetch(endpoint, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(command) });
+        expect(response.status).toBe(200);
+        return ConversationCommandSuccessSchema.parse(await response.json());
+      };
+      const request = { operation: "run_turn", conversationId, requestId: "first", expectedVersion: 0, question: "execution journal" };
+      const first = await send(request);
+      if (first.operation !== "run_turn") throw new Error("Expected turn result");
+      expect(first.value.result).toMatchObject({ ok: true, grounding: { status: "answered" } });
+      const again = await send({ ...request, requestId: "again", expectedVersion: 2, question: "again" });
+      if (again.operation !== "run_turn" || !again.value.result.ok || !first.value.result.ok) throw new Error("Expected grounded follow-up");
+      expect(again.value.result.answer).toBe(first.value.result.answer);
+      await send({ operation: "write_memory", conversationId, expectedVersion: 4, key: "topic", value: "execution journal", ttlSeconds: 60 });
+      const remembered = await send({ ...request, requestId: "memory", expectedVersion: 5, question: "memory:topic" });
+      expect(remembered).toMatchObject({ operation: "run_turn", value: { version: 7, result: { ok: true, grounding: { status: "answered" } } } });
+      const replay = await send(request);
+      expect(replay).toMatchObject({ operation: "run_turn", value: { cached: true, version: 7, result: first.value.result } });
+      const read = spawnSync(process.execPath, [cliPath, "state", JSON.stringify({ operation: "read", conversationId })],
+        { cwd: root, env, encoding: "utf8", timeout: 10_000 });
+      expect(read.status, read.stderr).toBe(0);
+      const loaded = ConversationCommandSuccessSchema.parse(JSON.parse(read.stdout));
+      if (loaded.operation !== "read") throw new Error("Expected snapshot");
+      expect(loaded.value.turns).toHaveLength(3);
+      expect(loaded.value.memories[0]?.value).toBe("execution journal");
+      const files = await readdir(journalRoot); expect(files).toHaveLength(3);
+      for (const turn of loaded.value.turns) {
+        const raw = await readFile(join(journalRoot, `${turn.runId}.jsonl`), "utf8");
+        expect(raw.trimEnd().split("\n").map((line) => RegisteredAgentEventEnvelopeSchema.parse(JSON.parse(line)))).toHaveLength(8);
+        expect(raw).not.toContain("execution journal");
+        expect(raw).not.toContain("memory:topic");
+        expect(raw).not.toContain(connectionString!);
+      }
+      const audit = await send({ operation: "audit", conversationId });
+      expect(JSON.stringify(audit)).not.toContain("execution journal");
+      expect(JSON.stringify(audit)).toContain(first.value.result.runId);
+    } finally {
+      await app.close();
+      expect(dirname(resolve(root))).toBe(resolve(tmpdir())); expect(basename(root)).toMatch(/^uaos-conversation-/u);
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("physically removes expired audit metadata while retaining a new purge tombstone", async () => {
+    const { service } = harness();
+    const created = await service.create({ retentionSeconds: 60 });
+    time += 31 * 86400_000;
+    expect((await service.purge()).audits).toBeGreaterThan(0);
+    const audit = await service.audit(created.conversationId);
+    expect(audit.map(({ eventType }) => eventType)).toEqual(["conversation.purged"]);
   });
 });

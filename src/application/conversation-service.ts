@@ -148,7 +148,7 @@ export function createConversationService(deps: {
   async function purge(signal?: AbortSignal) {
     const activeSignal = caller(signal), meta = metadata();
     const result = await storeCall(() => deps.store.purge(meta, activeSignal), activeSignal);
-    return internal(z.strictObject({ conversations: z.number().int().nonnegative(), memories: z.number().int().nonnegative() }), result);
+    return internal(z.strictObject({ conversations: z.number().int().nonnegative(), memories: z.number().int().nonnegative(), audits: z.number().int().nonnegative() }), result);
   }
 
   async function audit(conversationId: unknown, signal?: AbortSignal) {

@@ -40,7 +40,9 @@ To keep maintenance bounded, a purge invocation handles at most 100 expired conv
 
 ## Compatibility and evidence
 
-Run state, conversation history, and explicit memory remain different types. Existing iterations and their strict result/event schemas are preserved. Phase 5 adds dedicated conversation endpoints/CLI commands through composition; the shared grounded agent remains the executor behind stable ports.
+Run state, conversation history, and explicit memory remain different types. Existing iterations and their strict result/event schemas are preserved. Phase 5 adds a strict typed operation envelope through uaos state and POST /api/v1/conversation-commands; both call one application command handler. Operations are create, read, run_turn, write_memory, delete_memory, recover, purge, and audit. Ordinary ask/cite remains a standalone grounded execution; durable content storage occurs only through explicit conversation commands. The shared grounded agent remains the executor behind stable ports.
+
+The deterministic context demonstration recognizes again as the last settled question and memory:key as the selected explicit memory value. Context changes only a read-only retrieval query. It cannot grant permissions, execute another tool, or bypass grounding. These conventions demonstrate data flow and bounded history, not general semantic conversation understanding.
 
 Tests must prove cached replay executes zero additional effects, same-key input mismatch, concurrent turn exclusion, version conflicts, stable context, late-worker fencing, interrupted recovery, scoped/expired memory, cancellation settlement, transaction/audit rollback, physical purge, safe metadata, restart persistence, and CLI/HTTP parity.
 

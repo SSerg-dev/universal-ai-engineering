@@ -138,7 +138,7 @@ describe("Durable conversation service semantics", () => {
     advance(60_000);
     await expect(service.read(created.conversationId)).rejects.toMatchObject({ code: "CONVERSATION_EXPIRED" });
     expect(store.records.has(created.conversationId)).toBe(true);
-    expect(await service.purge()).toEqual({ conversations: 1, memories: 1 });
+    expect(await service.purge()).toEqual({ conversations: 1, memories: 1, audits: 0 });
     expect(store.records.has(created.conversationId)).toBe(false);
     const audit = await service.audit(created.conversationId);
     expect(audit.at(-1)?.eventType).toBe("conversation.purged");

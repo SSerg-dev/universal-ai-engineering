@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { execFileSync, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
@@ -51,7 +51,6 @@ async function admin<T>(work: (client: Client) => Promise<T>): Promise<T> {
 }
 
 beforeAll(async () => {
-  execFileSync(process.execPath, ["node_modules/typescript/bin/tsc"], { cwd: repositoryRoot });
   await repo.initialize(signal());
   const versions = await admin((client) => client.query("SELECT current_setting('server_version_num') AS postgres, extversion FROM pg_extension WHERE extname='vector'"));
   expect(versions.rows[0]?.postgres).toMatch(/^18\d{4}$/u);

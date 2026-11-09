@@ -8,10 +8,12 @@ import {
   type RunAgentUseCase,
 } from "../application/run-agent.js";
 import type { ResolveCitationUseCase } from "../application/resolve-citation.js";
+import type { ConversationCommandHandler } from "../application/conversation-command.js";
 
 export interface Runtime {
   readonly runAgent: RunAgentUseCase;
   readonly resolveCitation?: ResolveCitationUseCase;
+  readonly conversationCommand?: ConversationCommandHandler;
 }
 
 export interface CreateRuntimeOptions {
