@@ -194,7 +194,8 @@ describe("Iteration 1 review evidence", () => {
     const tracked = execFileSync("git", ["ls-files", "--", "*.md"], { encoding: "utf8" })
       .trim().split(/\r?\n/u);
     const files = new Set([...tracked, evidencePath, guidePath,
-      "docs/iterations/03-mcp-boundary.md", "docs/reviews/ITERATION-03-evidence.md"]);
+      "docs/iterations/03-mcp-boundary.md", "docs/reviews/ITERATION-03-evidence.md",
+      "docs/iterations/04-grounded-retrieval.md", "docs/reviews/ITERATION-04-evidence.md"]);
     const broken: string[] = [];
     for (const file of files) {
       const markdown = read(file)
@@ -272,5 +273,37 @@ describe("Iteration 3 review evidence", () => {
     for (const command of ["npm ci", "npm run build", "UAOS_ITERATION", "UAOS_MCP_CONSENT", "npm run uaos -- ask",
       "startServer", "/api/v1/agent-runs", "npm run validate"]) expect(guide).toContain(command);
     expect(read("docs/architecture/decisions/ADR-0005-mcp-boundary.md")).toContain("architectural review pending");
+  });
+});
+
+describe("Iteration 4 review evidence", () => {
+  const evidence = "docs/reviews/ITERATION-04-evidence.md";
+
+  it("traces both RAG requirements and seven independent boundaries", () => {
+    const requirements = rows(read(".planning/REQUIREMENTS.md"), "Traceability")
+      .filter((row) => row[1] === "Phase 4");
+    const coverage = rows(read(evidence), "Requirement traceability");
+    expect(coverage.map((row) => row[0])).toEqual(["RAG-01", "RAG-02"]);
+    expect(coverage.map((row) => row[0])).toEqual(requirements.map((row) => row[0]));
+    for (const row of [...requirements, ...coverage]) expect(row[2]).toBe("Implemented — review pending");
+    const threats = rows(read(evidence), "Threat traceability");
+    expect(threats.map((row) => row[0])).toEqual(Array.from({ length: 7 }, (_, i) => `T-04-${String(i + 1).padStart(2, "0")}`));
+    for (const row of threats) expect(row[2]).toMatch(/\]\(.*\.test\.ts\)/u);
+  });
+
+  it("requires explicit real-database verification and keeps approval separate", () => {
+    expect(Object.fromEntries(rows(read(evidence), "Review state").map((row) => [row[0], row[1]]))).toEqual({
+      Planned: "Complete", Implemented: "Complete", "Architecturally Reviewed": "Pending",
+      Approved: "Pending", Stable: "Pending",
+    });
+    const guide = read("docs/iterations/04-grounded-retrieval.md");
+    for (const command of ["npm ci", "npm run build", "npm run ingest", "npm run uaos -- ask", "npm run uaos -- cite",
+      "startServer", "/api/v1/citations/resolve", "npm run validate", "npm run test:database"]) expect(guide).toContain(command);
+    const manifest = JSON.parse(read("package.json"));
+    expect(manifest.scripts["test:database"]).toBe("node scripts/test-database.mjs");
+    const infrastructure = JSON.parse(read("docs/reviews/INFRASTRUCTURE-04.json"));
+    expect(infrastructure.image).toMatch(/^pgvector\/pgvector@sha256:[a-f0-9]{64}$/u);
+    expect(read("compose.retrieval.yaml")).toContain(infrastructure.image);
+    expect(read("docs/architecture/decisions/ADR-0006-grounded-retrieval.md")).toContain("architectural review pending");
   });
 });

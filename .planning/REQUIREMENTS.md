@@ -34,8 +34,8 @@
 
 ### Grounded Retrieval
 
-- [ ] **RAG-01**: Learner can ingest, chunk, index, and retrieve controlled documents through PostgreSQL/pgvector adapters.
-- [ ] **RAG-02**: User receives an answer grounded in retrieved passages with resolvable source citations.
+- [x] **RAG-01**: Learner can ingest, chunk, index, and retrieve controlled documents through PostgreSQL/pgvector adapters.
+- [x] **RAG-02**: User receives an answer grounded in retrieved passages with resolvable source citations.
 
 ### State and Memory
 
@@ -102,8 +102,8 @@
 | TOOL-01 | Phase 2 | Implemented — review pending |
 | TOOL-02 | Phase 2 | Implemented — review pending |
 | MCP-01 | Phase 3 | Implemented — review pending |
-| RAG-01 | Phase 4 | Pending |
-| RAG-02 | Phase 4 | Pending |
+| RAG-01 | Phase 4 | Implemented — review pending |
+| RAG-02 | Phase 4 | Implemented — review pending |
 | MEM-01 | Phase 5 | Pending |
 | EVAL-01 | Phase 6 | Pending |
 | OBS-01 | Phase 7 | Pending |
@@ -122,4 +122,4 @@
 
 ---
 *Requirements defined: 2026-09-28*
-*Last updated: 2026-11-09 after Phase 3 implementation. Checked requirements indicate implementation coverage; approval remains separate.*
+*Last updated: 2026-11-09 after Phase 4 implementation. Checked requirements indicate implementation coverage; approval remains separate.*

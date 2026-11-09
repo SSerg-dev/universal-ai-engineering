@@ -6,6 +6,11 @@ All notable project changes are recorded here. Work remains unapproved unless an
 
 ### Added
 
+- Phase 4 controlled Markdown ingestion with canonical Unicode spans, profile-tagged vectors, PostgreSQL/pgvector transactional active revisions, and retained exact citations.
+- Request-scoped extractive grounding, iteration 4 CLI/HTTP, ingestion and citation resolver commands, and explicit no-evidence abstention.
+- A digest-pinned teaching Compose service and an owner-verified disposable database test runner with rollback, concurrency, corruption, cancellation, deadline, and full CLI/HTTP checks.
+- Separate pg/types dependency admission and Iteration 4 guide/evidence.
+
 - Phase 3 consented local stdio MCP read_doc capability, pinned modern protocol, exact-schema discovery, validated correlation receipts, and SDK-owned session cleanup.
 - Explicit iteration 3 CLI/HTTP composition, adversarial boundary tests, real protocol/cancellation tests, and teaching/review evidence.
 - Separate admission for official MCP client/server SDK 2.4.0, preserving the original workspace pins.
