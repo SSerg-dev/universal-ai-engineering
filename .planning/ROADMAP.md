@@ -144,7 +144,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 06-01: Define cases, scorers, thresholds, results, and traceability.
+- [x] 06-01: Define cases, scorers, thresholds, results, and traceability.
 - [ ] 06-02: Implement regression commands, reports, fixtures, and evidence.
 
 ### Phase 7: End-to-End Observability
@@ -228,7 +228,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 | 3. MCP Boundary | 2/2 | Implemented; review pending | - |
 | 4. Grounded Retrieval | 2/2 | Implemented; review pending | - |
 | 5. Durable State and Memory | 2/2 | Implemented; review pending | - |
-| 6. Evaluation System | 0/2 | Not started | - |
+| 6. Evaluation System | 1/2 | In progress | - |
 | 7. End-to-End Observability | 0/2 | Not started | - |
 | 8. Streaming Angular UI | 0/2 | Not started | - |
 | 9. Guardrails and Approval | 0/2 | Not started | - |
