@@ -41,6 +41,7 @@ Phase 1 was explicitly approved on 2026-11-09 after the typed loop, CLI/HTTP ada
 - Phase 3 implements a consented stdio MCP read_doc boundary with pinned modern negotiation, strict result validation, CLI/HTTP selection, and safe correlated journal evidence. Phase 3 review and approval are pending.
 - Phase 4 implements controlled PostgreSQL/pgvector ingestion, immutable passage citations, exact extractive grounding, explicit CLI/HTTP selection, and read-only citation resolution. Its deterministic lexical embedding fixture proves mechanics; semantic provider selection remains open. Phase 4 review and approval are pending.
 - Phase 5 implements explicit durable conversations with bounded retention input, idempotent request replay, private leases/fencing, explicit TTL memory, safe transactional audit, and CLI/HTTP commands. Turn-boundary resume is supported; mid-turn effect replay is not claimed. Phase 5 review and approval are pending.
+- Phase 6 contracts and independent scorer/runner are verified. Dataset publication, report storage, CLI/composition, live baseline/regression evaluation, and final evidence remain in progress; EVAL-01 is not marked implemented.
 - Open GSD Core 1.15.0 provides the operational planning workflow and is installed locally under ignored `.codex/`.
 
 ## Constraints

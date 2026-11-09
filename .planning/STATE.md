@@ -3,11 +3,11 @@ gsd_state_version: "1.0"
 current_phase: 06
 current_phase_name: Evaluation System
 status: executing
-stopped_at: Completed UAOS-06-01; implementing independent evaluation scoring
+stopped_at: Completed evaluation scorer checkpoint; dataset/report/CLI/live eval remain
 last_updated: "2026-11-09"
 last_activity: 2026-11-09
-last_activity_desc: Evaluation contracts passed 279 tests before scorer implementation
-state_head: 7bd8e50
+last_activity_desc: Evaluation core passed 289 tests; known regression and evidence RED finding verified
+state_head: 4e0fbc0
 progress:
   total_phases: 10
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-11-09)
 
 Phase: UAOS-06 (Evaluation System) — EXECUTING
 Plan: 1 of 2 complete in current phase
-Status: Implementing 06-02 independent scoring and evaluation runner
-Last activity: 2026-11-09 — Phase 6 contracts passed 279 tests before dependent implementation
+Status: 06-02 core scorer/runner checkpoint complete; dataset/report/CLI/live evaluation pending
+Last activity: 2026-11-09 — 289 tests, strict project/core compilation, build, and known-regression/evidence checks passed
 
 Progress: 18/27 roadmap plans (66%); Phase 1 approved; Phase 2–5 review pending
 
@@ -91,7 +91,7 @@ Progress: 18/27 roadmap plans (66%); Phase 1 approved; Phase 2–5 review pendin
 
 ### Pending Todos
 
-Review Phase 2–5 evidence. Define Phase 6 evaluation contracts. The proposed seven-day local conversation retention preference remains open; Phase 5 requires explicit per-conversation retention and activates no automatic default.
+Review Phase 2–5 evidence. Continue 06-02 with dataset publication, safe filesystem report adapter, iteration 6/CLI composition with observed-passage instrumentation, real database baseline/regression checks, then guide/evidence closure. The proposed seven-day local retention preference remains open; Phase 5 requires explicit per-conversation retention and activates no automatic default.
 
 ### Blockers/Concerns
 
@@ -107,8 +107,8 @@ Review Phase 2–5 evidence. Define Phase 6 evaluation contracts. The proposed s
 ## Session Continuity
 
 Last session: 2026-11-09
-Stopped at: Phase 6 contracts complete; implementing 06-02
-Resume file: .planning/phases/UAOS-06-evaluation-system/06-01-SUMMARY.md
+Stopped at: Phase 6 scorer/runner checkpoint complete; 06-02 remains in progress
+Resume file: .planning/phases/UAOS-06-evaluation-system/06-02-SCORER-EVIDENCE.md
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 
@@ -119,3 +119,5 @@ Phase 3 closure on 2026-11-09 passed 195 tests in 19 files, project/core compila
 Phase 4 closure on 2026-11-09 passed 242 tests in 24 files, strict project/core compilation, build, links, package integrity, and requirement/threat coverage. An explicit disposable PostgreSQL 18 / pgvector 0.8.7 suite passed 11 cases and removed its exact owned container. Human review, approval, and stability remain pending.
 
 Phase 5 closure on 2026-11-09 passed 273 tests in 27 files, strict project/core compilation, build, links, and requirement/threat coverage. The separate database suite passed 19 cases and removed its exact owned container. Durable state, scoped memory, replay, fencing, expiry/purge, safe atomic audit, and real CLI/HTTP correlation are implemented. Human review, approval, and stability remain pending.
+
+Phase 6 contracts and core scorer/runner checkpoint passed 289 tests in 29 files, strict project/core compilation, and build. Independent scoring detects an unsupported-answer regression even with valid schema/journal; a separate RED test found and closed missing run.started acceptance on a failed trace. Dataset/report adapter/CLI/live evaluation and final EVAL-01 closure remain outstanding. Do not mark Phase 6 implemented or approved.
