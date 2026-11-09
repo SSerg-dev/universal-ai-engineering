@@ -76,7 +76,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 02-01: Define tool registry, invocation protocol, schemas, permissions, and error taxonomy.
+- [x] 02-01: Define tool registry, invocation protocol, schemas, permissions, and error taxonomy.
 - [ ] 02-02: Add a second tool, resilience policies, tests, teaching notes, and evidence.
 
 ### Phase 3: MCP Boundary
@@ -224,7 +224,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Typed Agent Loop | 9/9 | Approved | 2026-11-09 |
-| 2. Typed Tool System | 0/2 | Not started | - |
+| 2. Typed Tool System | 1/2 | In progress | - |
 | 3. MCP Boundary | 0/2 | Not started | - |
 | 4. Grounded Retrieval | 0/2 | Not started | - |
 | 5. Durable State and Memory | 0/2 | Not started | - |
