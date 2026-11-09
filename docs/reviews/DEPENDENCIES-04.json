@@ -1,0 +1,16 @@
+{
+  "phase": "UAOS-04",
+  "decision": "Selected for implementation",
+  "installState": "planned",
+  "selectedOn": "2026-11-09",
+  "selectedBy": "Codex under the user's roadmap implementation authorization",
+  "dependencies": [["pg", "8.23.1"]],
+  "devDependencies": [["@types/pg", "8.23.1"]],
+  "repository": "https://github.com/brianc/node-postgres",
+  "typesRepository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+  "nodeEngine": ">=16",
+  "integrity": {
+    "pg": "sha512-aL96AHANtWjPLDOLqnhx+ngp9+UK7ETEU8VJrDCGvsSSi/mGLcWYsS6Herg7lmaBJe4uwrfqsa7gTEFaSizDoQ==",
+    "@types/pg": "sha512-fKVHpikPdg4GKks3JuLEhvwSyvwzF23hnabPy6DD8ljVbC7+6J5dQzdv4arV6jqq57djnMgs1HKBxX4P8aBI3A=="
+  }
+}
