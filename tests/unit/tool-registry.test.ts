@@ -94,6 +94,19 @@ describe("typed tool registry", () => {
     expect(remove).toHaveBeenCalledTimes(1);
   });
 
+  it("checks permission before running an asynchronous schema callback", async () => {
+    const { ToolRegistry, defineTool } = await loadRegistry();
+    const validation = vi.fn(async () => true);
+    const execute = vi.fn(async () => "value");
+    const registry = new ToolRegistry([defineTool({
+      name: "echo", description: "Permission first",
+      inputSchema: z.unknown().refine(validation), outputSchema: z.string(), execute,
+    })]);
+    expect(await registry.invoke(invocation, options([]))).toEqual({ ok: false, code: "TOOL_PERMISSION_DENIED" });
+    expect(validation).not.toHaveBeenCalled();
+    expect(execute).not.toHaveBeenCalled();
+  });
+
   it("returns on a deadline even when the handler ignores abort and later resolves", async () => {
     const { ToolRegistry, defineTool } = await loadRegistry();
     vi.useFakeTimers();
@@ -158,6 +171,34 @@ describe("typed tool registry", () => {
     expect(await pending).toEqual({ ok: false, code: "TOOL_TIMEOUT" });
     expect(execute).not.toHaveBeenCalled();
     expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("bounds asynchronous output validation before projecting sources", async () => {
+    const { ToolRegistry, defineTool } = await loadRegistry();
+    vi.useFakeTimers();
+    const started = Promise.withResolvers<void>();
+    const sources = vi.fn(() => []);
+    const registry = new ToolRegistry([defineTool({
+      name: "echo", description: "Slow output validation", inputSchema: z.unknown(),
+      outputSchema: z.string().refine(() => new Promise<boolean>(() => {})), sources,
+      execute: async () => { started.resolve(); return "output"; },
+    })]);
+    const pending = registry.invoke(invocation, options());
+    await started.promise;
+    await vi.advanceTimersByTimeAsync(50);
+    expect(await pending).toEqual({ ok: false, code: "TOOL_TIMEOUT" });
+    expect(sources).not.toHaveBeenCalled();
+  });
+
+  it("rejects a substituted registration that returns another tool's observation", async () => {
+    const { ToolRegistry } = await loadRegistry();
+    const registry = new ToolRegistry([{
+      descriptor: { name: "echo", description: "Substituted registration" },
+      execute: async () => ({
+        ok: true, observation: { toolName: "different", output: "secret", sources: [] },
+      }),
+    }]);
+    expect(await registry.invoke(invocation, options())).toEqual({ ok: false, code: "TOOL_OUTPUT_INVALID" });
   });
 
   it.each([0, -1, NaN, Infinity, 2 ** 31])("fails closed on invalid timeout %s", async (timeoutMs) => {

@@ -4,10 +4,8 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import type { RunAgentUseCase } from "../../application/run-agent.js";
-import {
-  createRuntime,
-  type Runtime,
-} from "../../composition/create-runtime.js";
+import type { Runtime } from "../../composition/create-runtime.js";
+import { createIterationRuntime } from "../../composition/create-iteration-runtime.js";
 
 interface TextWriter {
   write(value: string): unknown;
@@ -21,7 +19,8 @@ export interface RunCliOptions {
 }
 
 function defaultRuntimeFactory(): Promise<Runtime> {
-  return createRuntime({
+  return createIterationRuntime({
+    iteration: process.env.UAOS_ITERATION,
     fixtureRoot:
       process.env.UAOS_FIXTURE_ROOT ?? resolve(process.cwd(), "fixtures", "docs"),
     journalRoot:

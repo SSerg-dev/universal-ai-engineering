@@ -3,6 +3,7 @@ import type { z } from "zod";
 import type { RunAgentSource } from "../domain/agent-contracts.js";
 import {
   ToolDescriptorSchema,
+  ToolExecutionResultSchema,
   ToolInvocationSchema,
   ToolObservationSchema,
   type ToolDescriptor,
@@ -119,7 +120,13 @@ export class ToolRegistry implements ToolDispatcherPort {
         .then(() => tool.execute(input.data.arguments, controller.signal))
         .catch(() => failure("TOOL_EXECUTION_FAILED"));
       const result = await Promise.race([execution, aborted]);
-      return controller.signal.aborted ? failure(cancellationCode) : result;
+      if (controller.signal.aborted) return failure(cancellationCode);
+      const parsedResult = ToolExecutionResultSchema.safeParse(result);
+      if (!parsedResult.success) return failure("TOOL_OUTPUT_INVALID");
+      if (parsedResult.data.ok && parsedResult.data.observation.toolName !== input.data.toolName) {
+        return failure("TOOL_OUTPUT_INVALID");
+      }
+      return parsedResult.data;
     } finally {
       clearTimeout(timer);
       options.signal.removeEventListener("abort", cancel);

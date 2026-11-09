@@ -44,17 +44,17 @@ async function waitForDelay(delayMs: number | undefined, signal: AbortSignal) {
   });
 }
 
-export class ScriptedModel implements ModelPort {
+export class ScriptedModel<TObservation = SearchDocsOutput> implements ModelPort<TObservation> {
   readonly #actions: readonly unknown[];
   readonly #options: CallFailureOptions;
-  readonly #requests: ModelRequest[] = [];
+  readonly #requests: ModelRequest<TObservation>[] = [];
 
   constructor(actions: readonly unknown[], options: CallFailureOptions = {}) {
     this.#actions = [...actions];
     this.#options = options;
   }
 
-  async request(input: ModelRequest, signal: AbortSignal): Promise<unknown> {
+  async request(input: ModelRequest<TObservation>, signal: AbortSignal): Promise<unknown> {
     signal.throwIfAborted();
     this.#requests.push(structuredClone(input));
     const callNumber = this.#requests.length;
@@ -70,7 +70,7 @@ export class ScriptedModel implements ModelPort {
     return this.#actions[callNumber - 1];
   }
 
-  requests(): readonly ModelRequest[] {
+  requests(): readonly ModelRequest<TObservation>[] {
     return structuredClone(this.#requests);
   }
 }

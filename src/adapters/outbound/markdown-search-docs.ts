@@ -2,6 +2,10 @@ import { readdir, readFile } from "node:fs/promises";
 import { basename, join } from "node:path";
 
 import type { SearchDocsPort } from "../../application/ports/search-docs-port.js";
+import type { ReadDocPort } from "../../application/ports/read-doc-port.js";
+import {
+  ReadDocInputSchema, ReadDocOutputSchema, type ReadDocInput, type ReadDocOutput,
+} from "../../domain/tool-contracts.js";
 import {
   SearchDocsInputSchema,
   SearchDocsOutputSchema,
@@ -77,7 +81,7 @@ async function loadDocument(root: string, filename: string): Promise<LoadedDocum
   });
 }
 
-export class MarkdownSearchDocs implements SearchDocsPort {
+export class MarkdownSearchDocs implements SearchDocsPort, ReadDocPort {
   readonly #documents: readonly LoadedDocument[];
 
   private constructor(documents: readonly LoadedDocument[]) {
@@ -123,5 +127,18 @@ export class MarkdownSearchDocs implements SearchDocsPort {
 
     signal.throwIfAborted();
     return SearchDocsOutputSchema.parse({ matches });
+  }
+
+  async read(input: ReadDocInput, signal: AbortSignal): Promise<ReadDocOutput> {
+    signal.throwIfAborted();
+    const { documentId } = ReadDocInputSchema.parse(input);
+    const document = this.#documents.find((candidate) => candidate.documentId === documentId);
+    return ReadDocOutputSchema.parse({
+      document: document === undefined ? null : {
+        documentId: document.documentId,
+        title: document.title,
+        content: document.content,
+      },
+    });
   }
 }

@@ -7,6 +7,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { AgentEventEnvelopeSchema } from "../../src/domain/agent-events.js";
+import { RegisteredAgentEventEnvelopeSchema } from "../../src/domain/tool-events.js";
 
 const repositoryRoot = fileURLToPath(new URL("../../", import.meta.url));
 const fixtureRoot = join(repositoryRoot, "fixtures", "docs");
@@ -46,7 +47,7 @@ async function runChild(
   return await new Promise((resolveResult, reject) => {
     const child = spawn(process.execPath, [...command], {
       cwd: options.cwd ?? repositoryRoot,
-      env: { ...process.env, ...options.env },
+      env: { ...process.env, UAOS_ITERATION: "1", ...options.env },
       stdio: ["ignore", "pipe", "pipe"],
     });
     let stdout = "";
@@ -162,6 +163,36 @@ describe("uaos ask CLI", () => {
     } finally {
       await rm(temporaryRoot, { recursive: true, force: true });
     }
+  });
+
+  it("runs iteration 2 through the real CLI and persists version 1.1 evidence", async () => {
+    const root = await mkdtemp(join(tmpdir(), "uaos-cli-tools-"));
+    try {
+      const result = await runChild([join(repositoryRoot, "dist/src/adapters/inbound/cli.js"), "ask", "doc:execution-journal"], {
+        env: { UAOS_ITERATION: "2", UAOS_FIXTURE_ROOT: fixtureRoot, UAOS_JOURNAL_ROOT: root },
+      });
+      expect(result.exitCode).toBe(0);
+      expect(result.stderr).toBe("");
+      expect(result.stdout).toContain("The execution journal preserves evidence");
+      expect(result.stdout).toContain("Execution Journal (execution-journal)");
+      const files = await readdir(root);
+      expect(files).toHaveLength(1);
+      const events = (await readFile(join(root, files[0]!), "utf8")).trimEnd().split("\n")
+        .map((line) => RegisteredAgentEventEnvelopeSchema.parse(JSON.parse(line)));
+      expect(events).toHaveLength(8);
+      expect(events.find(({ eventType }) => eventType === "tool.requested")?.payload).toMatchObject({ toolName: "read_doc" });
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects an unsupported CLI iteration with sanitized startup output", async () => {
+    const result = await runChild([join(repositoryRoot, "dist/src/adapters/inbound/cli.js"), "ask", "question"], {
+      env: { UAOS_ITERATION: "unsupported secret value", UAOS_FIXTURE_ROOT: fixtureRoot },
+    });
+    expect(result.exitCode).toBe(1);
+    expect(result.stdout).toBe("");
+    expect(result.stderr).toBe("Error: The CLI runtime could not be started.\n");
   });
 
   it("maps SIGINT to one caller signal, one cancellation event, and listener cleanup", async () => {

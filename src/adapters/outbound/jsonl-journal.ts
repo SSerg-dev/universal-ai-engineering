@@ -3,9 +3,9 @@ import { isAbsolute, relative, resolve, sep } from "node:path";
 
 import type { JournalPort } from "../../application/ports/journal-port.js";
 import {
-  AgentEventEnvelopeSchema,
-  type AgentEventEnvelope,
-} from "../../domain/agent-events.js";
+  ExecutionEventEnvelopeSchema,
+  type ExecutionEventEnvelope,
+} from "../../domain/tool-events.js";
 
 const SAFE_RUN_ID = /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/u;
 
@@ -32,7 +32,7 @@ function journalPath(root: string, runId: string): string {
   return candidate;
 }
 
-export class JsonlJournal implements JournalPort {
+export class JsonlJournal implements JournalPort<ExecutionEventEnvelope> {
   readonly #root: string;
 
   constructor(options: JsonlJournalOptions) {
@@ -42,9 +42,9 @@ export class JsonlJournal implements JournalPort {
     this.#root = resolve(options.root);
   }
 
-  async append(event: AgentEventEnvelope, signal: AbortSignal): Promise<void> {
+  async append(event: ExecutionEventEnvelope, signal: AbortSignal): Promise<void> {
     signal.throwIfAborted();
-    const parsedEvent = AgentEventEnvelopeSchema.parse(event);
+    const parsedEvent = ExecutionEventEnvelopeSchema.parse(event);
     const path = journalPath(this.#root, parsedEvent.runId);
     const line = `${JSON.stringify(parsedEvent)}\n`;
 

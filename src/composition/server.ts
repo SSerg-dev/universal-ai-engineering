@@ -3,19 +3,21 @@ import { resolve } from "node:path";
 import type { FastifyInstance } from "fastify";
 
 import { buildHttpApp } from "../adapters/inbound/http.js";
-import { createRuntime } from "./create-runtime.js";
+import { createIterationRuntime } from "./create-iteration-runtime.js";
 
 export interface StartServerOptions {
   readonly fixtureRoot?: string;
   readonly host?: string;
   readonly journalRoot?: string;
   readonly port?: number;
+  readonly iteration?: 1 | 2;
 }
 
 export async function startServer(
   options: StartServerOptions = {},
 ): Promise<FastifyInstance> {
-  const runtime = await createRuntime({
+  const runtime = await createIterationRuntime({
+    iteration: options.iteration,
     fixtureRoot:
       options.fixtureRoot ?? resolve(process.cwd(), "fixtures", "docs"),
     journalRoot:
