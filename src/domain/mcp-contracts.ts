@@ -7,6 +7,13 @@ export const MCP_SERVER_ID = "uaos-docs";
 export const MCP_REMOTE_TOOL_NAME = "read_doc";
 export const MCP_TOOL_ALIAS = "mcp_read_doc";
 export const MCP_MAX_RESULT_BYTES = 65_536;
+export const MCP_RUN_META_KEY = "org.uaos/runId";
+export const MCP_CALL_META_KEY = "org.uaos/callId";
+
+export const McpCorrelationMetadataSchema = z.object({
+  [MCP_RUN_META_KEY]: ToolCallContextSchema.shape.runId,
+  [MCP_CALL_META_KEY]: ToolCallContextSchema.shape.callId,
+});
 
 export const McpConsentSchema = z.strictObject({
   serverId: z.literal(MCP_SERVER_ID),

@@ -1,0 +1,8 @@
+{
+  "runtime": "Node.js 24.22.1",
+  "command": "node node_modules/vitest/vitest.mjs run tests/unit/mcp-read-doc.test.ts -t \"normalizes a factory failure\"",
+  "exitCode": 1,
+  "expected": "MCP_TRANSPORT_FAILED with the static boundary message",
+  "actual": "The raw factory error escaped before session creation entered the protected lifecycle",
+  "resolution": "Session construction and teardown now participate in the same normalized lifecycle; the full boundary suite passes"
+}
