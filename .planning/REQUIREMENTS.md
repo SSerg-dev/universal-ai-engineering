@@ -14,12 +14,12 @@
 
 - [ ] **EDU-01**: Learner can run and compare ten versions that preserve one scenario while adding one major capability per version.
 - [x] **EDU-02**: Learner can follow the internal-documentation assistant scenario consistently from question to grounded answer.
-- [ ] **EDU-03**: Learner can inspect explanation, tests, validation output, and review state for every iteration.
+- [x] **EDU-03**: Learner can inspect explanation, tests, validation output, and review state for every iteration.
 
 ### Agent Loop Foundation
 
 - [x] **CORE-01**: Learner can run a typed agent loop that accepts a question, asks a model for the next action, executes one tool, and returns a terminal answer or typed failure.
-- [ ] **CORE-02**: Learner can invoke the same application use case through a Node CLI and Fastify HTTP API.
+- [x] **CORE-02**: Learner can invoke the same application use case through a Node CLI and Fastify HTTP API.
 - [x] **CORE-03**: Learner can inspect a correlated JSONL journal of loop, model, tool, error, and result events.
 - [x] **CORE-04**: Learner can run deterministic success, failure, timeout, cancellation, and limit tests without network access.
 
@@ -90,15 +90,15 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | Phase 1 | Complete |
-| ARCH-01 | Phase 1 | Complete |
+| FOUND-01 | Phase 1 | Implemented — review pending |
+| ARCH-01 | Phase 1 | Implemented — review pending |
 | EDU-01 | Phase 10 | Pending |
-| EDU-02 | Phase 1 | Complete |
-| EDU-03 | Phase 1 | Pending |
-| CORE-01 | Phase 1 | Complete |
-| CORE-02 | Phase 1 | Pending |
-| CORE-03 | Phase 1 | Complete |
-| CORE-04 | Phase 1 | Complete |
+| EDU-02 | Phase 1 | Implemented — review pending |
+| EDU-03 | Phase 1 | Implemented — review pending |
+| CORE-01 | Phase 1 | Implemented — review pending |
+| CORE-02 | Phase 1 | Implemented — review pending |
+| CORE-03 | Phase 1 | Implemented — review pending |
+| CORE-04 | Phase 1 | Implemented — review pending |
 | TOOL-01 | Phase 2 | Pending |
 | TOOL-02 | Phase 2 | Pending |
 | MCP-01 | Phase 3 | Pending |
@@ -111,9 +111,9 @@
 | UI-01 | Phase 8 | Pending |
 | GUARD-01 | Phase 9 | Pending |
 | ROUTER-01 | Phase 10 | Pending |
-| NFR-01 | Phase 1 | Complete |
-| NFR-02 | Phase 1 | Complete |
-| NFR-03 | Phase 1 | Complete |
+| NFR-01 | Phase 1 | Implemented — review pending |
+| NFR-02 | Phase 1 | Implemented — review pending |
+| NFR-03 | Phase 1 | Implemented — review pending |
 
 **Coverage:**
 - v1 requirements: 24 total
@@ -122,4 +122,4 @@
 
 ---
 *Requirements defined: 2026-09-28*
-*Last updated: 2026-09-28 after greenfield roadmap creation*
+*Last updated: 2026-11-09 after Phase 1 implementation. Checked requirements indicate implementation coverage; approval remains separate.*

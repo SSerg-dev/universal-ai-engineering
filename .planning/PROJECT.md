@@ -37,7 +37,7 @@ A learner can understand, build, test, and review a reusable Agentic OS one work
 - Primary user and learner: Sergei.
 - Scenario: an assistant answers questions from internal documentation and progressively gains retrieval, state, quality, and governance capabilities.
 - The previous documentation-heavy Draft foundation was retired by ADR-0002 and remains recoverable from Git commit `e4a25e9`.
-- The project is greenfield: there is no application code or package manifest yet.
+- Phase 1 now has a Node.js 24 package, a typed one-tool loop, deterministic local adapters, shared CLI/HTTP entry points, JSONL persistence, and offline verification. Implementation review and phase approval remain pending.
 - Open GSD Core 1.15.0 provides the operational planning workflow and is installed locally under ignored `.codex/`.
 
 ## Constraints
@@ -80,4 +80,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update context with evidence and lessons.
 
 ---
-*Last updated: 2026-09-28 after greenfield restart initialization*
+*Last updated: 2026-11-09 after Phase 1 implementation and evidence closure*

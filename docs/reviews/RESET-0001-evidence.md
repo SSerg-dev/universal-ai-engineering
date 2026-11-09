@@ -117,3 +117,7 @@ The Phase 1 contract-first pass independently rechecked this record before any s
 
 - `.codex/.gsd-staging/` could not be removed because the host denied access. It is local GSD state under the Git-ignored `.codex/` directory and does not affect repository contents.
 - At the original evidence capture, the greenfield working tree was uncommitted pending roadmap review and explicit acceptance. It was later committed as `b8650a3` without changing the recovery point or converting any Pending review, approval, or stability state.
+
+## 2026-11-09 Forward Revalidation
+
+The [Iteration 1 evidence](ITERATION-01-evidence.md) links automated recovery, migration, retired-path, and governance checks to the implemented slice. The recovery commit remains e4a25e9, prior findings are preserved, and reset architectural review, approval, and stability remain Pending. The externally archived untracked planning ZIP was not independently verified in this session.

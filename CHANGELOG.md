@@ -6,6 +6,13 @@ All notable project changes are recorded here. Work remains unapproved unless an
 
 ### Added
 
+- ADR-0003 contracts, strict Zod boundaries, and five provider-neutral ports.
+- A two-state typed agent loop with one lexical search tool and a deterministic local teaching model.
+- Controlled Markdown fixtures, shared runtime composition, uaos ask CLI, and bounded Fastify HTTP.
+- Awaited, schema-validated per-run JSONL with fail-closed persistence and cancellation evidence.
+- Offline contract, unit, integration, real HTTP, CLI smoke, and evidence integrity checks.
+- An Iteration 1 walkthrough and requirement/threat evidence with explicit pending approval and stability.
+
 - Minimal project brief for the ten-iteration Universal Agentic OS course.
 - ADR-0002 authorizing the greenfield restart.
 - Consolidated legacy baseline index and RESET-0001 evidence record.

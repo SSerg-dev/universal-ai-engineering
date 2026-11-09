@@ -5,7 +5,7 @@
 | State | Status | Evidence required to change it |
 |---|---|---|
 | Package Legitimacy | **Accepted** | Human accepted every exact package name/version and category on 2026-09-30. |
-| Implemented | **Pending** | All Phase 1 contracts, use case, adapters, deterministic tests, and evidence are complete. |
+| Implemented | **Complete** | Phase 1 contracts, use case, adapters, tests, and iteration evidence are implemented. Implementation review remains pending. |
 | Architecturally Reviewed | **Reviewed** | Human reviewed ADR-0003, dependency direction, schemas, ports, tests, package record, and findings on 2026-09-30. |
 | Approved | **Pending** | Explicit human approval after blocking findings are resolved. |
 | Stable | **Pending** | Explicit stability decision after implementation, validation, review, and approval. |
@@ -88,3 +88,9 @@ Automated preparation found no blocking contract or dependency-direction mismatc
 - **Stability decision:** Pending
 
 This record must not be rewritten to imply that a generated artifact, passing test, or completed implementation constitutes human review, approval, or stability.
+
+## 2026-11-09 Implementation Evidence
+
+The implemented CLI, HTTP, lexical search, typed loop, and JSONL boundaries are covered by the [iteration evidence](ITERATION-01-evidence.md) and [learner walkthrough](../iterations/01-typed-agent-loop.md). The accepted package set and the historical 2026-09-30 contract review remain intact. Historical prepared-evidence sections above describe the pre-install gate at that time.
+
+The real HTTP body-completion defect F-HTTP-01 and CLI smoke compilation timing defect F-CLI-01 were resolved with regression coverage. The iteration record retains both findings. Review of the final implementation is pending. The Approved and Stable gate states remain Pending.

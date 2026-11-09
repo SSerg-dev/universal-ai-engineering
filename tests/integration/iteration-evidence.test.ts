@@ -1,0 +1,155 @@
+import { execFileSync } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+
+import { describe, expect, it } from "vitest";
+import { z } from "zod";
+
+const phase = ".planning/phases/UAOS-01-typed-agent-loop";
+const evidencePath = "docs/reviews/ITERATION-01-evidence.md";
+const guidePath = "docs/iterations/01-typed-agent-loop.md";
+const read = (path: string) => readFileSync(path, "utf8").replaceAll("\r\n", "\n");
+
+function rows(source: string, heading: string): string[][] {
+  const section = source.split(`## ${heading}\n`)[1]?.split(/\n## /u)[0] ?? "";
+  return section.split("\n")
+    .filter((line) => line.startsWith("|"))
+    .map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim()))
+    .filter((row) => !row.every((cell) => /^:?-+:?$/u.test(cell)))
+    .slice(1);
+}
+
+function expectedTasks(): string[] {
+  return Array.from({ length: 9 }, (_, index) => {
+    const plan = String(index + 1).padStart(2, "0");
+    const tasks = [...read(`${phase}/01-${plan}-PLAN.md`).matchAll(/<task\b/gu)];
+    return tasks.map((_, task) => `01-${plan}-${String(task + 1).padStart(2, "0")}`);
+  }).flat();
+}
+
+describe("Iteration 1 review evidence", () => {
+  it("covers each Phase 1 requirement exactly once with executable evidence", () => {
+    const requirements = rows(read(".planning/REQUIREMENTS.md"), "Traceability")
+      .filter((row) => row[1] === "Phase 1");
+    const coverage = rows(read(evidencePath), "Requirement traceability");
+
+    expect(requirements).toHaveLength(11);
+    expect(coverage.map((row) => row[0]).sort()).toEqual(
+      requirements.map((row) => row[0]).sort(),
+    );
+    for (const row of requirements) expect(row[2]).toBe("Implemented — review pending");
+    for (const row of coverage) {
+      expect(row[1]).toMatch(/\]\(.*\.test\.ts\)/u);
+      expect(row[2]).toBe("Implemented — review pending");
+    }
+  });
+
+  it("accounts for all twenty plan tasks and thirteen unique threat identities", () => {
+    const validation = read(`${phase}/01-VALIDATION.md`);
+    const tasks = rows(validation, "Per-Task Verification Map");
+    expect(expectedTasks()).toHaveLength(20);
+    expect(tasks.map((row) => row[0]).sort()).toEqual(expectedTasks().sort());
+    for (const row of tasks) {
+      expect(row[7]).toMatch(/npm (?:test|run validate)/u);
+      expect(row[8]).toBe("Yes");
+      expect(row[9]).toBe("green");
+    }
+
+    const threats = rows(read(evidencePath), "Threat traceability");
+    const expected = Array.from({ length: 12 }, (_, index) =>
+      `T-01-${String(index + 1).padStart(2, "0")}`,
+    ).concat("T-01-SC");
+    expect(threats.map((row) => row[0]).sort()).toEqual(expected.sort());
+    for (const row of threats) {
+      expect(row[2]).toBe("Mitigated");
+      expect(row[3]).toMatch(/\]\(.*\.test\.ts\)/u);
+    }
+  });
+
+  it("keeps phase approval and stability pending while preserving prior human review", () => {
+    const stateRows = rows(read(evidencePath), "Review state");
+    expect(stateRows).toHaveLength(5);
+    const states = new Map(stateRows.map((row) => [row[0], row[1]]));
+    expect(states.size).toBe(5);
+    expect(states.get("Planned")).toBe("Complete");
+    expect(states.get("Implemented")).toBe("Complete");
+    expect(states.get("Architecturally Reviewed")).toContain("implementation review pending");
+    expect(states.get("Approved")).toBe("Pending");
+    expect(states.get("Stable")).toBe("Pending");
+
+    const gate = read("docs/reviews/ARCH-0001-iteration-01-gate.md");
+    expect(gate).toContain("**Review date:** 2026-09-30");
+    const gateStates = new Map(rows(gate, "Gate State").map((row) => [row[0], row[1]]));
+    expect(gateStates.get("Approved")).toBe("**Pending**");
+    expect(gateStates.get("Stable")).toBe("**Pending**");
+    expect(gateStates.get("Implemented")).toBe("**Complete**");
+    expect(read("docs/reviews/RESET-0001-evidence.md")).toContain("Git commit: `e4a25e9`");
+  });
+
+  it("runs under Node.js 24 with exactly the human-accepted direct package pins", () => {
+    expect(process.versions.node.split(".")[0]).toBe("24");
+    const records = [...read(`${phase}/01-02-SUMMARY.md`).matchAll(/<!-- accepted-package-pins: (.+?) -->/gu)];
+    expect(records).toHaveLength(1);
+    const tuple = z.tuple([
+      z.string().regex(/^(?:@[a-z0-9._-]+\/)?[a-z0-9._-]+$/u),
+      z.string().regex(/^\d+\.\d+\.\d+$/u),
+    ]);
+    const accepted = z.strictObject({
+      dependencies: z.array(tuple).min(1),
+      devDependencies: z.array(tuple).min(1),
+    }).parse(JSON.parse(records[0]![1]!));
+    const names = [...accepted.dependencies, ...accepted.devDependencies].map(([name]) => name);
+    expect(new Set(names).size).toBe(names.length);
+    const documentedPins = rows(read(evidencePath), "Reproduction");
+    expect(documentedPins.map((row) => row.join(" ")).sort()).toEqual(
+      Object.entries(accepted).flatMap(([category, pins]) =>
+        pins.map(([name, version]) => `${name} ${version} ${category}`),
+      ).sort(),
+    );
+
+    const manifest = JSON.parse(read("package.json"));
+    const lock = JSON.parse(read("package-lock.json"));
+    for (const holder of [manifest, lock.packages[""]]) {
+      for (const category of ["optionalDependencies", "peerDependencies", "peerDependenciesMeta", "bundleDependencies", "bundledDependencies"]) {
+        expect(Object.hasOwn(holder, category)).toBe(false);
+      }
+    }
+    for (const category of ["dependencies", "devDependencies"] as const) {
+      const pins = Object.fromEntries(accepted[category]);
+      expect(manifest[category]).toEqual(pins);
+      expect(lock.packages[""][category]).toEqual(pins);
+      for (const [name, version] of accepted[category]) {
+        expect(lock.packages[`node_modules/${name}`].version).toBe(version);
+      }
+    }
+    expect(manifest.engines.node).toBe("24.x");
+    expect(manifest.scripts.validate.split(/\s*&&\s*/u)).toEqual([
+      "npm run typecheck", "npm run typecheck:core", "npm test", "npm run build",
+    ]);
+    expect(manifest.scripts["typecheck:core"]).toBe("tsc -p tsconfig.core.json --noEmit");
+  });
+
+  it("resolves repository Markdown links and keeps the teaching commands runnable", () => {
+    const tracked = execFileSync("git", ["ls-files", "--", "*.md"], { encoding: "utf8" })
+      .trim().split(/\r?\n/u);
+    const files = new Set([...tracked, evidencePath, guidePath]);
+    const broken: string[] = [];
+    for (const file of files) {
+      const markdown = read(file)
+        .replace(/^(`{3,}|~{3,})[^\n]*\n[\s\S]*?^\1[ \t]*$/gmu, "")
+        .replace(/<automated>[\s\S]*?<\/automated>/gu, "")
+        .replace(/`+[^`\n]*`+/gu, "");
+      for (const match of markdown.matchAll(/\[[^\]]*\]\(([^)]+)\)/gu)) {
+        const target = match[1]!.replace(/^<|>$/gu, "");
+        if (/^[a-z][a-z0-9+.-]*:|^#/iu.test(target)) continue;
+        const local = decodeURIComponent(target.split("#")[0]!);
+        if (!existsSync(resolve(dirname(file), local))) broken.push(`${file} -> ${target}`);
+      }
+    }
+    expect(broken).toEqual([]);
+    const guide = read(guidePath);
+    for (const command of ["npm ci", "npm run build", "npm run validate", "npm run uaos -- ask", "startServer", "/api/v1/agent-runs"]) {
+      expect(guide).toContain(command);
+    }
+  });
+});

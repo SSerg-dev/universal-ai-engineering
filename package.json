@@ -11,10 +11,11 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "typecheck:core": "tsc -p tsconfig.core.json --noEmit",
     "test": "vitest run",
     "build": "tsc",
     "uaos": "node ./dist/src/adapters/inbound/cli.js",
-    "validate": "npm run typecheck && npm run test && npm run build"
+    "validate": "npm run typecheck && npm run typecheck:core && npm test && npm run build"
   },
   "dependencies": {
     "fastify": "5.12.5",

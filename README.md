@@ -33,6 +33,8 @@ React and Next.js are not part of the selected architecture.
 
 ## Documentation
 
+- [Iteration 1 walkthrough](docs/iterations/01-typed-agent-loop.md)
+- [Iteration 1 evidence](docs/reviews/ITERATION-01-evidence.md)
 - [Project brief](docs/PROJECT-BRIEF.md)
 - [Greenfield restart decision](docs/architecture/decisions/ADR-0002-greenfield-restart.md)
 - [Legacy baseline index](docs/archive/LEGACY-BASELINE.md)
@@ -44,4 +46,4 @@ React and Next.js are not part of the selected architecture.
 
 ## Status
 
-Greenfield planning. No implementation capability has been approved or shipped yet.
+Phase 1 implementation is complete with offline CLI, Fastify HTTP, JSONL evidence, and deterministic tests. See the walkthrough for Node.js 24 installation, execution, and validation. Implementation review, phase approval, and stability remain pending.

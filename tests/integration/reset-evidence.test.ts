@@ -37,6 +37,7 @@ describe("RESET-0001 recovery evidence", () => {
     const recoveryTree = new Set(
       git("ls-tree", "-r", "--name-only", recoveryCommit).split(/\r?\n/u),
     );
+    expect(recoveryTree.size).toBe(23);
 
     for (const retiredFile of retiredFiles) {
       expect(recoveryTree, `${retiredFile} missing at ${recoveryCommit}`).toContain(
