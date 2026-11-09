@@ -77,6 +77,11 @@ export const GroundedAnswerSchema = z.discriminatedUnion("status", [
 ]);
 export type GroundedAnswer = z.infer<typeof GroundedAnswerSchema>;
 
+export const GroundedModelActionSchema = z.discriminatedUnion("type", [
+  z.strictObject({ type: z.literal("call_tool"), toolName: z.literal("retrieve_passages"), arguments: RetrievalInputSchema }),
+  z.strictObject({ type: z.literal("grounded_answer"), grounding: GroundedAnswerSchema }),
+]);
+
 export const GroundedRunAgentResultSchema = z.discriminatedUnion("ok", [
   RunAgentResultSchema.options[0].extend({ grounding: GroundedAnswerSchema }),
   RunAgentResultSchema.options[1],
