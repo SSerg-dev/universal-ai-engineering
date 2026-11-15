@@ -6,6 +6,9 @@ All notable project changes are recorded here. Work remains unapproved unless an
 
 ### Added
 
+- Completed Phase 6 with a sealed internal-docs dataset, host-observed retrieval evidence, immutable safe report publication, and iteration 6 evaluation CLI.
+- Live PostgreSQL baseline/regression, journal-equivalence, report-privacy, compiled-CLI, and no-overwrite/cancellation checks with Iteration 6 guide/evidence.
+
 - Phase 6 evaluation contracts and core checkpoint with dataset revision checks, six independent quality dimensions, explicit applicable coverage, safe reports, known-regression detection, and evidence grammar validation. Dataset/report adapter/CLI/live-evaluation closure remains in progress.
 
 - Phase 5 explicit durable conversation commands, idempotent turn replay, preallocated journal correlation, private leases/fencing, and optimistic concurrency.

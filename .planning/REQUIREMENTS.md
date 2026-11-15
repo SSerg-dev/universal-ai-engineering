@@ -43,7 +43,7 @@
 
 ### Evaluation
 
-- [ ] **EVAL-01**: Maintainer can run a versioned evaluation dataset and detect regressions in grounding, retrieval, tool behavior, schemas, and outcomes.
+- [x] **EVAL-01**: Maintainer can run a versioned evaluation dataset and detect regressions in grounding, retrieval, tool behavior, schemas, and outcomes.
 
 ### Observability
 
@@ -105,7 +105,7 @@
 | RAG-01 | Phase 4 | Implemented — review pending |
 | RAG-02 | Phase 4 | Implemented — review pending |
 | MEM-01 | Phase 5 | Implemented — review pending |
-| EVAL-01 | Phase 6 | Pending |
+| EVAL-01 | Phase 6 | Implemented — review pending |
 | OBS-01 | Phase 7 | Pending |
 | STREAM-01 | Phase 8 | Pending |
 | UI-01 | Phase 8 | Pending |
@@ -122,4 +122,4 @@
 
 ---
 *Requirements defined: 2026-09-28*
-*Last updated: 2026-11-09 after Phase 5 implementation. Checked requirements indicate implementation coverage; approval remains separate.*
+*Last updated: 2026-11-15 after Phase 6 implementation. Checked requirements indicate implementation coverage; approval remains separate.*
