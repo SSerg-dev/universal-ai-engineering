@@ -19,12 +19,13 @@ const metadata = { schemaVersion: z.literal("telemetry-1.0"), traceId: StateIdSc
 
 export const RunTelemetryMetricsSchema = z.strictObject({
   runId: StateIdSchema, ...outcome, durationMs: TelemetryDurationSchema,
+  errorCode: AgentErrorCodeSchema.optional(),
   modelCalls: z.number().int().min(0).max(2), toolCalls: z.number().int().min(0).max(1), retries: z.literal(0),
   modelDurationMs: TelemetryDurationSchema, toolDurationMs: TelemetryDurationSchema,
   retrievalDurationMs: TelemetryDurationSchema, journalDurationMs: TelemetryDurationSchema,
   bufferDrops: count,
 });
-export const StateTelemetryOperationSchema = z.enum(["create", "read", "run_turn", "write_memory", "delete_memory", "recover", "purge", "audit"]);
+export const StateTelemetryOperationSchema = z.enum(["create", "read", "run_turn", "write_memory", "delete_memory", "recover", "purge", "audit", "invalid_command"]);
 const qualityMetric = z.strictObject({ dimension: EvaluationDimensionSchema, passed: z.number().int().min(0).max(100),
   applicable: z.number().int().min(0).max(100), rate: z.number().finite().min(0).max(1).nullable() })
   .refine((value) => value.passed <= value.applicable &&
@@ -46,6 +47,9 @@ export const TelemetryRecordSchema = z.discriminatedUnion("kind", [
   }).refine((value) => new Set(value.caseRunIds).size === value.caseRunIds.length &&
     new Set(value.dimensions.map(({ dimension }) => dimension)).size === EVALUATION_DIMENSIONS.length &&
     value.dimensions.every(({ applicable }) => applicable <= value.caseRunIds.length)) }),
+  z.strictObject({ ...metadata, kind: z.literal("evaluation.failed"), payload: z.strictObject({
+    durationMs: TelemetryDurationSchema, ...outcome, status: z.enum(["error", "cancelled"]), bufferDrops: count,
+  }) }),
   z.strictObject({ ...metadata, kind: z.literal("state.completed"), payload: z.strictObject({
     operation: StateTelemetryOperationSchema, durationMs: TelemetryDurationSchema, ...outcome,
     conversationId: StateIdSchema.optional(), requestId: StateIdSchema.optional(), runId: StateIdSchema.optional(),
@@ -57,6 +61,7 @@ export const TelemetryRecordSchema = z.discriminatedUnion("kind", [
   if ("status" in payload && (payload.status === "ok" ? payload.errorCode !== undefined : payload.errorCode === undefined)) return false;
   if ("status" in payload && payload.status === "cancelled" && !["CANCELLED", "TOOL_CANCELLED"].includes(payload.errorCode ?? "")) return false;
   if (record.kind === "span.completed" && record.payload.parentSpanId === record.payload.spanId) return false;
+  if (record.kind === "span.completed" && ["model", "tool"].includes(record.payload.operation) && record.payload.callId === undefined) return false;
   if (record.kind === "run.metrics" || record.kind === "execution.log") return record.traceId === record.payload.runId;
   if (record.kind === "evaluation.metrics") return record.traceId === record.payload.evaluationId;
   return true;
@@ -76,7 +81,9 @@ export const TelemetryDiagnosisSchema = z.strictObject({
   records: z.number().int().min(0).max(64),
   spans: z.array(z.strictObject({ operation: TelemetryOperationSchema, durationMs: TelemetryDurationSchema, ...outcome })).max(64),
   runMetrics: RunTelemetryMetricsSchema.optional(), relatedRunIds: z.array(StateIdSchema).max(100),
-}).refine((value) => new Set(value.issues).size === value.issues.length && value.complete === (value.issues.length === 0));
+}).refine((value) => new Set(value.issues).size === value.issues.length && value.complete === (value.issues.length === 0) &&
+  (!value.complete || (value.records > 0 && value.spans.length > 0)) &&
+  new Set(value.relatedRunIds).size === value.relatedRunIds.length);
 export type TelemetryDiagnosis = z.infer<typeof TelemetryDiagnosisSchema>;
 
 export class TelemetryBoundaryError extends Error {

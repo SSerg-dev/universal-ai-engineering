@@ -14,7 +14,7 @@ The primary result schemas remain unchanged. A missing/partial telemetry artifac
 
 ## Data and correlation
 
-Strict telemetry-1.0 records are execution.log, span.completed, run.metrics, state.completed, and evaluation.metrics. Only validated IDs, closed operation/status/error labels, counts, durations, timestamps, and quality rates are admitted. Questions, answers, prompts, arguments, document text, quotes, memory keys/values, exception text/stacks, paths, URLs, and credentials have no telemetry fields. IDs are correlation metadata, not metric label dimensions.
+Strict telemetry-1.0 records are execution.log, span.completed, run.metrics, state.completed, evaluation.metrics, and evaluation.failed. The last form represents an evaluation that produced no acknowledged valid report, without inventing rates or case outcomes. Invalid state commands use the fixed invalid_command operation label, never raw untrusted input. Only validated IDs, closed operation/status/error labels, counts, durations, timestamps, and quality rates are admitted. Questions, answers, prompts, arguments, document text, quotes, memory keys/values, exception text/stacks, paths, URLs, and credentials have no telemetry fields. IDs are correlation metadata, not metric label dimensions.
 
 runId is the run trace identity. Request call IDs link model/tool spans to persisted execution events; a root span parents operation spans. State operations receive a separate opaque operation trace and include validated conversation/request/run ID links when present. Evaluation summaries link their evaluation ID, case run IDs, and six quality dimensions. Private lease tokens are never telemetry.
 
