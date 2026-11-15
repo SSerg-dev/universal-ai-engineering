@@ -179,7 +179,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 08-01: Implement the transport-neutral event protocol and streaming API adapter.
+- [x] 08-01: Implement the transport-neutral event protocol and streaming API adapter.
 - [ ] 08-02: Build the Angular/Tailwind inspector with accessibility and contract tests.
 
 ### Phase 9: Guardrails and Approval
@@ -230,6 +230,6 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 | 5. Durable State and Memory | 2/2 | Implemented; review pending | - |
 | 6. Evaluation System | 2/2 | Implemented; review pending | - |
 | 7. End-to-End Observability | 2/2 | Implemented; review pending | - |
-| 8. Streaming Angular UI | 0/2 | Not started | - |
+| 8. Streaming Angular UI | 1/2 | In progress | - |
 | 9. Guardrails and Approval | 0/2 | Not started | - |
 | 10. Router and Course Completion | 0/2 | Not started | - |

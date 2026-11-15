@@ -10,7 +10,7 @@ export interface StartServerOptions {
   readonly host?: string;
   readonly journalRoot?: string;
   readonly port?: number;
-  readonly iteration?: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  readonly iteration?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
   readonly mcpConsent?: "read_doc";
   readonly databaseUrl?: string;
   readonly indexId?: string;

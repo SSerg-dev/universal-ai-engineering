@@ -35,5 +35,11 @@ export function createIterationRuntime(options: CreateIterationRuntimeOptions): 
       telemetryRoot: options.telemetryRoot ?? resolve(process.cwd(), ".uaos/telemetry"),
     }));
   }
+  if (iteration === 8 || iteration === "8") {
+    return import("./create-streaming-runtime.js").then(({ createStreamingRuntime }) => createStreamingRuntime({
+      ...options, reportRoot: options.reportRoot ?? resolve(process.cwd(), ".uaos/evaluations"),
+      telemetryRoot: options.telemetryRoot ?? resolve(process.cwd(), ".uaos/telemetry"),
+    }));
+  }
   throw new Error("The selected iteration is unsupported.");
 }

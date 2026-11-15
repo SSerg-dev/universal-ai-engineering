@@ -82,7 +82,7 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
       try {
         if (argv.length !== 2) throw new TelemetryBoundaryError("INVALID_TRACE_ID");
         const inspect = options.runtimeFactory ? (await runtimeFactory()).inspect
-          : process.env.UAOS_ITERATION === "7" ? createTelemetryInspector(process.env.UAOS_TELEMETRY_ROOT ?? resolve(process.cwd(), ".uaos/telemetry")) : undefined;
+          : ["7", "8"].includes(process.env.UAOS_ITERATION ?? "") ? createTelemetryInspector(process.env.UAOS_TELEMETRY_ROOT ?? resolve(process.cwd(), ".uaos/telemetry")) : undefined;
         if (!inspect) throw new TelemetryBoundaryError("INVALID_TRACE_ID");
         const diagnosis = TelemetryDiagnosisSchema.parse(await inspect(argv[1], controller.signal));
         stdout.write(`${JSON.stringify(diagnosis)}\n`);

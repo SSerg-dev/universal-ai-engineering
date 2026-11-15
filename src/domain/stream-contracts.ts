@@ -38,6 +38,7 @@ export const StreamCancelResultSchema = z.strictObject({ runId: StreamRunIdSchem
 export const StreamBoundaryCodeSchema = z.enum([
   "STREAM_INPUT_INVALID", "STREAM_RUN_NOT_FOUND", "STREAM_CURSOR_INVALID", "STREAM_CAPACITY_EXCEEDED",
   "STREAM_SUBSCRIBER_LIMIT", "STREAM_CLOSED", "STREAM_EVENT_INVALID",
+  "STREAM_ORIGIN_DENIED",
 ]);
 export type StreamBoundaryCode = z.infer<typeof StreamBoundaryCodeSchema>;
 export class StreamBoundaryError extends Error {

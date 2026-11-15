@@ -8,7 +8,7 @@
 
 Iteration 8 adds one explicit content-bearing protocol and a local same-origin streaming inspector. It delegates execution to the same observed grounded use case; it does not fork the agent loop. Earlier CLI/API/state/evaluation/inspection entry points remain available and iteration 1 remains the default.
 
-POST /api/v1/stream-runs accepts the bounded question and returns 202 with a generated run ID. GET /api/v1/stream-runs/:runId/events returns server-sent events with typed JSON data and IDs of runId:sequence. POST /api/v1/stream-runs/:runId/cancel requests cancellation; the primary outcome resolves the race with success. Request/route/cursor validation precedes effects. JSON errors expose only fixed stream boundary codes/messages. Diagnostics stay on the local CLI.
+POST /api/v1/stream-runs accepts the bounded question and returns 202 with a generated run ID. GET /api/v1/stream-runs/:runId/events returns server-sent events with typed JSON data and IDs of runId:sequence. POST /api/v1/stream-runs/:runId/cancel requests cancellation; the primary outcome resolves the race with success. Request/route/cursor validation precedes effects. A supplied browser Origin must match the request origin; cross-origin requests fail STREAM_ORIGIN_DENIED before create/cancel/subscribe effects. JSON errors expose only fixed stream boundary codes/messages. Diagnostics stay on the local CLI.
 
 The SSE transport adapter owns response headers, socket writes, cleanup, and heartbeats. The core owns ordering, replay bounds, cancellation state, retention, and terminal exclusivity behind ports. Fastify hijack/raw response handling is confined to its adapter. There is no SDK/framework/Node filesystem import in domain/application.
 

@@ -6,6 +6,8 @@ import type { ResolveCitationUseCase } from "../../application/resolve-citation.
 import { RetrievalBoundaryError } from "../../domain/retrieval-contracts.js";
 import type { ConversationCommandHandler } from "../../application/conversation-command.js";
 import { StateBoundaryError, type StateBoundaryCode } from "../../domain/state-contracts.js";
+import type { RunStreamPort } from "../../application/ports/stream-port.js";
+import { registerStreamRoutes } from "./http-streams.js";
 
 const HTTP_BODY_LIMIT_BYTES = 16 * 1024;
 
@@ -13,6 +15,7 @@ export interface BuildHttpAppOptions {
   readonly runAgent: RunAgentUseCase;
   readonly resolveCitation?: ResolveCitationUseCase;
   readonly conversationCommand?: ConversationCommandHandler;
+  readonly streams?: RunStreamPort;
 }
 
 function stateStatus(code: StateBoundaryCode): number {
@@ -128,6 +131,7 @@ function transportMessage(status: 400 | 413 | 415 | 500): string {
 export function buildHttpApp(options: BuildHttpAppOptions): FastifyInstance {
   const app = Fastify({ bodyLimit: HTTP_BODY_LIMIT_BYTES, logger: false });
   app.decorateRequest("agentRunSignal", null);
+  if (options.streams) registerStreamRoutes(app, options.streams);
 
   app.removeContentTypeParser("text/plain");
   app.setErrorHandler((error, _request, reply) => {
