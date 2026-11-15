@@ -1,0 +1,42 @@
+{
+  "iteration": "08",
+  "checkedOn": "2026-11-15",
+  "status": "Admitted for implementation — architectural review and human approval pending",
+  "authorization": "User authorized continuing roadmap implementation with periodic atomic commits and pushes",
+  "registry": "https://registry.npmjs.org",
+  "scope": "Isolated ui package only; existing root dependency tuples remain unchanged",
+  "runtime": "Node.js 24.22.1",
+  "compatibility": "Angular 22 requires TypeScript >=6.0 <6.1; isolated TypeScript 6.0.3 preserves core TypeScript 7.0.2",
+  "dependencies": [
+    ["@angular/common", "22.2.6"],
+    ["@angular/compiler", "22.2.6"],
+    ["@angular/core", "22.2.6"],
+    ["@angular/platform-browser", "22.2.6"],
+    ["rxjs", "7.8.2"],
+    ["tslib", "2.9.1"]
+  ],
+  "devDependencies": [
+    ["@angular/build", "22.2.7"],
+    ["@angular/cli", "22.2.7"],
+    ["@angular/compiler-cli", "22.2.6"],
+    ["@tailwindcss/postcss", "4.3.5"],
+    ["jsdom", "31.0.1"],
+    ["postcss", "8.5.33"],
+    ["tailwindcss", "4.3.5"],
+    ["typescript", "6.0.3"],
+    ["vitest", "5.0.2"]
+  ],
+  "upstreams": {
+    "angular-framework": "https://github.com/angular/angular",
+    "angular-tooling": "https://github.com/angular/angular-cli",
+    "typescript": "https://github.com/microsoft/TypeScript",
+    "tailwind": "https://github.com/tailwindlabs/tailwindcss",
+    "postcss": "https://github.com/postcss/postcss",
+    "rxjs": "https://github.com/reactivex/rxjs",
+    "tslib": "https://github.com/microsoft/tslib",
+    "vitest": "https://github.com/vitest-dev/vitest",
+    "jsdom": "https://github.com/jsdom/jsdom"
+  },
+  "evidence": "npm view exact-package version engines peerDependencies repository.url dist.integrity --json; peer ranges and official compatibility docs inspected before installation",
+  "excluded": ["React", "Next.js", "zone.js", "Angular forms/router/SSR", "component registries", "remote fonts", "peer dependency bypasses"]
+}

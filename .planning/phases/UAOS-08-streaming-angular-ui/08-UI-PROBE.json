@@ -1,0 +1,284 @@
+{
+  "items": [
+    {
+      "requirement_id": "E1",
+      "category": "empty",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E1: Empty question shows labelled validation; timeline/answer render the exact empty copy above; no fake run/answer.",
+      "reason": null,
+      "probe": "What is shown when there is no data — zero items, an unfilled form, or absent media?"
+    },
+    {
+      "requirement_id": "E1",
+      "category": "loading",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E1: Pending create/run/reconnect/cancel states have text status; active form/examples prevent duplicate submission; cancellation remains available until terminal. Details remain readable.",
+      "reason": null,
+      "probe": "What is shown while data or content is still loading (skeleton, spinner, progressive reveal)?"
+    },
+    {
+      "requirement_id": "E1",
+      "category": "error",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E1: Create/network/protocol/domain/cancel failures have separate fixed copy and explicit retry path. Received steps are retained on interrupted transport; no success is inferred without a valid terminal.",
+      "reason": null,
+      "probe": "What is shown when the load or submit fails (message, retry affordance, partial fallback)?"
+    },
+    {
+      "requirement_id": "E1",
+      "category": "partial",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E1: Invalid input retains typed content; partial streams retain accepted steps; an answer is provisional until completion. An absent citation never becomes a fake source.",
+      "reason": null,
+      "probe": "What is shown for partial or incomplete data — some fields or rows present, others missing?"
+    },
+    {
+      "requirement_id": "E1",
+      "category": "overflow",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E1: At 360px all cards/controls/quotes/IDs wrap without page overflow; long answers expand vertically; only textarea editing may scroll internally.",
+      "reason": null,
+      "probe": "What happens when content exceeds its container — scroll, clip, wrap, or truncate?"
+    },
+    {
+      "requirement_id": "E1",
+      "category": "long-text",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E1: Question is bounded to 2048; accepted protocol content keeps its declared frame bounds; long words and IDs use overflow-wrap:anywhere; action labels wrap and retain a 48px target.",
+      "reason": null,
+      "probe": "What happens with unusually long text — truncation, wrapping, ellipsis, or reflow?"
+    },
+    {
+      "requirement_id": "E2",
+      "category": "empty",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E2: Empty question shows labelled validation; timeline/answer render the exact empty copy above; no fake run/answer.",
+      "reason": null,
+      "probe": "What is shown when there is no data — zero items, an unfilled form, or absent media?"
+    },
+    {
+      "requirement_id": "E2",
+      "category": "loading",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E2: Pending create/run/reconnect/cancel states have text status; active form/examples prevent duplicate submission; cancellation remains available until terminal. Details remain readable.",
+      "reason": null,
+      "probe": "What is shown while data or content is still loading (skeleton, spinner, progressive reveal)?"
+    },
+    {
+      "requirement_id": "E2",
+      "category": "error",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E2: Create/network/protocol/domain/cancel failures have separate fixed copy and explicit retry path. Received steps are retained on interrupted transport; no success is inferred without a valid terminal.",
+      "reason": null,
+      "probe": "What is shown when the load or submit fails (message, retry affordance, partial fallback)?"
+    },
+    {
+      "requirement_id": "E2",
+      "category": "populated",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E2: Real ordered timeline rows and validated answer/citation cards render after execution; no synthetic progress delay.",
+      "reason": null,
+      "probe": "What does the normal populated (happy-path) state look like at a typical volume of content?"
+    },
+    {
+      "requirement_id": "E2",
+      "category": "partial",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E2: Invalid input retains typed content; partial streams retain accepted steps; an answer is provisional until completion. An absent citation never becomes a fake source.",
+      "reason": null,
+      "probe": "What is shown for partial or incomplete data — some fields or rows present, others missing?"
+    },
+    {
+      "requirement_id": "E2",
+      "category": "overflow",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E2: At 360px all cards/controls/quotes/IDs wrap without page overflow; long answers expand vertically; only textarea editing may scroll internally.",
+      "reason": null,
+      "probe": "What happens when content exceeds its container — scroll, clip, wrap, or truncate?"
+    },
+    {
+      "requirement_id": "E2",
+      "category": "zero-one-many",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E2: Zero steps uses empty copy; one/many steps remain an ordered list; zero citations displays abstention copy and no source cards; one to three exact claims render individual cards.",
+      "reason": null,
+      "probe": "How does the layout read at zero, one, and many items (singular vs plural copy, spacing)?"
+    },
+    {
+      "requirement_id": "E2",
+      "category": "long-text",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E2: Question is bounded to 2048; accepted protocol content keeps its declared frame bounds; long words and IDs use overflow-wrap:anywhere; action labels wrap and retain a 48px target.",
+      "reason": null,
+      "probe": "What happens with unusually long text — truncation, wrapping, ellipsis, or reflow?"
+    },
+    {
+      "requirement_id": "E3",
+      "category": "empty",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E3: Empty question shows labelled validation; timeline/answer render the exact empty copy above; no fake run/answer.",
+      "reason": null,
+      "probe": "What is shown when there is no data — zero items, an unfilled form, or absent media?"
+    },
+    {
+      "requirement_id": "E3",
+      "category": "loading",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E3: Pending create/run/reconnect/cancel states have text status; active form/examples prevent duplicate submission; cancellation remains available until terminal. Details remain readable.",
+      "reason": null,
+      "probe": "What is shown while data or content is still loading (skeleton, spinner, progressive reveal)?"
+    },
+    {
+      "requirement_id": "E3",
+      "category": "error",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E3: Create/network/protocol/domain/cancel failures have separate fixed copy and explicit retry path. Received steps are retained on interrupted transport; no success is inferred without a valid terminal.",
+      "reason": null,
+      "probe": "What is shown when the load or submit fails (message, retry affordance, partial fallback)?"
+    },
+    {
+      "requirement_id": "E3",
+      "category": "populated",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E3: Real ordered timeline rows and validated answer/citation cards render after execution; no synthetic progress delay.",
+      "reason": null,
+      "probe": "What does the normal populated (happy-path) state look like at a typical volume of content?"
+    },
+    {
+      "requirement_id": "E3",
+      "category": "partial",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E3: Invalid input retains typed content; partial streams retain accepted steps; an answer is provisional until completion. An absent citation never becomes a fake source.",
+      "reason": null,
+      "probe": "What is shown for partial or incomplete data — some fields or rows present, others missing?"
+    },
+    {
+      "requirement_id": "E3",
+      "category": "overflow",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E3: At 360px all cards/controls/quotes/IDs wrap without page overflow; long answers expand vertically; only textarea editing may scroll internally.",
+      "reason": null,
+      "probe": "What happens when content exceeds its container — scroll, clip, wrap, or truncate?"
+    },
+    {
+      "requirement_id": "E3",
+      "category": "zero-one-many",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E3: Zero steps uses empty copy; one/many steps remain an ordered list; zero citations displays abstention copy and no source cards; one to three exact claims render individual cards.",
+      "reason": null,
+      "probe": "How does the layout read at zero, one, and many items (singular vs plural copy, spacing)?"
+    },
+    {
+      "requirement_id": "E3",
+      "category": "long-text",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E3: Question is bounded to 2048; accepted protocol content keeps its declared frame bounds; long words and IDs use overflow-wrap:anywhere; action labels wrap and retain a 48px target.",
+      "reason": null,
+      "probe": "What happens with unusually long text — truncation, wrapping, ellipsis, or reflow?"
+    },
+    {
+      "requirement_id": "E4",
+      "category": "loading",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E4: Pending create/run/reconnect/cancel states have text status; active form/examples prevent duplicate submission; cancellation remains available until terminal. Details remain readable.",
+      "reason": null,
+      "probe": "What is shown while data or content is still loading (skeleton, spinner, progressive reveal)?"
+    },
+    {
+      "requirement_id": "E4",
+      "category": "error",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E4: Create/network/protocol/domain/cancel failures have separate fixed copy and explicit retry path. Received steps are retained on interrupted transport; no success is inferred without a valid terminal.",
+      "reason": null,
+      "probe": "What is shown when the load or submit fails (message, retry affordance, partial fallback)?"
+    },
+    {
+      "requirement_id": "E4",
+      "category": "overflow",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E4: At 360px all cards/controls/quotes/IDs wrap without page overflow; long answers expand vertically; only textarea editing may scroll internally.",
+      "reason": null,
+      "probe": "What happens when content exceeds its container — scroll, clip, wrap, or truncate?"
+    },
+    {
+      "requirement_id": "E4",
+      "category": "long-text",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E4: Question is bounded to 2048; accepted protocol content keeps its declared frame bounds; long words and IDs use overflow-wrap:anywhere; action labels wrap and retain a 48px target.",
+      "reason": null,
+      "probe": "What happens with unusually long text — truncation, wrapping, ellipsis, or reflow?"
+    },
+    {
+      "requirement_id": "E5",
+      "category": "loading",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E5: Pending create/run/reconnect/cancel states have text status; active form/examples prevent duplicate submission; cancellation remains available until terminal. Details remain readable.",
+      "reason": null,
+      "probe": "What is shown while data or content is still loading (skeleton, spinner, progressive reveal)?"
+    },
+    {
+      "requirement_id": "E5",
+      "category": "error",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E5: Create/network/protocol/domain/cancel failures have separate fixed copy and explicit retry path. Received steps are retained on interrupted transport; no success is inferred without a valid terminal.",
+      "reason": null,
+      "probe": "What is shown when the load or submit fails (message, retry affordance, partial fallback)?"
+    },
+    {
+      "requirement_id": "E5",
+      "category": "overflow",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E5: At 360px all cards/controls/quotes/IDs wrap without page overflow; long answers expand vertically; only textarea editing may scroll internally.",
+      "reason": null,
+      "probe": "What happens when content exceeds its container — scroll, clip, wrap, or truncate?"
+    },
+    {
+      "requirement_id": "E5",
+      "category": "long-text",
+      "status": "resolved",
+      "verification": "explicit",
+      "resolution": "E5: Question is bounded to 2048; accepted protocol content keeps its declared frame bounds; long words and IDs use overflow-wrap:anywhere; action labels wrap and retain a 48px target.",
+      "reason": null,
+      "probe": "What happens with unusually long text — truncation, wrapping, ellipsis, or reflow?"
+    }
+  ],
+  "coverage": {
+    "applicable": 30,
+    "resolved": 30,
+    "unresolved": 0,
+    "unclassified": 0,
+    "byVerification": {
+      "explicit": 30,
+      "backstop": 0
+    }
+  }
+}

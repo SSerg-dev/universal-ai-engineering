@@ -1,0 +1,7 @@
+[
+  { "id": "E1", "text": "Question form with labelled textarea, character count, examples, submit validation, loading and error feedback.", "elements": ["form", "interactive-control", "static-content"] },
+  { "id": "E2", "text": "Ordered execution timeline list with progress rows, current status and empty, partial, failed and populated states.", "elements": ["list-collection", "static-content"] },
+  { "id": "E3", "text": "Answer text and citation cards list with empty, streaming, abstained, failed and complete states; long exact quotations wrap.", "elements": ["static-content", "list-collection"] },
+  { "id": "E4", "text": "Cancel and reconnect buttons with visible labels, pending state, disabled states and actionable connection errors.", "elements": ["interactive-control", "static-content"] },
+  { "id": "E5", "text": "Page title, course context, status text and optional expandable run details with bounded long identifiers.", "elements": ["static-content", "interactive-control"] }
+]
