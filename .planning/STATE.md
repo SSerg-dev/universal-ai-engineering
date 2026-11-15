@@ -1,44 +1,44 @@
 ---
 gsd_state_version: "1.0"
-current_phase: 06
-current_phase_name: Evaluation System
-status: executing
-stopped_at: Completed evaluation scorer checkpoint; dataset/report/CLI/live eval remain
+current_phase: 07
+current_phase_name: End-to-End Observability
+status: planning
+stopped_at: Completed Phase 6; preparing safe telemetry contracts
 last_updated: "2026-11-15"
-last_activity: 2026-11-09
-last_activity_desc: Evaluation core passed 289 tests; known regression and evidence RED finding verified
-state_head: 4e0fbc0
+last_activity: 2026-11-15
+last_activity_desc: Phase 6 closed with 300 tests and 22 live database checks
+state_head: e56a800
 progress:
   total_phases: 10
   completed_phases: 1
   total_plans: 27
-  completed_plans: 18
-  percent: 66
+  completed_plans: 19
+  percent: 70
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-11-09)
+See: .planning/PROJECT.md (updated 2026-11-15)
 
 **Core value:** A learner can understand, build, test, and review a reusable Agentic OS one working iteration at a time.
-**Current focus:** Phase UAOS-06 — Evaluation System
+**Current focus:** Phase UAOS-07 — End-to-End Observability
 
 ## Current Position
 
-Phase: UAOS-06 (Evaluation System) — EXECUTING
-Plan: 1 of 2 complete in current phase
-Status: 06-02 core scorer/runner checkpoint complete; dataset/report/CLI/live evaluation pending
-Last activity: 2026-11-09 — 289 tests, strict project/core compilation, build, and known-regression/evidence checks passed
+Phase: UAOS-07 (End-to-End Observability) — PLANNING
+Plan: 0 of 2 complete in current phase
+Status: Preparing 07-01 safe correlation, redaction, latency, metrics, and telemetry ports
+Last activity: 2026-11-15 — Phase 6 passed 300 tests, core/project compilation, build, links, and 22 live database checks
 
-Progress: 18/27 roadmap plans (66%); Phase 1 approved; Phase 2–5 review pending
+Progress: 19/27 roadmap plans (70%); Phase 1 approved; Phase 2–6 review pending
 
 ## Performance Metrics
 
-- Total plans completed: 18
+- Total plans completed: 19
 - Average duration: -
-- Total execution time: 0.0 hours
+- Total execution time: Not tracked; no cumulative duration claim
 
 **Per-Plan Metrics:**
 
@@ -91,7 +91,7 @@ Progress: 18/27 roadmap plans (66%); Phase 1 approved; Phase 2–5 review pendin
 
 ### Pending Todos
 
-Review Phase 2–5 evidence. Continue 06-02 with dataset publication, safe filesystem report adapter, iteration 6/CLI composition with observed-passage instrumentation, real database baseline/regression checks, then guide/evidence closure. The proposed seven-day local retention preference remains open; Phase 5 requires explicit per-conversation retention and activates no automatic default.
+Review Phase 2–6 evidence. Define Phase 7 contracts before telemetry implementation, preserving metadata-only privacy, earlier iteration behavior, and required journal failure semantics. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
 
 ### Blockers/Concerns
 
@@ -107,8 +107,8 @@ Review Phase 2–5 evidence. Continue 06-02 with dataset publication, safe files
 ## Session Continuity
 
 Last session: 2026-11-15
-Stopped at: Session resumed; completing dataset, report persistence, CLI/composition, and live evaluation in 06-02
-Resume file: .planning/phases/UAOS-06-evaluation-system/06-02-SCORER-EVIDENCE.md
+Stopped at: Phase 6 implemented; preparing Phase 7 contracts
+Resume file: .planning/phases/UAOS-06-evaluation-system/06-02-SUMMARY.md
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 
@@ -121,3 +121,5 @@ Phase 4 closure on 2026-11-09 passed 242 tests in 24 files, strict project/core 
 Phase 5 closure on 2026-11-09 passed 273 tests in 27 files, strict project/core compilation, build, links, and requirement/threat coverage. The separate database suite passed 19 cases and removed its exact owned container. Durable state, scoped memory, replay, fencing, expiry/purge, safe atomic audit, and real CLI/HTTP correlation are implemented. Human review, approval, and stability remain pending.
 
 Phase 6 contracts and core scorer/runner checkpoint passed 289 tests in 29 files, strict project/core compilation, and build. Independent scoring detects an unsupported-answer regression even with valid schema/journal; a separate RED test found and closed missing run.started acceptance on a failed trace. Dataset/report adapter/CLI/live evaluation and final EVAL-01 closure remain outstanding. Do not mark Phase 6 implemented or approved.
+
+Phase 6 final closure on 2026-11-15 supersedes the historical core checkpoint: 300 tests in 32 files, project/core typecheck, build, links, requirement/threat coverage, plus 22 live database checks passed. Dataset publication, immutable reports, iteration 6 CLI/composition, real baseline/regression, and evidence are implemented. Human architectural review, approval, and stability remain pending.
