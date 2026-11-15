@@ -1,0 +1,5 @@
+# Pre-start cancellation discovery — 2026-11-15
+
+The first real streaming database suite passed 27 tests and failed one new pre-start cancellation diagnostic in five files (14.45 seconds). The owned disposable database was removed. The stream correctly emitted one start/cancellation terminal, the engine returned CANCELLED with zero model/tool attempts, and its required journal contained only run.cancelled. Inspection incorrectly demanded run.started for this valid branch. A separate infrastructure-free observed-runtime regression reproduced the same failure (one failed / two passed).
+
+The diagnostic now allows a single matching terminal without run.started only with zero model/tool attempts and INVALID_REQUEST, CANCELLED, or TIMEOUT. Empty logs still require zero attempts and JOURNAL_FAILURE plus the existing failed journal span. It does not accept a missing run.started after work began. Existing missing-start, terminal/correlation, and operation-coverage checks remain active. This corrects diagnosis rather than changing the engine, journal semantics, or stream cancellation policy.

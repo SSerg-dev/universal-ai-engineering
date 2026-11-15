@@ -81,8 +81,12 @@ export function createDiagnoseTelemetry(reader: TelemetryReadPort) {
           lastLog.errorCode !== metrics.errorCode) issues.add("CORRELATION_MISMATCH");
       } else if (!operations("journal").some(({ payload }) => payload.status === "error")) issues.add("MISSING_OPERATION_SPAN");
       const first = logs[0]?.payload;
-      if (first?.eventType !== "run.started" && !(logs.length === 1 && metrics.errorCode === "INVALID_REQUEST" && first?.eventType === "run.failed") &&
-        !(logs.length === 0 && metrics.errorCode === "JOURNAL_FAILURE")) issues.add("CORRELATION_MISMATCH");
+      const noCalls = metrics.modelCalls === 0 && metrics.toolCalls === 0;
+      const terminalBeforeStart = logs.length === 1 && noCalls &&
+        ((["INVALID_REQUEST", "TIMEOUT"].includes(metrics.errorCode ?? "") && first?.eventType === "run.failed") ||
+          (metrics.errorCode === "CANCELLED" && first?.eventType === "run.cancelled"));
+      if (first?.eventType !== "run.started" && !terminalBeforeStart &&
+        !(logs.length === 0 && noCalls && metrics.errorCode === "JOURNAL_FAILURE")) issues.add("CORRELATION_MISMATCH");
     } else if (terminal?.kind === "evaluation.metrics") relatedRunIds.push(...terminal.payload.caseRunIds);
     else if (terminal?.kind === "state.completed" && terminal.payload.runId) relatedRunIds.push(terminal.payload.runId);
     return TelemetryDiagnosisSchema.parse({ traceId, complete: issues.size === 0, issues: [...issues], records: records.length,

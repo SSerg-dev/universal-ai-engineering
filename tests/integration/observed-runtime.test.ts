@@ -6,6 +6,18 @@ import type { TelemetryRecord } from "../../src/domain/telemetry-contracts.js";
 import type { RegisteredAgentEventEnvelope } from "../../src/domain/tool-events.js";
 
 describe("Observed grounded composition without retrieval access", () => {
+  it("recognizes a valid cancellation-only journal when the caller aborted before execution", async () => {
+    const records: TelemetryRecord[] = [], events: RegisteredAgentEventEnvelope[] = [], caller = new AbortController();
+    caller.abort();
+    const runtime = await createObservedGroundedRuntime({ databaseUrl: "postgres://unused", fixtureRoot: "unused",
+      journalRoot: "unused", telemetryRoot: "unused", journal: { append: async (event) => { events.push(event); } },
+      telemetrySink: { append: async (record) => { records.push(record); } } });
+    const result = await runtime.runAgent({ question: "private" }, caller.signal);
+    expect(result).toMatchObject({ ok: false, error: { code: "CANCELLED" } });
+    expect(events.map(({ eventType }) => eventType)).toEqual(["run.cancelled"]);
+    expect(await createDiagnoseTelemetry({ read: async () => records })(result.runId)).toMatchObject({ complete: true,
+      runMetrics: { status: "cancelled", modelCalls: 0, toolCalls: 0 } });
+  });
   it("isolates concurrent run IDs, records denied permission and never exports private input", async () => {
     let sequence = 0;
     const records: TelemetryRecord[] = [], events: RegisteredAgentEventEnvelope[] = [];
