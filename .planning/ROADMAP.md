@@ -161,7 +161,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 07-01: Define telemetry semantics, correlation, redaction, metrics, and ports.
+- [x] 07-01: Define telemetry semantics, correlation, redaction, metrics, and ports.
 - [ ] 07-02: Instrument the engine and verify failure diagnosis with evidence.
 
 ### Phase 8: Streaming Angular UI
@@ -229,7 +229,7 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 | 4. Grounded Retrieval | 2/2 | Implemented; review pending | - |
 | 5. Durable State and Memory | 2/2 | Implemented; review pending | - |
 | 6. Evaluation System | 2/2 | Implemented; review pending | - |
-| 7. End-to-End Observability | 0/2 | Not started | - |
+| 7. End-to-End Observability | 1/2 | In progress | - |
 | 8. Streaming Angular UI | 0/2 | Not started | - |
 | 9. Guardrails and Approval | 0/2 | Not started | - |
 | 10. Router and Course Completion | 0/2 | Not started | - |
