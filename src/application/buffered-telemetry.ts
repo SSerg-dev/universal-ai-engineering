@@ -51,6 +51,13 @@ export class BufferedTelemetry {
       timer = setTimeout(() => { controller.abort(); resolve(delivery(true)); }, this.#timeoutMs);
     });
     const drain = async () => {
+      if (this.#sink.appendBatch && this.#records.length > 0) {
+        try {
+          await this.#sink.appendBatch(this.#records.map((record) => TelemetryRecordSchema.parse(record)), controller.signal);
+          if (!controller.signal.aborted) exported = this.#records.length;
+        } catch { /* Batch failure has no per-record fallback or retry. */ }
+        return delivery(false);
+      }
       for (const record of this.#records) {
         if (controller.signal.aborted) break;
         try {

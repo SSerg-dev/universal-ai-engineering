@@ -1,11 +1,13 @@
 import { lstat, mkdir, open, realpath } from "node:fs/promises";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
+import { z } from "zod";
 
 import type { TelemetryReadPort, TelemetrySinkPort } from "../../application/ports/telemetry-port.js";
 import { TelemetryBoundaryError, TelemetryRecordSchema, type TelemetryRecord } from "../../domain/telemetry-contracts.js";
+import { StateIdSchema } from "../../domain/state-contracts.js";
 
 const MAX_BYTES = 1024 * 1024;
-const safeTrace = /^(?:run|operation|evaluation)-[A-Za-z0-9_-]{1,110}$/u;
+const safeTrace = /^(?:run|operation|evaluation)-[A-Za-z0-9_-]+$/u;
 interface OwnedTrace { device: bigint; inode: bigint; size: bigint; sequence: number }
 function missing(error: unknown) { return typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT"; }
 
@@ -15,7 +17,7 @@ export class FilesystemTelemetry implements TelemetrySinkPort, TelemetryReadPort
   constructor(options: { root: string }) { this.#root = options.root; }
 
   async #path(traceId: string, create: boolean) {
-    if (!safeTrace.test(traceId)) throw new TelemetryBoundaryError("INVALID_TRACE_ID");
+    if (!StateIdSchema.safeParse(traceId).success || !safeTrace.test(traceId)) throw new TelemetryBoundaryError("INVALID_TRACE_ID");
     if (!this.#root.trim()) throw new Error("Invalid telemetry root");
     const selected = resolve(this.#root);
     if (create) await mkdir(selected, { recursive: true });
@@ -55,6 +57,33 @@ export class FilesystemTelemetry implements TelemetrySinkPort, TelemetryReadPort
       else this.#owned.set(traceId, next!);
     } catch {
       if (traceId) this.#owned.delete(traceId);
+      if (signal.aborted) throw signal.reason;
+      throw new Error("The optional telemetry export failed.");
+    }
+  }
+
+  async appendBatch(raw: readonly TelemetryRecord[], signal: AbortSignal): Promise<void> {
+    signal.throwIfAborted();
+    try {
+      const records = z.array(TelemetryRecordSchema).min(1).max(64).parse(raw);
+      const traceId = records[0]!.traceId;
+      if (records.some((record, index) => record.traceId !== traceId || record.sequence !== index + 1)) throw new Error("Invalid telemetry batch");
+      const data = Buffer.from(`${records.map((record) => JSON.stringify(record)).join("\n")}\n`, "utf8");
+      if (data.length > MAX_BYTES) throw new Error("Telemetry batch bound");
+      const { path } = await this.#path(traceId, true);
+      signal.throwIfAborted();
+      const handle = await open(path, "wx", 0o600);
+      try {
+        let offset = 0;
+        while (offset < data.length) {
+          signal.throwIfAborted();
+          const { bytesWritten } = await handle.write(data, offset, data.length - offset, offset);
+          if (bytesWritten === 0) throw new Error("Incomplete telemetry write");
+          offset += bytesWritten;
+        }
+        await handle.sync();
+      } finally { await handle.close(); }
+    } catch {
       if (signal.aborted) throw signal.reason;
       throw new Error("The optional telemetry export failed.");
     }

@@ -18,6 +18,17 @@ afterEach(async () => {
 });
 
 describe("Owned bounded metadata-only telemetry files", () => {
+  it("writes one validated batch exclusively and refuses sequence/correlation errors before creating a file", async () => {
+    const directory = await root(), store = new FilesystemTelemetry({ root: directory }), records = telemetryTraceFixture();
+    await expect(store.appendBatch([records[1]!], signal())).rejects.toThrow("optional telemetry export failed");
+    await expect(store.appendBatch([records[0]!, { ...records[1]!, traceId: "run-other" }], signal())).rejects.toThrow("optional telemetry export failed");
+    expect(await readdir(directory)).toEqual([]);
+    await store.appendBatch(records, signal());
+    expect(await store.read("run-fixture", signal())).toEqual(records);
+    const content = await readFile(join(directory, "run-fixture.telemetry.jsonl"), "utf8");
+    await expect(store.appendBatch(records, signal())).rejects.toThrow("optional telemetry export failed");
+    expect(await readFile(join(directory, "run-fixture.telemetry.jsonl"), "utf8")).toBe(content);
+  });
   it("persists a complete trace and reads a validated diagnostic without touching other files", async () => {
     const directory = await root(), store = new FilesystemTelemetry({ root: directory }), records = telemetryTraceFixture();
     for (const record of records) await store.append(record, signal());

@@ -7,6 +7,38 @@ import { telemetryTraceFixture } from "../fixtures/telemetry-trace.js";
 const clock = { now: () => "2026-11-15T00:00:00.000Z" };
 const record = telemetryTraceFixture()[0]!;
 describe("Bounded best-effort telemetry export", () => {
+  it("acknowledges a whole validated batch once and does no sink I/O for an empty buffer", async () => {
+    const append = vi.fn<TelemetrySinkPort["append"]>(async () => {});
+    const appendBatch = vi.fn<NonNullable<TelemetrySinkPort["appendBatch"]>>(async () => {});
+    const buffer = new BufferedTelemetry({ traceId: "run-fixture", clock, sink: { append, appendBatch } });
+    buffer.record(record.kind, record.payload);
+    expect(await buffer.flush()).toEqual({ exported: 1, dropped: 0, timedOut: false });
+    expect(appendBatch.mock.calls[0]![0][0]).toEqual(record); expect(append).not.toHaveBeenCalled();
+    const empty = new BufferedTelemetry({ traceId: "run-empty", clock, sink: { append, appendBatch } });
+    expect(await empty.flush()).toEqual({ exported: 0, dropped: 0, timedOut: false });
+    expect(appendBatch).toHaveBeenCalledTimes(1);
+  });
+  it("prefers one bounded batch and never retries through append after batch failure", async () => {
+    const append = vi.fn<TelemetrySinkPort["append"]>(async () => {});
+    const appendBatch = vi.fn<NonNullable<TelemetrySinkPort["appendBatch"]>>(async () => { throw new Error("private batch failure"); });
+    const buffer = new BufferedTelemetry({ traceId: "run-fixture", clock, sink: { append, appendBatch } });
+    buffer.record(record.kind, record.payload); buffer.record(record.kind, record.payload);
+    expect(await buffer.flush()).toEqual({ exported: 0, dropped: 2, timedOut: false });
+    expect(appendBatch).toHaveBeenCalledTimes(1); expect(appendBatch.mock.calls[0]![0]).toHaveLength(2);
+    expect(append).not.toHaveBeenCalled();
+  });
+
+  it("bounds a late batch acknowledgment without changing delivery counts or falling back", async () => {
+    const pending = Promise.withResolvers<void>();
+    const append = vi.fn<TelemetrySinkPort["append"]>(async () => {});
+    const appendBatch = vi.fn<NonNullable<TelemetrySinkPort["appendBatch"]>>(async () => pending.promise);
+    const buffer = new BufferedTelemetry({ traceId: "run-fixture", clock, sink: { append, appendBatch }, flushTimeoutMs: 10 });
+    buffer.record(record.kind, record.payload);
+    const delivered = await buffer.flush();
+    expect(delivered).toEqual({ exported: 0, dropped: 1, timedOut: true });
+    pending.resolve(); await new Promise((resolve) => setImmediate(resolve));
+    expect(await buffer.flush()).toBe(delivered); expect(appendBatch).toHaveBeenCalledTimes(1); expect(append).not.toHaveBeenCalled();
+  });
   it("performs no exporter I/O before flush and preserves validated copies", async () => {
     const append = vi.fn<TelemetrySinkPort["append"]>(async () => {});
     const buffer = new BufferedTelemetry({ traceId: "run-fixture", clock, sink: { append } });
