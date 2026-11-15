@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "eval-dataset-1.0",
+  "datasetId": "internal-docs",
+  "version": "1.0.0",
+  "cases": [
+    {
+      "caseId": "journal-evidence",
+      "question": "execution journal",
+      "scenario": "normal",
+      "expected": {
+        "kind": "answered",
+        "requiredDocumentIds": [
+          "execution-journal"
+        ],
+        "forbiddenDocumentIds": []
+      },
+      "execution": {
+        "toolName": "retrieve_passages",
+        "modelCalls": 2,
+        "toolCalls": 1
+      }
+    },
+    {
+      "caseId": "zero-information",
+      "question": "!!!",
+      "scenario": "normal",
+      "expected": {
+        "kind": "abstained"
+      },
+      "execution": {
+        "toolName": "retrieve_passages",
+        "modelCalls": 2,
+        "toolCalls": 1
+      }
+    },
+    {
+      "caseId": "permission-denied",
+      "question": "execution journal",
+      "scenario": "deny_tool",
+      "expected": {
+        "kind": "failed",
+        "errorCode": "TOOL_FAILURE"
+      },
+      "execution": {
+        "toolName": "retrieve_passages",
+        "modelCalls": 1,
+        "toolCalls": 1
+      }
+    }
+  ],
+  "revision": "1d04a965af0ff9b85355dbaaa5df72089a8c4971dc4b1155fc3178aaf9e931d2"
+}
