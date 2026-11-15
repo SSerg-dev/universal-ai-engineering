@@ -26,6 +26,8 @@ Wall-clock ISO timestamps order human-readable records; an injected monotonic cl
 
 Model/tool control intervals run from completion of required request-event persistence to arrival of the response/completion event, excluding that completion event's persistence. They include adapter work and boundary validation; they are not a pure vendor inference measurement. Separate retrieval timing wraps actual embedding/repository retrieval. Journal timing measures awaited appends. Run timing covers primary execution, excluding the post-result telemetry flush. Concurrent traces never share mutable span state.
 
+If underlying retrieval ignores cancellation, its observed interval closes at the primary terminal boundary with the known timeout/cancellation outcome. This does not claim the underlying side effect has stopped. A later settlement cannot create another span or alter already exported totals. Instrumentation consumes CPU; no zero-overhead or unchanged near-deadline scheduling claim is made.
+
 Only iteration 7 replaces the previous duration placeholders in its own persisted response/tool events with these measured intervals. Earlier iterations retain their event/result contracts. Usage counts remain attempts, retry count is explicitly zero because no retry policy is implemented, and error labels remain host-owned codes. A late failed/cancelled operation closes pending spans against the terminal outcome without fabricating a response event.
 
 ## Bounds and diagnostics

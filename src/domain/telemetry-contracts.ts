@@ -5,8 +5,9 @@ import { AgentEventTypeSchema } from "./agent-events.js";
 import { EVALUATION_DIMENSIONS, EvaluationDimensionSchema } from "./evaluation-contracts.js";
 import { StateBoundaryCodeSchema, StateIdSchema, StateTimestampSchema } from "./state-contracts.js";
 import { ToolErrorCodeSchema } from "./tool-contracts.js";
+import { RetrievalBoundaryCodeSchema } from "./retrieval-contracts.js";
 
-export const TelemetryErrorCodeSchema = z.union([AgentErrorCodeSchema, ToolErrorCodeSchema, StateBoundaryCodeSchema,
+export const TelemetryErrorCodeSchema = z.union([AgentErrorCodeSchema, ToolErrorCodeSchema, StateBoundaryCodeSchema, RetrievalBoundaryCodeSchema,
   z.enum(["DATASET_INVALID", "DATASET_REVISION_MISMATCH", "EVALUATION_INVALID", "REPORT_FAILURE"]) ]);
 export type TelemetryErrorCode = z.infer<typeof TelemetryErrorCodeSchema>;
 export const TelemetryOperationSchema = z.enum(["run", "model", "tool", "retrieval", "journal", "state", "evaluation"]);

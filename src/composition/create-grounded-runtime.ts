@@ -13,6 +13,7 @@ import type { IdGeneratorPort } from "../application/ports/id-generator-port.js"
 import type { TurnContext } from "../application/ports/turn-execution-port.js";
 import type { JournalPort } from "../application/ports/journal-port.js";
 import type { RegisteredAgentEventEnvelope } from "../domain/tool-events.js";
+import type { RetrievalMeasurementPort } from "../application/ports/telemetry-port.js";
 
 export interface GroundedRuntimeOptions extends CreateRuntimeOptions, RetrievalResourceOptions {
   readonly ids?: IdGeneratorPort;
@@ -20,6 +21,7 @@ export interface GroundedRuntimeOptions extends CreateRuntimeOptions, RetrievalR
   readonly journal?: JournalPort<RegisteredAgentEventEnvelope>;
   readonly allowedTools?: ReadonlySet<string>;
   readonly onRetrieved?: (passageIds: readonly string[]) => void;
+  readonly retrievalMeasurement?: RetrievalMeasurementPort;
 }
 
 export async function createGroundedRuntime(options: GroundedRuntimeOptions): Promise<Runtime> {
@@ -29,7 +31,9 @@ export async function createGroundedRuntime(options: GroundedRuntimeOptions): Pr
     name: "retrieve_passages", description: "Retrieve controlled indexed evidence",
     inputSchema: RetrievalInputSchema, outputSchema: RetrievalOutputSchema,
     execute: async (input, signal) => {
-      const output = await retrieve(input, signal);
+      const output = options.retrievalMeasurement
+        ? await options.retrievalMeasurement.measure(() => retrieve(input, signal), signal)
+        : await retrieve(input, signal);
       options.onRetrieved?.(Object.freeze(output.passages.map(({ passageId }) => passageId)));
       return output;
     },

@@ -12,3 +12,6 @@ export interface MonotonicClockPort {
 export interface SpanIdGeneratorPort {
   nextSpanId(): string;
 }
+export interface RetrievalMeasurementPort {
+  measure<T>(work: () => Promise<T>, signal: AbortSignal): Promise<T>;
+}
