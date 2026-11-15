@@ -4,6 +4,7 @@
 node_modules/
 dist/
 coverage/
+.uaos/
 .env
 .env.*
 !.env.example

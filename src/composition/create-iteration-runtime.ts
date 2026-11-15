@@ -1,11 +1,13 @@
 import { createRuntime, type CreateRuntimeOptions, type Runtime } from "./create-runtime.js";
 import { createToolRuntime } from "./create-tool-runtime.js";
+import { resolve } from "node:path";
 
 export interface CreateIterationRuntimeOptions extends CreateRuntimeOptions {
   readonly iteration?: unknown;
   readonly mcpConsent?: unknown;
   readonly databaseUrl?: unknown;
   readonly indexId?: unknown;
+  readonly reportRoot?: string;
 }
 
 export function createIterationRuntime(options: CreateIterationRuntimeOptions): Promise<Runtime> {
@@ -20,6 +22,11 @@ export function createIterationRuntime(options: CreateIterationRuntimeOptions): 
   }
   if (iteration === 5 || iteration === "5") {
     return import("./create-conversation-runtime.js").then(({ createConversationRuntime }) => createConversationRuntime(options));
+  }
+  if (iteration === 6 || iteration === "6") {
+    return import("./create-evaluation-runtime.js").then(({ createEvaluationRuntime }) => createEvaluationRuntime({
+      ...options, reportRoot: options.reportRoot ?? resolve(process.cwd(), ".uaos/evaluations"),
+    }));
   }
   throw new Error("The selected iteration is unsupported.");
 }

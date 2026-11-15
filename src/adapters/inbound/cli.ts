@@ -7,6 +7,7 @@ import type { RunAgentUseCase } from "../../application/run-agent.js";
 import type { Runtime } from "../../composition/create-runtime.js";
 import { createIterationRuntime } from "../../composition/create-iteration-runtime.js";
 import { StateBoundaryError } from "../../domain/state-contracts.js";
+import { EvaluationBoundaryError, EvaluationReportSchema } from "../../domain/evaluation-contracts.js";
 
 interface TextWriter {
   write(value: string): unknown;
@@ -25,6 +26,7 @@ function defaultRuntimeFactory(): Promise<Runtime> {
     mcpConsent: process.env.UAOS_MCP_CONSENT,
     databaseUrl: process.env.UAOS_DATABASE_URL,
     indexId: process.env.UAOS_INDEX_ID,
+    ...(process.env.UAOS_REPORT_ROOT === undefined ? {} : { reportRoot: process.env.UAOS_REPORT_ROOT }),
     fixtureRoot:
       process.env.UAOS_FIXTURE_ROOT ?? resolve(process.cwd(), "fixtures", "docs"),
     journalRoot:
@@ -74,6 +76,18 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
   process.on("SIGINT", abortFromSigint);
   try {
     const runtime = await runtimeFactory();
+    if (argv[0] === "eval") {
+      try {
+        if (argv.length !== 1 || !runtime.evaluate) throw new EvaluationBoundaryError("EVALUATION_INVALID");
+        const report = EvaluationReportSchema.parse(await runtime.evaluate(controller.signal));
+        stdout.write(`${JSON.stringify(report)}\n`);
+        return report.gate.passed ? 0 : 2;
+      } catch (error) {
+        const code = error instanceof EvaluationBoundaryError ? error.code : "EVALUATION_INVALID";
+        stderr.write(`Error [${code}]: The evaluation operation could not be completed.\n`);
+        return 1;
+      }
+    }
     if (argv.length === 2 && argv[0] === "state") {
       try {
         if (!runtime.conversationCommand) throw new StateBoundaryError("STATE_INPUT_INVALID");
