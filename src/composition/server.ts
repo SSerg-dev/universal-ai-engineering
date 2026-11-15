@@ -10,10 +10,12 @@ export interface StartServerOptions {
   readonly host?: string;
   readonly journalRoot?: string;
   readonly port?: number;
-  readonly iteration?: 1 | 2 | 3 | 4 | 5 | 6;
+  readonly iteration?: 1 | 2 | 3 | 4 | 5 | 6 | 7;
   readonly mcpConsent?: "read_doc";
   readonly databaseUrl?: string;
   readonly indexId?: string;
+  readonly telemetryRoot?: string;
+  readonly reportRoot?: string;
 }
 
 export async function startServer(
@@ -24,6 +26,8 @@ export async function startServer(
     mcpConsent: options.mcpConsent,
     databaseUrl: options.databaseUrl,
     indexId: options.indexId,
+    ...(options.telemetryRoot === undefined ? {} : { telemetryRoot: options.telemetryRoot }),
+    ...(options.reportRoot === undefined ? {} : { reportRoot: options.reportRoot }),
     fixtureRoot:
       options.fixtureRoot ?? resolve(process.cwd(), "fixtures", "docs"),
     journalRoot:

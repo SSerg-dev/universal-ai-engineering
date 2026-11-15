@@ -6,8 +6,10 @@ import { pathToFileURL } from "node:url";
 import type { RunAgentUseCase } from "../../application/run-agent.js";
 import type { Runtime } from "../../composition/create-runtime.js";
 import { createIterationRuntime } from "../../composition/create-iteration-runtime.js";
+import { createTelemetryInspector } from "../../composition/create-telemetry-inspector.js";
 import { StateBoundaryError } from "../../domain/state-contracts.js";
 import { EvaluationBoundaryError, EvaluationReportSchema } from "../../domain/evaluation-contracts.js";
+import { TelemetryBoundaryError, TelemetryDiagnosisSchema } from "../../domain/telemetry-contracts.js";
 
 interface TextWriter {
   write(value: string): unknown;
@@ -27,6 +29,7 @@ function defaultRuntimeFactory(): Promise<Runtime> {
     databaseUrl: process.env.UAOS_DATABASE_URL,
     indexId: process.env.UAOS_INDEX_ID,
     ...(process.env.UAOS_REPORT_ROOT === undefined ? {} : { reportRoot: process.env.UAOS_REPORT_ROOT }),
+    ...(process.env.UAOS_TELEMETRY_ROOT === undefined ? {} : { telemetryRoot: process.env.UAOS_TELEMETRY_ROOT }),
     fixtureRoot:
       process.env.UAOS_FIXTURE_ROOT ?? resolve(process.cwd(), "fixtures", "docs"),
     journalRoot:
@@ -75,6 +78,21 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
 
   process.on("SIGINT", abortFromSigint);
   try {
+    if (argv[0] === "inspect") {
+      try {
+        if (argv.length !== 2) throw new TelemetryBoundaryError("INVALID_TRACE_ID");
+        const inspect = options.runtimeFactory ? (await runtimeFactory()).inspect
+          : process.env.UAOS_ITERATION === "7" ? createTelemetryInspector(process.env.UAOS_TELEMETRY_ROOT ?? resolve(process.cwd(), ".uaos/telemetry")) : undefined;
+        if (!inspect) throw new TelemetryBoundaryError("INVALID_TRACE_ID");
+        const diagnosis = TelemetryDiagnosisSchema.parse(await inspect(argv[1], controller.signal));
+        stdout.write(`${JSON.stringify(diagnosis)}\n`);
+        return diagnosis.complete ? 0 : 2;
+      } catch (error) {
+        const code = error instanceof TelemetryBoundaryError ? error.code : "TELEMETRY_READ_FAILURE";
+        stderr.write(`Error [${code}]: The telemetry operation could not be completed.\n`);
+        return 1;
+      }
+    }
     const runtime = await runtimeFactory();
     if (argv[0] === "eval") {
       try {

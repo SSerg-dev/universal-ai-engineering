@@ -3,11 +3,11 @@ gsd_state_version: "1.0"
 current_phase: 07
 current_phase_name: End-to-End Observability
 status: executing
-stopped_at: Completed 07-01; implementing bounded telemetry and diagnosis
+stopped_at: Completed telemetry runtime and CLI; verifying live database correlation
 last_updated: "2026-11-15"
 last_activity: 2026-11-15
-last_activity_desc: Telemetry contracts passed 314 tests before dependent implementation
-state_head: 4c799e6
+last_activity_desc: Observed runtime and offline inspect passed 357 tests, core/project compilation, and build
+state_head: afad273
 progress:
   total_phases: 10
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-11-15)
 
 Phase: UAOS-07 (End-to-End Observability) — EXECUTING
 Plan: 1 of 2 complete in current phase
-Status: Implementing 07-02 bounded telemetry buffer/exporter and failure diagnosis
-Last activity: 2026-11-15 — 314 tests, strict project/core compilation, and build passed before instrumentation
+Status: Implementing 07-02; runtime/CLI complete, live database correlation and final evidence pending
+Last activity: 2026-11-15 — 357 tests, strict project/core compilation, and build passed
 
 Progress: 20/27 roadmap plans (74%); Phase 1 approved; Phase 2–6 review pending
 
@@ -91,7 +91,7 @@ Progress: 20/27 roadmap plans (74%); Phase 1 approved; Phase 2–6 review pendin
 
 ### Pending Todos
 
-Review Phase 2–6 evidence. Define Phase 7 contracts before telemetry implementation, preserving metadata-only privacy, earlier iteration behavior, and required journal failure semantics. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
+Review Phase 2–6 evidence. Complete Phase 7 live CLI/HTTP/database evidence and runbook against selected ADR-0009; telemetry contracts and runtime are implemented. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
 
 ### Blockers/Concerns
 

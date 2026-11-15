@@ -10,12 +10,14 @@ import {
 import type { ResolveCitationUseCase } from "../application/resolve-citation.js";
 import type { ConversationCommandHandler } from "../application/conversation-command.js";
 import type { EvaluationReport } from "../domain/evaluation-contracts.js";
+import type { TelemetryDiagnosis } from "../domain/telemetry-contracts.js";
 
 export interface Runtime {
   readonly runAgent: RunAgentUseCase;
   readonly resolveCitation?: ResolveCitationUseCase;
   readonly conversationCommand?: ConversationCommandHandler;
   readonly evaluate?: (signal?: AbortSignal) => Promise<EvaluationReport>;
+  readonly inspect?: (traceId: unknown, signal?: AbortSignal) => Promise<TelemetryDiagnosis>;
 }
 
 export interface CreateRuntimeOptions {
