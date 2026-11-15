@@ -9,8 +9,9 @@ import { createConversationRuntime } from "./create-conversation-runtime.js";
 import { createEvaluationExecution } from "./create-evaluation-execution.js";
 import type { RetrievalResourceOptions } from "./create-retrieval-resources.js";
 import type { CreateRuntimeOptions, Runtime } from "./create-runtime.js";
+import type { GroundedRuntimeFactory } from "./create-grounded-runtime.js";
 
-export async function createEvaluationRuntime(options: CreateRuntimeOptions & RetrievalResourceOptions & { reportRoot: string }): Promise<Runtime> {
+export async function createEvaluationRuntime(options: CreateRuntimeOptions & RetrievalResourceOptions & { reportRoot: string; groundedFactory?: GroundedRuntimeFactory }): Promise<Runtime> {
   const runtime = await createConversationRuntime(options);
   const evaluate = createRunEvaluation({
     executor: createEvaluationExecution(options), reports: new FilesystemEvaluationReport({ root: options.reportRoot }),

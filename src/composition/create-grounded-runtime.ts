@@ -24,6 +24,8 @@ export interface GroundedRuntimeOptions extends CreateRuntimeOptions, RetrievalR
   readonly retrievalMeasurement?: RetrievalMeasurementPort;
 }
 
+export type GroundedRuntimeFactory = (options: GroundedRuntimeOptions) => Promise<Runtime>;
+
 export async function createGroundedRuntime(options: GroundedRuntimeOptions): Promise<Runtime> {
   const resources = createRetrievalResources(options);
   const retrieve = createRetrievePassages({ ...resources, minimumScore: 0.15 });
