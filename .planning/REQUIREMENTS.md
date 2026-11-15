@@ -47,7 +47,7 @@
 
 ### Observability
 
-- [ ] **OBS-01**: Maintainer can correlate logs, traces, metrics, model calls, tool calls, retrieval, state, and evaluations for one run without exposing protected content by default.
+- [x] **OBS-01**: Maintainer can correlate logs, traces, metrics, model calls, tool calls, retrieval, state, and evaluations for one run without exposing protected content by default. Implemented — review pending.
 
 ### Streaming and UI
 
@@ -106,7 +106,7 @@
 | RAG-02 | Phase 4 | Implemented — review pending |
 | MEM-01 | Phase 5 | Implemented — review pending |
 | EVAL-01 | Phase 6 | Implemented — review pending |
-| OBS-01 | Phase 7 | Pending |
+| OBS-01 | Phase 7 | Implemented — review pending |
 | STREAM-01 | Phase 8 | Pending |
 | UI-01 | Phase 8 | Pending |
 | GUARD-01 | Phase 9 | Pending |

@@ -42,6 +42,7 @@ Phase 1 was explicitly approved on 2026-11-09 after the typed loop, CLI/HTTP ada
 - Phase 4 implements controlled PostgreSQL/pgvector ingestion, immutable passage citations, exact extractive grounding, explicit CLI/HTTP selection, and read-only citation resolution. Its deterministic lexical embedding fixture proves mechanics; semantic provider selection remains open. Phase 4 review and approval are pending.
 - Phase 5 implements explicit durable conversations with bounded retention input, idempotent request replay, private leases/fencing, explicit TTL memory, safe transactional audit, and CLI/HTTP commands. Turn-boundary resume is supported; mid-turn effect replay is not claimed. Phase 5 review and approval are pending.
 - Phase 6 implements sealed internal-docs@1.0.0, six independent evaluation dimensions, observed-passage evidence, safe immutable report publication, and uaos eval with live PostgreSQL baseline/regression checks. EVAL-01 implementation is complete; architectural review, approval, and stability remain pending.
+- Phase 7 implements bounded safe telemetry, measured operation spans, state/evaluation links, and database-independent uaos inspect. A live Windows synchronization finding led to bounded batch export under the original optional wait budget (ADR-0010). OBS-01 implementation is complete; architectural review, approval, and stability remain pending.
 - Open GSD Core 1.15.0 provides the operational planning workflow and is installed locally under ignored `.codex/`.
 
 ## Constraints
@@ -84,4 +85,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update context with evidence and lessons.
 
 ---
-*Last updated: 2026-11-15 after Phase 6 implementation and evidence closure*
+*Last updated: 2026-11-15 after Phase 7 implementation and evidence closure*

@@ -33,6 +33,8 @@ React and Next.js are not part of the selected architecture.
 
 ## Documentation
 
+- [Iteration 7 observability and failure diagnosis](docs/iterations/07-observability.md)
+- [Iteration 7 evidence](docs/reviews/ITERATION-07-evidence.md)
 - [Iteration 6 evaluation gates](docs/iterations/06-evaluation-system.md)
 - [Iteration 6 evidence](docs/reviews/ITERATION-06-evidence.md)
 - [Iteration 5 durable state and memory](docs/iterations/05-durable-state-memory.md)
@@ -56,4 +58,4 @@ React and Next.js are not part of the selected architecture.
 
 ## Status
 
-Phase 1 implementation is complete with offline CLI, Fastify HTTP, JSONL evidence, and deterministic tests. See the walkthrough for Node.js 24 installation, execution, and validation. Phase 1 was explicitly approved on 2026-11-09. Phase 2 adds a typed registry and a second tool. Phase 3 adds a consented local stdio MCP capability. Phase 4 adds PostgreSQL/pgvector ingestion, extractive grounding, and immutable passage citations. Phase 5 adds explicit durable conversation commands, idempotent replay, fenced recovery, and scoped TTL memory. Phase 6 adds a sealed dataset, independent quality gates, immutable safe reports, and uaos eval. Select iterations explicitly through composition; iteration 1 remains the default. Phase 2–6 review and approval are pending. Stability remains a separate decision.
+Phase 1 implementation is complete with offline CLI, Fastify HTTP, JSONL evidence, and deterministic tests. See the walkthrough for Node.js 24 installation, execution, and validation. Phase 1 was explicitly approved on 2026-11-09. Phase 2 adds a typed registry and a second tool. Phase 3 adds a consented local stdio MCP capability. Phase 4 adds PostgreSQL/pgvector ingestion, extractive grounding, and immutable passage citations. Phase 5 adds explicit durable conversation commands, idempotent replay, fenced recovery, and scoped TTL memory. Phase 6 adds a sealed dataset, independent quality gates, immutable safe reports, and uaos eval. Phase 7 adds safe optional telemetry, measured operation spans, state/quality links, and database-independent uaos inspect. Select iterations explicitly through composition; iteration 1 remains the default. Phase 2–7 review and approval are pending. Stability remains a separate decision.

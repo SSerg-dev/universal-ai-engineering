@@ -197,7 +197,8 @@ describe("Iteration 1 review evidence", () => {
       "docs/iterations/03-mcp-boundary.md", "docs/reviews/ITERATION-03-evidence.md",
       "docs/iterations/04-grounded-retrieval.md", "docs/reviews/ITERATION-04-evidence.md",
       "docs/iterations/05-durable-state-memory.md", "docs/reviews/ITERATION-05-evidence.md",
-      "docs/iterations/06-evaluation-system.md", "docs/reviews/ITERATION-06-evidence.md"]);
+      "docs/iterations/06-evaluation-system.md", "docs/reviews/ITERATION-06-evidence.md",
+      "docs/iterations/07-observability.md", "docs/reviews/ITERATION-07-evidence.md"]);
     const broken: string[] = [];
     for (const file of files) {
       const markdown = read(file)
@@ -355,5 +356,29 @@ describe("Iteration 6 review evidence", () => {
     for (const command of ["npm ci", "npm run build", "npm run ingest", "UAOS_ITERATION", "uaos -- eval", "UAOS_REPORT_ROOT",
       "known unsupported-answer regression", "npm run validate", "npm run test:database"]) expect(guide).toContain(command);
     expect(read("docs/architecture/decisions/ADR-0008-deterministic-evaluation.md")).toContain("architectural review pending");
+  });
+});
+
+describe("Iteration 7 review evidence", () => {
+  const evidence = "docs/reviews/ITERATION-07-evidence.md";
+  it("traces observability scope and seven independent privacy/delivery/diagnosis boundaries", () => {
+    const requirements = rows(read(".planning/REQUIREMENTS.md"), "Traceability").filter((row) => row[1] === "Phase 7");
+    const coverage = rows(read(evidence), "Requirement traceability");
+    expect(coverage.map((row) => row[0])).toEqual(["OBS-01"]);
+    expect(coverage.map((row) => row[0])).toEqual(requirements.map((row) => row[0]));
+    for (const row of [...requirements, ...coverage]) expect(row[2]).toBe("Implemented — review pending");
+    const threats = rows(read(evidence), "Threat traceability");
+    expect(threats.map((row) => row[0])).toEqual(Array.from({ length: 7 }, (_, i) => `T-07-${String(i + 1).padStart(2, "0")}`));
+    for (const row of threats) expect(row[2]).toMatch(/\]\(.*\.test\.ts\)/u);
+  });
+  it("keeps approval pending and documents safe actual failure diagnosis without the database", () => {
+    expect(Object.fromEntries(rows(read(evidence), "Review state").map((row) => [row[0], row[1]]))).toEqual({
+      Planned: "Complete", Implemented: "Complete", "Architecturally Reviewed": "Pending", Approved: "Pending", Stable: "Pending",
+    });
+    const guide = read("docs/iterations/07-observability.md");
+    for (const command of ["npm ci", "npm run build", "npm run ingest", "UAOS_ITERATION", "uaos -- inspect", "UAOS_TELEMETRY_ROOT",
+      "TOOL_PERMISSION_DENIED", "250 ms", "startServer", "npm run validate", "npm run test:database"]) expect(guide).toContain(command);
+    expect(read("docs/architecture/decisions/ADR-0009-safe-observability.md")).toContain("architectural review pending");
+    expect(read("docs/architecture/decisions/ADR-0010-bounded-telemetry-batches.md")).toContain("architectural review pending");
   });
 });

@@ -1,19 +1,19 @@
 ---
 gsd_state_version: "1.0"
-current_phase: 07
-current_phase_name: End-to-End Observability
-status: executing
-stopped_at: Completed telemetry runtime and CLI; verifying live database correlation
+current_phase: 08
+current_phase_name: Streaming Angular UI
+status: planning
+stopped_at: Completed Phase 7 implementation/evidence; defining Phase 8 streaming and UI contracts
 last_updated: "2026-11-15"
 last_activity: 2026-11-15
-last_activity_desc: Observed runtime and offline inspect passed 357 tests, core/project compilation, and build
-state_head: afad273
+last_activity_desc: Phase 7 passed 363 tests, 26 live database tests, links, traceability, and build
+state_head: 29711d2
 progress:
   total_phases: 10
   completed_phases: 1
   total_plans: 27
-  completed_plans: 20
-  percent: 74
+  completed_plans: 21
+  percent: 78
 ---
 
 # Project State
@@ -23,20 +23,20 @@ progress:
 See: .planning/PROJECT.md (updated 2026-11-15)
 
 **Core value:** A learner can understand, build, test, and review a reusable Agentic OS one working iteration at a time.
-**Current focus:** Phase UAOS-07 — End-to-End Observability
+**Current focus:** Phase UAOS-08 — Streaming Angular UI
 
 ## Current Position
 
-Phase: UAOS-07 (End-to-End Observability) — EXECUTING
-Plan: 1 of 2 complete in current phase
-Status: Implementing 07-02; runtime/CLI complete, live database correlation and final evidence pending
-Last activity: 2026-11-15 — 357 tests, strict project/core compilation, and build passed
+Phase: UAOS-08 (Streaming Angular UI) — PLANNING
+Plan: 0 of 2 complete in current phase
+Status: Phase 7 implemented; defining streaming and UI contracts before dependent implementation
+Last activity: 2026-11-15 — 363 tests in 40 files, strict project/core compilation, build, and 26 live database tests passed
 
-Progress: 20/27 roadmap plans (74%); Phase 1 approved; Phase 2–6 review pending
+Progress: 21/27 roadmap plans (78%); Phase 1 approved; Phase 2–7 review pending
 
 ## Performance Metrics
 
-- Total plans completed: 20
+- Total plans completed: 21
 - Average duration: -
 - Total execution time: Not tracked; no cumulative duration claim
 
@@ -91,7 +91,7 @@ Progress: 20/27 roadmap plans (74%); Phase 1 approved; Phase 2–6 review pendin
 
 ### Pending Todos
 
-Review Phase 2–6 evidence. Complete Phase 7 live CLI/HTTP/database evidence and runbook against selected ADR-0009; telemetry contracts and runtime are implemented. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
+Review Phase 2–7 evidence. Define Phase 8 content-bearing streaming/replay/cancellation contracts and Angular/Tailwind UI design before implementation. Preserve metadata-only journal/telemetry and earlier iteration selection. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
 
 ### Blockers/Concerns
 
@@ -107,8 +107,8 @@ Review Phase 2–6 evidence. Complete Phase 7 live CLI/HTTP/database evidence an
 ## Session Continuity
 
 Last session: 2026-11-15
-Stopped at: Phase 7 contracts complete; implementing 07-02
-Resume file: .planning/phases/UAOS-07-observability/07-01-SUMMARY.md
+Stopped at: Phase 7 implemented and evidence complete; defining Phase 8 contracts
+Resume file: .planning/phases/UAOS-07-observability/07-02-SUMMARY.md
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 
@@ -123,3 +123,5 @@ Phase 5 closure on 2026-11-09 passed 273 tests in 27 files, strict project/core 
 Phase 6 contracts and core scorer/runner checkpoint passed 289 tests in 29 files, strict project/core compilation, and build. Independent scoring detects an unsupported-answer regression even with valid schema/journal; a separate RED test found and closed missing run.started acceptance on a failed trace. Dataset/report adapter/CLI/live evaluation and final EVAL-01 closure remain outstanding. Do not mark Phase 6 implemented or approved.
 
 Phase 6 final closure on 2026-11-15 supersedes the historical core checkpoint: 300 tests in 32 files, project/core typecheck, build, links, requirement/threat coverage, plus 22 live database checks passed. Dataset publication, immutable reports, iteration 6 CLI/composition, real baseline/regression, and evidence are implemented. Human architectural review, approval, and stability remain pending.
+
+Phase 7 final closure on 2026-11-15 passed 363 tests in 40 files, project/core typecheck, build, links, requirement/threat coverage, and 26 live database checks. Optional metadata telemetry, measured spans, state/evaluation links, database-free CLI inspection, and safe batch export are implemented. ADR-0010 retains the initial live performance finding and correction. Human architectural review, approval, and stability remain pending.

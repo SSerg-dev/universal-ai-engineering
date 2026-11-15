@@ -6,6 +6,10 @@ All notable project changes are recorded here. Work remains unapproved unless an
 
 ### Added
 
+- Phase 7 metadata-only observability, measured model/tool/retrieval/journal spans, state/evaluation correlation, and database-independent CLI inspection.
+- Bounded optional telemetry with exclusive JSONL batch publication, no primary-result drift, explicit incomplete diagnosis, and retained live performance discovery/correction in ADR-0010.
+- Real CLI/HTTP/state/evaluation trace checks, failure runbook, hard exercises, and Iteration 7 review evidence.
+
 - Completed Phase 6 with a sealed internal-docs dataset, host-observed retrieval evidence, immutable safe report publication, and iteration 6 evaluation CLI.
 - Live PostgreSQL baseline/regression, journal-equivalence, report-privacy, compiled-CLI, and no-overwrite/cancellation checks with Iteration 6 guide/evidence.
 
