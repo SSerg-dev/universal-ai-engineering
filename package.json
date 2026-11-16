@@ -17,7 +17,10 @@
     "build": "tsc",
     "uaos": "node ./dist/src/adapters/inbound/cli.js",
     "ingest": "node ./dist/src/composition/ingest-fixtures.js",
-    "validate": "npm run typecheck && npm run typecheck:core && npm test && npm run build"
+    "validate": "npm run typecheck && npm run typecheck:core && npm test && npm run build",
+    "build:ui": "npm --prefix ui run build",
+    "test:ui": "npm --prefix ui run test",
+    "validate:all": "npm run validate && npm --prefix ui run validate"
   },
   "dependencies": {
     "@modelcontextprotocol/client": "2.4.0",

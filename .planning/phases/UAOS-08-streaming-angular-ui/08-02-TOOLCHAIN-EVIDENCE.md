@@ -1,0 +1,7 @@
+# Isolated UI toolchain checkpoint — 2026-11-16
+
+[ADR-0012](../../../docs/architecture/decisions/ADR-0012-isolated-angular-build.md) and the exact [dependency record](../../../docs/reviews/UI-08-dependencies.json) preceded installation. The separate ui package installed 292 packages with scripts/audit/funding disabled and no peer bypass. Its lockfile pins integrity and exact admitted direct versions. Existing root dependency tuples and package-lock.json remain unchanged; only explicit UI/combined validation script entry points were added.
+
+Official Angular application/AOT plus Tailwind/PostCSS built the minimal scaffold successfully on Node.js 24.22.1 using isolated TypeScript 6.0.3: 97.71 kB raw / 29.43 kB estimated transfer, 3.974 seconds. This is scaffold sizing, not final inspector performance. Two dependency/import-boundary tests passed. The core remains TypeScript 7.0.2; UI may share only the pure protocol/reducer entry points and cannot import Node infrastructure or executable output rendering.
+
+The selected UI contract has seven verified specification dimensions and 30 explicit UI-state resolutions; this is not a rendered accessibility/visual or human approval claim. The actual network client, Angular inspector, component/client tests, clean-lock installation reproduction, live desktop/mobile evidence, and final Phase 8 closure remain outstanding. The placeholder UI intentionally does not claim a functioning inspector.

@@ -3,11 +3,11 @@ gsd_state_version: "1.0"
 current_phase: 08
 current_phase_name: Streaming Angular UI
 status: executing
-stopped_at: 08-01 streaming API complete; defining Angular/Tailwind UI contract and compatible build boundary
-last_updated: "2026-11-15"
-last_activity: 2026-11-15
-last_activity_desc: 08-01 passed 385 tests, 28 live database checks, project/core typecheck, and build
-state_head: 9af71f0
+stopped_at: Angular/Tailwind AOT scaffold and isolated toolchain passed; implementing browser client and inspector
+last_updated: "2026-11-16"
+last_activity: 2026-11-16
+last_activity_desc: UI specification verified; isolated Angular AOT build and two admission/import checks passed
+state_head: 393bdc8
 progress:
   total_phases: 10
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-11-15)
 
 Phase: UAOS-08 (Streaming Angular UI) — EXECUTING
 Plan: 1 of 2 complete in current phase
-Status: 08-01 complete; defining 08-02 Angular/Tailwind UI design and compatible build boundary
-Last activity: 2026-11-15 — 385 tests in 44 files, project/core compilation, build, and 28 live database checks passed
+Status: 08-01 complete; 08-02 UI contract/toolchain verified, implementing browser client and inspector
+Last activity: 2026-11-16 — Angular AOT/Tailwind scaffold and two admission/import checks passed; backend closure remains 385 tests and 28 live database checks
 
 Progress: 22/27 roadmap plans (81%); Phase 1 approved; Phase 2–7 review pending; Phase 8 UI outstanding
 
@@ -91,7 +91,7 @@ Progress: 22/27 roadmap plans (81%); Phase 1 approved; Phase 2–7 review pendin
 
 ### Pending Todos
 
-Review Phase 2–7 evidence. Define Phase 8 content-bearing streaming/replay/cancellation contracts and Angular/Tailwind UI design before implementation. Preserve metadata-only journal/telemetry and earlier iteration selection. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
+Review Phase 2–7 evidence. Complete 08-02 browser client/Angular inspector and rendered UI evidence against the verified UI-SPEC and isolated compatible toolchain. Preserve metadata-only journal/telemetry and earlier iteration selection. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
 
 ### Blockers/Concerns
 
@@ -106,9 +106,9 @@ Review Phase 2–7 evidence. Define Phase 8 content-bearing streaming/replay/can
 
 ## Session Continuity
 
-Last session: 2026-11-15
-Stopped at: 08-01 stream implementation/evidence complete; defining 08-02 UI contract
-Resume file: .planning/phases/UAOS-08-streaming-angular-ui/08-01-SUMMARY.md
+Last session: 2026-11-16
+Stopped at: 08-02 isolated UI toolchain verified; implementing browser client and inspector
+Resume file: .planning/phases/UAOS-08-streaming-angular-ui/08-02-TOOLCHAIN-EVIDENCE.md
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 

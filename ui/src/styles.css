@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #172b35;
+  --color-muted: #52636b;
+  --color-canvas: #f5f7f8;
+  --color-accent: #0f766e;
+  --color-outline: #d6e0e3;
+  --color-danger: #b42318;
+  --color-success: #166534;
+}
+
+body { margin: 0; background: var(--color-canvas); color: var(--color-ink); font: 400 16px/1.6 system-ui, sans-serif; }
+main { max-width: 1168px; margin-inline: auto; padding: 48px 24px; }
+h1 { font-size: 40px; font-weight: 600; line-height: 1.2; }

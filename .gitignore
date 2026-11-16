@@ -5,6 +5,9 @@ node_modules/
 dist/
 coverage/
 .uaos/
+ui/.angular/
+ui/out-tsc/
+ui/dist/
 .env
 .env.*
 !.env.example
