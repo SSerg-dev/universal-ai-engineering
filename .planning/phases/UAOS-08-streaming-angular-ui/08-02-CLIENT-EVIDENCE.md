@@ -1,0 +1,7 @@
+# Browser client checkpoint — 2026-11-16
+
+Implemented the [browser client contract](../../../docs/architecture/browser-stream-client.md) independently of Angular rendering: one create, bounded read-only reconnect, validated UTF-8/SSE fields/envelopes/cursors, shared reducer ordering, exact duplicates, explicit cancellation, and disposal cleanup. No question/body is re-sent on reconnect; raw server exceptions never become UI messages.
+
+The official Angular/Vitest/jsdom builder passed 13 tests in one file in 48.57 seconds (87% environment startup; no performance claim about execution). Tests prove split UTF-8/CRLF, exact duplicate idempotency, truncated-frame recovery at the accepted cursor, three reconnect delays, explicit read-only resume, identity/gap/cursor/protocol rejection, post-terminal rejection, cancel acknowledgment versus actual primary terminal, failed-cancel recovery, expired-run behavior, bounded JSON/frame parsing, invalid UTF-8, and no callbacks after disposal. Two root UI admission/import tests passed separately; standalone TypeScript 6 strict spec compilation passed.
+
+An explicit UI rootDir includes the repository's approved shared source files without widening the source import allowlist. The original core toolchain and dependency tuples remain unchanged. The actual Angular inspector, component/a11y tests, clean-install reproduction, real desktop/mobile rendered evidence, and Phase 8 closure remain outstanding. No human review/approval/stability is claimed.

@@ -1,0 +1,11 @@
+# Browser Stream Client Contract
+
+The UI consumes [ADR-0011](decisions/ADR-0011-bounded-run-streams.md) through relative same-origin URLs and the shared pure acceptance reducer. It creates one question once, then reconnects only the read stream. It holds one run/question in memory and writes no browser storage.
+
+Create/cancel requests wait at most five seconds; each read attempt waits at most ten seconds. A dropped read permits three reconnect attempts with 500/1000/1500 ms delays, always using the last actually accepted sequence. A further failure leaves an explicit disconnected state and manual reconnect action. It never retries POST create or cancellation automatically. A lost create acknowledgment can leave an unknown bounded server run; the UI does not pretend it knows the run ID or silently resubmit the question.
+
+Every SSE data frame must have one matching runId:sequence id, event:uaos, one JSON data field, and a strict stream envelope. Heartbeat comments are ignored. The parser accepts chunked UTF-8/CRLF, bounds each pending frame to 65536 characters and incoming chunks to 1 MiB, rejects malformed encoding/fields/IDs, and delegates order/call correlation/duplicate/terminal checks to the shared reducer. Exact duplicates do not add visible steps. A truncated connection may reconnect from its last complete accepted event. JSON create/cancel responses are bounded to 8192 bytes before parsing.
+
+A malformed protocol is a distinct terminal client error and is not automatically retried. Missing/expired run responses require starting a new question. A domain cancellation/failure comes only from the typed server terminal; cancel acknowledgment alone never fabricates a cancellation terminal. A failed cancel request leaves the original stream active and offers an explicit retry. Primary success can win a late cancellation race.
+
+Disposal aborts client network waits and prevents later callbacks; disconnect itself does not cancel server execution. Renderer updates receive validated snapshots and fixed problem codes, never raw exception/server error text. All answer/quote output is text interpolation. The protocol, retry policy, UI design, and build boundary are independently testable; no component recreates business execution.

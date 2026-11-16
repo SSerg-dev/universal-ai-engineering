@@ -3,6 +3,7 @@
     "target": "ES2022",
     "module": "preserve",
     "moduleResolution": "bundler",
+    "rootDir": "..",
     "lib": ["ES2024", "DOM"],
     "strict": true,
     "noUncheckedIndexedAccess": true,

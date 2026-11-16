@@ -3,11 +3,11 @@ gsd_state_version: "1.0"
 current_phase: 08
 current_phase_name: Streaming Angular UI
 status: executing
-stopped_at: Angular/Tailwind AOT scaffold and isolated toolchain passed; implementing browser client and inspector
+stopped_at: Browser stream client passed 13 Angular/Vitest tests; implementing Angular inspector
 last_updated: "2026-11-16"
 last_activity: 2026-11-16
-last_activity_desc: UI specification verified; isolated Angular AOT build and two admission/import checks passed
-state_head: 393bdc8
+last_activity_desc: Bounded browser client passed 13 UI tests, TypeScript 6 compilation, and two import/admission checks
+state_head: 5c2260d
 progress:
   total_phases: 10
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-11-15)
 
 Phase: UAOS-08 (Streaming Angular UI) — EXECUTING
 Plan: 1 of 2 complete in current phase
-Status: 08-01 complete; 08-02 UI contract/toolchain verified, implementing browser client and inspector
-Last activity: 2026-11-16 — Angular AOT/Tailwind scaffold and two admission/import checks passed; backend closure remains 385 tests and 28 live database checks
+Status: 08-01 complete; 08-02 browser client verified, implementing the Angular inspector and rendered evidence
+Last activity: 2026-11-16 — 13 UI client tests, TypeScript 6 compilation, and two admission/import checks passed; backend closure remains 385 tests and 28 live database checks
 
 Progress: 22/27 roadmap plans (81%); Phase 1 approved; Phase 2–7 review pending; Phase 8 UI outstanding
 
@@ -107,8 +107,8 @@ Review Phase 2–7 evidence. Complete 08-02 browser client/Angular inspector and
 ## Session Continuity
 
 Last session: 2026-11-16
-Stopped at: 08-02 isolated UI toolchain verified; implementing browser client and inspector
-Resume file: .planning/phases/UAOS-08-streaming-angular-ui/08-02-TOOLCHAIN-EVIDENCE.md
+Stopped at: 08-02 browser client verified; implementing Angular inspector
+Resume file: .planning/phases/UAOS-08-streaming-angular-ui/08-02-CLIENT-EVIDENCE.md
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 
