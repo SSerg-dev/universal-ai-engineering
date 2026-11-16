@@ -2,12 +2,12 @@
 gsd_state_version: "1.0"
 current_phase: 10
 current_phase_name: Router and Course Completion
-status: planning
-stopped_at: Phase 9 implemented with evidence; define Phase 10 routing and compatibility contracts
+status: executing
+stopped_at: Phase 10 routing contracts and core verified; concrete composition and course packaging next
 last_updated: "2026-11-16"
 last_activity: 2026-11-16
-last_activity_desc: Phase 9 closed with 451 root tests, 21 UI tests, 48 database checks, builds and traceability
-state_head: 6b0e1a7
+last_activity_desc: Routing core passed 476 root tests, strict project/core compilation and build; integration pending
+state_head: 36ab9f3
 progress:
   total_phases: 10
   completed_phases: 1
@@ -27,9 +27,9 @@ See: .planning/PROJECT.md (updated 2026-11-15)
 
 ## Current Position
 
-Phase: UAOS-10 (Router and Course Completion) — PLANNING
+Phase: UAOS-10 (Router and Course Completion) — EXECUTING
 Plan: 0 of 2 complete in current phase
-Status: Phase 9 implemented; define typed routing/fallback and course compatibility contracts before Phase 10 implementation
+Status: Plan 10-01 in progress; typed routing/fallback contracts and core verified, composition and adapters pending
 Last activity: 2026-11-16 — 451 root tests, 21 UI tests, 48 database checks, both builds and links/traceability passed
 
 Progress: 25/27 roadmap plans (93%); Phase 1 approved; Phase 2–9 review pending
@@ -107,8 +107,8 @@ Review Phase 2–9 evidence. Define Phase 10 typed route/model/tool/retrieval/po
 ## Session Continuity
 
 Last session: 2026-11-16
-Stopped at: Phase 9 implementation/evidence complete; Phase 10 contracts next
-Resume file: .planning/phases/UAOS-09-guardrails-approval/09-02-SUMMARY.md
+Stopped at: Phase 10 core verified; concrete routing composition and CLI/API next
+Resume file: .planning/phases/UAOS-10-router-course-completion/10-01-CORE-EVIDENCE.md
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 
