@@ -1,0 +1,7 @@
+# Real browser focus discovery — 2026-11-16
+
+The first real Chrome/PostgreSQL run completed empty/validation, grounded citations/safe evidence, 360px layout/touch targets, long-question abstention, and read-only reconnect with one create. It failed the cancellation scenario. A second instrumented run narrowed this to cancel-focus-return: the actual engine wrote CANCELLED with zero model/tool calls and valid metadata, but focus remained on the previous answer heading rather than the newly enabled question input. The isolated regression instead observed body focus after the stop button was removed. Both owned database containers and isolated browser profiles were cleaned up.
+
+The original component queued focus in a microtask immediately after receiving the terminal snapshot. Angular's next render had not yet removed the textarea's disabled state, so the browser ignored focus. The earlier jsdom test called detectChanges before yielding and concealed the race. Updating that test to yield before the render reproduced the failure (one failed, 20 skipped).
+
+Focus now uses Angular's [afterNextRender](https://angular.dev/api/core/afterNextRender) write phase with the component injector, so it runs after the DOM update. This changes focus timing only; it does not alter execution/cancellation semantics or invent a server terminal. The stronger regression remains required alongside a corrected real browser run.

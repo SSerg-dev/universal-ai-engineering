@@ -94,10 +94,13 @@ describe("Accessible Angular execution inspector", () => {
     const { root, component, fixture, textarea } = setup(); await begin(component);
     let state = reduceStream(initialStreamState("run-one"), completedState().events[0]);
     update(snapshot(state, { connection: "connected" })); fixture.detectChanges();
-    (root.querySelector(".stop") as HTMLButtonElement).click(); await fixture.whenStable(); expect(client.cancel).toHaveBeenCalledTimes(1);
+    const stop = root.querySelector(".stop") as HTMLButtonElement; stop.focus(); stop.click(); await fixture.whenStable(); expect(client.cancel).toHaveBeenCalledTimes(1);
     expect(root.textContent).not.toContain("Новый запуск можно начать с другого вопроса.");
     state = reduceStream(state, { ...state.events[0], sequence: 2, type: "run.cancelled", payload: { code: "CANCELLED", stage: "model", retryable: false } });
-    update(snapshot(state)); fixture.detectChanges(); await fixture.whenStable();
+    update(snapshot(state));
+    // A renderer notification can precede the frame that re-enables the textarea.
+    await Promise.resolve();
+    fixture.detectChanges(); await fixture.whenStable();
     expect(root.textContent).toContain("Запуск остановлен."); expect(root.querySelector(".stop")).toBeNull(); expect(document.activeElement).toBe(textarea);
   });
 

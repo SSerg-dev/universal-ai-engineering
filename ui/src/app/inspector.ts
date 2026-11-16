@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, InjectionToken, computed, inject, signal, viewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, ElementRef, InjectionToken, Injector, afterNextRender, computed, inject, signal, viewChild } from "@angular/core";
 
 import type { StreamEvent } from "../../../src/domain/stream-contracts.js";
 import { RunStreamClient, type ClientProblem, type ClientSnapshot } from "./stream-client";
@@ -17,6 +17,7 @@ const problems: Record<ClientProblem, string> = {
 @Component({ selector: "uaos-inspector", standalone: true, templateUrl: "./inspector.html", changeDetection: ChangeDetectionStrategy.OnPush })
 export class InspectorComponent {
   readonly #client = inject(STREAM_CLIENT);
+  readonly #injector = inject(Injector);
   private readonly questionElement = viewChild<ElementRef<HTMLTextAreaElement>>("questionElement");
   private readonly answerHeading = viewChild<ElementRef<HTMLHeadingElement>>("answerHeading");
   #pendingQuestion = "";
@@ -80,7 +81,7 @@ export class InspectorComponent {
     if (value.connection === "closed" && value.state && value.state.runId !== this.#focusedRun) {
       this.#focusedRun = value.state.runId;
       const cancelled = value.state.events.at(-1)?.type === "run.cancelled";
-      queueMicrotask(() => { if (cancelled) this.questionElement()?.nativeElement.focus(); else this.answerHeading()?.nativeElement.focus(); });
+      afterNextRender({ write: () => { if (cancelled) this.questionElement()?.nativeElement.focus(); else this.answerHeading()?.nativeElement.focus(); } }, { injector: this.#injector });
     }
   };
   sourceTitle(documentId: string) { return this.answer()?.payload.sources.find((source) => source.documentId === documentId)?.title ?? documentId; }
