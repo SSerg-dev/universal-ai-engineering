@@ -198,7 +198,9 @@ describe("Iteration 1 review evidence", () => {
       "docs/iterations/04-grounded-retrieval.md", "docs/reviews/ITERATION-04-evidence.md",
       "docs/iterations/05-durable-state-memory.md", "docs/reviews/ITERATION-05-evidence.md",
       "docs/iterations/06-evaluation-system.md", "docs/reviews/ITERATION-06-evidence.md",
-      "docs/iterations/07-observability.md", "docs/reviews/ITERATION-07-evidence.md"]);
+      "docs/iterations/07-observability.md", "docs/reviews/ITERATION-07-evidence.md",
+      "docs/iterations/08-streaming-angular-ui.md", "docs/reviews/ITERATION-08-evidence.md",
+      ".planning/phases/UAOS-08-streaming-angular-ui/08-02-SUMMARY.md"]);
     const broken: string[] = [];
     for (const file of files) {
       const markdown = read(file)
@@ -380,5 +382,48 @@ describe("Iteration 7 review evidence", () => {
       "TOOL_PERMISSION_DENIED", "250 ms", "startServer", "npm run validate", "npm run test:database"]) expect(guide).toContain(command);
     expect(read("docs/architecture/decisions/ADR-0009-safe-observability.md")).toContain("architectural review pending");
     expect(read("docs/architecture/decisions/ADR-0010-bounded-telemetry-batches.md")).toContain("architectural review pending");
+  });
+});
+
+describe("Iteration 8 review evidence", () => {
+  const evidence = "docs/reviews/ITERATION-08-evidence.md";
+  it("traces streaming/UI requirements and eight protocol/privacy/build/rendered-evidence boundaries", () => {
+    const requirements = rows(read(".planning/REQUIREMENTS.md"), "Traceability").filter((row) => row[1] === "Phase 8");
+    const coverage = rows(read(evidence), "Requirement traceability");
+    expect(coverage.map((row) => row[0])).toEqual(["STREAM-01", "UI-01"]);
+    expect(coverage.map((row) => row[0])).toEqual(requirements.map((row) => row[0]));
+    for (const row of [...requirements, ...coverage]) expect(row[2]).toBe("Implemented — review pending");
+    const threats = rows(read(evidence), "Threat traceability");
+    expect(threats.map((row) => row[0])).toEqual(Array.from({ length: 8 }, (_, i) => `T-08-${String(i + 1).padStart(2, "0")}`));
+    for (const row of threats) expect(row[2]).toMatch(/\]\(.*(?:\.test\.ts|\.spec\.ts|\.mjs)\)/u);
+  });
+  it("keeps human acceptance separate and makes all-package/database/browser reproduction explicit", () => {
+    expect(Object.fromEntries(rows(read(evidence), "Review state").map((row) => [row[0], row[1]]))).toEqual({
+      Planned: "Complete", Implemented: "Complete", "Architecturally Reviewed": "Pending", Approved: "Pending", Stable: "Pending",
+    });
+    const guide = read("docs/iterations/08-streaming-angular-ui.md");
+    for (const command of ["npm ci", "npm --prefix ui ci", "npm run build:ui", "npm --prefix ui start", "UAOS_ITERATION", "startServer",
+      "npm run validate:all", "npm run test:database", "npm run test:browser", "UAOS_BROWSER_BIN"]) expect(guide).toContain(command);
+    const coverage = JSON.parse(read(".planning/phases/UAOS-08-streaming-angular-ui/08-UI-PROBE.json"));
+    expect(coverage.coverage).toMatchObject({ applicable: 30, resolved: 30, unresolved: 0, unclassified: 0 });
+    expect(read("docs/architecture/decisions/ADR-0012-isolated-angular-build.md")).toContain("architectural review pending");
+  });
+  it("retains source-bound real-browser results and six valid desktop/mobile PNG artifacts", () => {
+    const directory = "docs/reviews/iteration-08-assets", report = JSON.parse(read(`${directory}/result.json`));
+    expect(report).toMatchObject({ checkedOn: "2026-11-16", passed: true, externalRequests: 0, runtimeExceptions: 0 });
+    expect(report.sourceHead).toMatch(/^[a-f0-9]{40}$/u);
+    expect(() => execFileSync("git", ["merge-base", "--is-ancestor", report.sourceHead, "HEAD"])).not.toThrow();
+    expect(report.checks).toHaveLength(7); expect(new Set(report.checks).size).toBe(7);
+    expect(report.screenshots).toHaveLength(6);
+    expect(report.browser).toMatch(/^(?:Chrome|Edg)\//u);
+    for (const screenshot of report.screenshots as { filename: string; width: number; height: number }[]) {
+      expect(screenshot.filename).toMatch(/^(?:desktop|mobile)-[a-z-]+\.png$/u);
+      const data = readFileSync(`${directory}/${screenshot.filename}`);
+      expect(data.subarray(0, 8)).toEqual(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+      expect(data.readUInt32BE(16)).toBe(screenshot.width); expect(data.readUInt32BE(20)).toBe(screenshot.height);
+      expect([360, 1440]).toContain(screenshot.width); expect(screenshot.height).toBeLessThanOrEqual(10_000);
+    }
+    expect(Object.keys(report.assetDigests)).toHaveLength(2);
+    for (const digest of Object.values(report.assetDigests)) expect(digest).toMatch(/^[a-f0-9]{64}$/u);
   });
 });

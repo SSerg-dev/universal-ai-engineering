@@ -52,7 +52,7 @@
 ### Streaming and UI
 
 - [x] **STREAM-01**: User can receive ordered typed start, progress, tool, answer, completion, cancellation, and error events during a run. Implemented — review pending.
-- [ ] **UI-01**: User can ask a question and inspect live progress, citations, and results in an Angular/Tailwind interface outside the core.
+- [x] **UI-01**: User can ask a question and inspect live progress, citations, and results in an Angular/Tailwind interface outside the core. Implemented — review pending.
 
 ### Guardrails
 
@@ -108,7 +108,7 @@
 | EVAL-01 | Phase 6 | Implemented — review pending |
 | OBS-01 | Phase 7 | Implemented — review pending |
 | STREAM-01 | Phase 8 | Implemented — review pending |
-| UI-01 | Phase 8 | Pending |
+| UI-01 | Phase 8 | Implemented — review pending |
 | GUARD-01 | Phase 9 | Pending |
 | ROUTER-01 | Phase 10 | Pending |
 | NFR-01 | Phase 1 | Validated — human approved |

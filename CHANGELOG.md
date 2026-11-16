@@ -6,6 +6,10 @@ All notable project changes are recorded here. Work remains unapproved unless an
 
 ### Added
 
+- Phase 8 ordered typed SSE, bounded process-local replay, explicit cancellation, strict client correlation/reconnect rules, and real TCP/database coverage.
+- Russian Angular/Tailwind question/timeline/answer inspector with exact source cards, keyboard/status/focus behavior, safe text rendering, and an isolated officially compatible AOT toolchain.
+- Owned real-browser desktop/mobile/reconnect/cancellation/privacy evidence, immutable screenshot promotion, clean UI lock installation reproduction, and separate combined validation.
+
 - Phase 7 metadata-only observability, measured model/tool/retrieval/journal spans, state/evaluation correlation, and database-independent CLI inspection.
 - Bounded optional telemetry with exclusive JSONL batch publication, no primary-result drift, explicit incomplete diagnosis, and retained live performance discovery/correction in ADR-0010.
 - Real CLI/HTTP/state/evaluation trace checks, failure runbook, hard exercises, and Iteration 7 review evidence.

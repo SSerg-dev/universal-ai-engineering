@@ -1,19 +1,19 @@
 ---
 gsd_state_version: "1.0"
-current_phase: 08
-current_phase_name: Streaming Angular UI
-status: executing
-stopped_at: UI client/components, clean install and real browser scenarios passed; closing Phase 8 evidence
+current_phase: 09
+current_phase_name: Guardrails and Approval
+status: planning
+stopped_at: Phase 8 implementation/evidence complete; defining Phase 9 policy and approval contracts
 last_updated: "2026-11-16"
 last_activity: 2026-11-16
-last_activity_desc: Combined validation passed 387 root and 21 UI tests; 28 database checks and seven browser scenarios passed
-state_head: 3272ef5
+last_activity_desc: Phase 8 closure passed 390 root/21 UI tests, 28 database checks, seven browser scenarios, links and traceability
+state_head: 1ab1561
 progress:
   total_phases: 10
   completed_phases: 1
   total_plans: 27
-  completed_plans: 22
-  percent: 81
+  completed_plans: 23
+  percent: 85
 ---
 
 # Project State
@@ -23,20 +23,20 @@ progress:
 See: .planning/PROJECT.md (updated 2026-11-15)
 
 **Core value:** A learner can understand, build, test, and review a reusable Agentic OS one working iteration at a time.
-**Current focus:** Phase UAOS-08 — Streaming Angular UI
+**Current focus:** Phase UAOS-09 — Guardrails and Approval
 
 ## Current Position
 
-Phase: UAOS-08 (Streaming Angular UI) — EXECUTING
-Plan: 1 of 2 complete in current phase
-Status: 08-01 complete; 08-02 implemented, final source-bound screenshots and traceability/evidence closure pending
-Last activity: 2026-11-16 — 387 root tests, 21 UI tests, both builds, clean UI lock installation, 28 database tests and seven browser scenarios passed
+Phase: UAOS-09 (Guardrails and Approval) — PLANNING
+Plan: 0 of 2 complete in current phase
+Status: Phase 8 implemented; defining policy, budget, approval, denial and threat contracts before enforcement
+Last activity: 2026-11-16 — 390 root tests, 21 UI tests, both builds, 28 database checks, seven browser scenarios, links/traceability and clean UI lock reproduction passed
 
-Progress: 22/27 roadmap plans (81%); Phase 1 approved; Phase 2–7 review pending; Phase 8 UI outstanding
+Progress: 23/27 roadmap plans (85%); Phase 1 approved; Phase 2–8 review pending
 
 ## Performance Metrics
 
-- Total plans completed: 22
+- Total plans completed: 23
 - Average duration: -
 - Total execution time: Not tracked; no cumulative duration claim
 
@@ -91,7 +91,7 @@ Progress: 22/27 roadmap plans (81%); Phase 1 approved; Phase 2–7 review pendin
 
 ### Pending Todos
 
-Review Phase 2–7 evidence. Complete 08-02 browser client/Angular inspector and rendered UI evidence against the verified UI-SPEC and isolated compatible toolchain. Preserve metadata-only journal/telemetry and earlier iteration selection. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
+Review Phase 2–8 evidence. Define Phase 9 host-owned policy, permissions, budgets, request/output validation, explicit consequential-action approval and auditable denial contracts before implementation. Preserve metadata-only journal/telemetry, existing public error vocabularies and earlier iteration selection. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
 
 ### Blockers/Concerns
 
@@ -107,8 +107,8 @@ Review Phase 2–7 evidence. Complete 08-02 browser client/Angular inspector and
 ## Session Continuity
 
 Last session: 2026-11-16
-Stopped at: 08-02 real browser/clean-install checks passed; closing evidence
-Resume file: .planning/phases/UAOS-08-streaming-angular-ui/08-02-BROWSER-EVIDENCE.md
+Stopped at: Phase 8 implementation/evidence complete; defining Phase 9 contracts
+Resume file: .planning/phases/UAOS-08-streaming-angular-ui/08-02-SUMMARY.md
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 
@@ -125,3 +125,5 @@ Phase 6 contracts and core scorer/runner checkpoint passed 289 tests in 29 files
 Phase 6 final closure on 2026-11-15 supersedes the historical core checkpoint: 300 tests in 32 files, project/core typecheck, build, links, requirement/threat coverage, plus 22 live database checks passed. Dataset publication, immutable reports, iteration 6 CLI/composition, real baseline/regression, and evidence are implemented. Human architectural review, approval, and stability remain pending.
 
 Phase 7 final closure on 2026-11-15 passed 363 tests in 40 files, project/core typecheck, build, links, requirement/threat coverage, and 26 live database checks. Optional metadata telemetry, measured spans, state/evaluation links, database-free CLI inspection, and safe batch export are implemented. ADR-0010 retains the initial live performance finding and correction. Human architectural review, approval, and stability remain pending.
+
+Phase 8 final closure on 2026-11-16 passed 390 root tests, 21 UI tests, strict project/core compilation, both builds, 28 database checks, seven real browser scenarios, internal links, requirement/threat coverage and clean isolated UI lock reproduction. Typed SSE/replay/cancellation and a Russian Angular/Tailwind inspector are implemented; six source-bound screenshots are retained. Root dependencies/lockfile remain unchanged. Human architectural review, approval, and stability remain pending.
