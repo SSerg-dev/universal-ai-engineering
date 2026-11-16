@@ -8,6 +8,7 @@ import type { ConversationCommandHandler } from "../../application/conversation-
 import { StateBoundaryError, type StateBoundaryCode } from "../../domain/state-contracts.js";
 import type { RunStreamPort } from "../../application/ports/stream-port.js";
 import { registerStreamRoutes } from "./http-streams.js";
+import { GuardBoundaryError, GuardCommandSuccessSchema, type GuardBoundaryCode, type GuardCommandSuccess } from "../../domain/guard-contracts.js";
 
 const HTTP_BODY_LIMIT_BYTES = 16 * 1024;
 
@@ -16,6 +17,7 @@ export interface BuildHttpAppOptions {
   readonly resolveCitation?: ResolveCitationUseCase;
   readonly conversationCommand?: ConversationCommandHandler;
   readonly streams?: RunStreamPort;
+  readonly guardCommand?: (input: unknown, signal?: AbortSignal) => Promise<GuardCommandSuccess>;
 }
 
 function stateStatus(code: StateBoundaryCode): number {
@@ -25,6 +27,21 @@ function stateStatus(code: StateBoundaryCode): number {
     case "CONVERSATION_EXPIRED": return 410;
     case "VERSION_CONFLICT": case "CONVERSATION_BUSY": case "REQUEST_KEY_REUSED":
     case "TURN_INTERRUPTED": case "TURN_FENCED": case "STATE_CAPACITY_EXCEEDED": return 409;
+    default: return 500;
+  }
+}
+
+function guardStatus(code: GuardBoundaryCode): number {
+  switch (code) {
+    case "GUARD_INPUT_INVALID": return 400;
+    case "GUARD_ACTION_NOT_FOUND": return 404;
+    case "GUARD_DENIED": case "GUARD_APPROVAL_REQUIRED": case "GUARD_EXPORT_DISABLED": return 403;
+    case "GUARD_EXPIRED": return 410;
+    case "GUARD_CAPACITY_EXCEEDED": return 429;
+    case "GUARD_REQUEST_REUSED": case "GUARD_VERSION_CONFLICT": case "GUARD_DIGEST_MISMATCH": case "GUARD_POLICY_CHANGED":
+    case "GUARD_BUSY": case "GUARD_FENCED": case "GUARD_UNCERTAIN": case "GUARD_EXPORT_MISMATCH": return 409;
+    case "GUARD_PREPARATION_FAILED": case "GUARD_EXPORT_LIMIT": return 422;
+    case "GUARD_CANCELLED": return 499;
     default: return 500;
   }
 }
@@ -196,6 +213,23 @@ export function buildHttpApp(options: BuildHttpAppOptions): FastifyInstance {
         return reply.status(signal.aborted ? 499 : stateStatus(code)).send({ ok: false, error: {
           code: signal.aborted ? "CANCELLED" : code, message: "The conversation state operation could not be completed.",
         } });
+      }
+    });
+  }
+
+  const guardCommand = options.guardCommand;
+  if (guardCommand) {
+    app.post("/api/v1/guard-commands", { onRequest: bindCallerSignal }, async (request, reply) => {
+      reply.header("Cache-Control", "no-store");
+      try {
+        const origin = request.headers.origin;
+        if (origin !== undefined && origin !== `${request.protocol}://${request.headers.host}`) throw new GuardBoundaryError("GUARD_DENIED");
+        const result = GuardCommandSuccessSchema.parse(await guardCommand(request.body, request.getDecorator<AbortSignal>("agentRunSignal")));
+        return reply.status(200).send(result);
+      } catch (error) {
+        // Uncertainty must survive response cancellation; it is not a claim of no effect.
+        const code = error instanceof GuardBoundaryError ? error.code : "GUARD_RESULT_INVALID";
+        return reply.status(guardStatus(code)).send({ ok: false, error: { code, message: "The guarded operation could not be completed." } });
       }
     });
   }

@@ -58,7 +58,12 @@ describe("durable guarded approval and required metadata audit", () => {
       const duplicate = (await service().command({ operation: "prepare_export", requestId: "request-service", question: "private question" })).value;
       expect(duplicate).toEqual(pending);
       const approved = (await service().command(decision("approve", pending))).value as ApprovalView;
-      const succeeded = (await service().command(decision("execute", approved))).value as ApprovalView;
+      const attempts = await Promise.allSettled([service().command(decision("execute", approved)), service().command(decision("execute", approved))]);
+      expect(attempts.filter(({ status }) => status === "fulfilled")).toHaveLength(1);
+      expect(attempts.find(({ status }) => status === "rejected")).toMatchObject({ reason: { code: "GUARD_VERSION_CONFLICT" } });
+      const completed = attempts.find((attempt) => attempt.status === "fulfilled");
+      if (!completed || completed.status !== "fulfilled") throw new Error("Expected one authorized publication");
+      const succeeded = completed.value.value as ApprovalView;
       expect(succeeded.state).toBe("succeeded"); expect(executions).toBe(1);
       expect(await readFile(join(root, `${pending.approvalId}.md`), "utf8")).toBe(pending.payload?.markdown);
       expect(JSON.stringify(await service().command({ operation: "audit", scopeId: pending.approvalId }))).not.toMatch(/private question|Controlled evidence|lease-/u);
@@ -162,5 +167,7 @@ describe("durable guarded approval and required metadata audit", () => {
     await expect(store().load(f.pending.approvalId, signal())).rejects.toMatchObject({ code: "GUARD_RESULT_INVALID" });
     const controller = new AbortController(), reason = new Error("caller aborted"); controller.abort(reason);
     await expect(store().append(draft, controller.signal)).rejects.toBe(reason);
+    // Do not leave intentionally corrupted fixture state for later runtime maintenance.
+    await admin((client) => client.query("DELETE FROM uaos_guard.approvals WHERE approval_id=$1", [f.pending.approvalId]));
   });
 });

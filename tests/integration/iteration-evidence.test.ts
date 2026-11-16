@@ -427,3 +427,34 @@ describe("Iteration 8 review evidence", () => {
     for (const digest of Object.values(report.assetDigests)) expect(digest).toMatch(/^[a-f0-9]{64}$/u);
   });
 });
+
+describe("Iteration 9 review evidence", () => {
+  const evidence = "docs/reviews/ITERATION-09-evidence.md";
+  it("traces guard scope and eight policy/approval/audit/recovery boundaries to executable evidence", () => {
+    const requirements = rows(read(".planning/REQUIREMENTS.md"), "Traceability").filter((row) => row[1] === "Phase 9");
+    const coverage = rows(read(evidence), "Requirement traceability");
+    expect(coverage.map((row) => row[0])).toEqual(["GUARD-01"]);
+    expect(coverage.map((row) => row[0])).toEqual(requirements.map((row) => row[0]));
+    for (const row of [...requirements, ...coverage]) expect(row[2]).toBe("Implemented — review pending");
+    const threats = rows(read(evidence), "Threat traceability");
+    expect(threats.map((row) => row[0])).toEqual(Array.from({ length: 8 }, (_, i) => `T-09-${String(i + 1).padStart(2, "0")}`));
+    for (const row of threats) expect(row[2]).toMatch(/\]\(.*\.test\.ts\)/u);
+  });
+  it("keeps explicit operator approval distinct and provides runnable review/export/reconcile commands with valid links", () => {
+    expect(Object.fromEntries(rows(read(evidence), "Review state").map((row) => [row[0], row[1]]))).toEqual({
+      Planned: "Complete", Implemented: "Complete", "Architecturally Reviewed": "Pending", Approved: "Pending", Stable: "Pending",
+    });
+    const guide = "docs/iterations/09-guardrails-approval.md", io = "docs/architecture/guard-command-io.md";
+    for (const command of ["npm ci", "npm run build", "npm run ingest", "UAOS_ITERATION", "prepare_export", "proposalDigest", "expectedVersion",
+      "'approve'", "'deny'", "'execute'", "'reconcile'", "purge_expired", "npm run validate:all", "npm run test:database"]) expect(read(guide)).toContain(command);
+    const adr = "docs/architecture/decisions/ADR-0013-guarded-execution-and-approved-export.md";
+    expect(read(adr)).toContain("architectural review pending");
+    for (const file of [guide, io, evidence, adr, ".planning/phases/UAOS-09-guardrails-approval/09-THREAT-MODEL.md"]) {
+      for (const match of read(file).matchAll(/\]\(([^)]+)\)/gu)) {
+        const target = match[1]!;
+        if (/^(?:https?:|#)/u.test(target)) continue;
+        expect(existsSync(resolve(dirname(file), target.split("#")[0]!)), `${file} => ${target}`).toBe(true);
+      }
+    }
+  });
+});

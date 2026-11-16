@@ -9,12 +9,13 @@ import type { CreateRuntimeOptions, Runtime } from "./create-runtime.js";
 import { createEvaluationRuntime } from "./create-evaluation-runtime.js";
 import { createObservedGroundedRuntime } from "./create-observed-grounded-runtime.js";
 import { createTelemetryInspector } from "./create-telemetry-inspector.js";
+import type { GroundedRuntimeFactory } from "./create-grounded-runtime.js";
 
 export async function createObservedRuntime(options: CreateRuntimeOptions & RetrievalResourceOptions & {
-  reportRoot: string; telemetryRoot: string;
+  reportRoot: string; telemetryRoot: string; groundedFactory?: GroundedRuntimeFactory;
 }): Promise<Runtime> {
   const runtime = await createEvaluationRuntime({ ...options,
-    groundedFactory: (grounded) => createObservedGroundedRuntime({ ...grounded, telemetryRoot: options.telemetryRoot }),
+    groundedFactory: options.groundedFactory ?? ((grounded) => createObservedGroundedRuntime({ ...grounded, telemetryRoot: options.telemetryRoot })),
   });
   const observation: OperationObservationOptions = {
     clock: new SystemClock(), monotonic: new PerformanceClock(),

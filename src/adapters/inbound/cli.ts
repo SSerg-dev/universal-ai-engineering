@@ -10,6 +10,7 @@ import { createTelemetryInspector } from "../../composition/create-telemetry-ins
 import { StateBoundaryError } from "../../domain/state-contracts.js";
 import { EvaluationBoundaryError, EvaluationReportSchema } from "../../domain/evaluation-contracts.js";
 import { TelemetryBoundaryError, TelemetryDiagnosisSchema } from "../../domain/telemetry-contracts.js";
+import { GuardBoundaryError, GuardCommandSuccessSchema } from "../../domain/guard-contracts.js";
 
 interface TextWriter {
   write(value: string): unknown;
@@ -30,6 +31,7 @@ function defaultRuntimeFactory(): Promise<Runtime> {
     indexId: process.env.UAOS_INDEX_ID,
     ...(process.env.UAOS_REPORT_ROOT === undefined ? {} : { reportRoot: process.env.UAOS_REPORT_ROOT }),
     ...(process.env.UAOS_TELEMETRY_ROOT === undefined ? {} : { telemetryRoot: process.env.UAOS_TELEMETRY_ROOT }),
+    ...(process.env.UAOS_EXPORT_ROOT === undefined ? {} : { exportRoot: process.env.UAOS_EXPORT_ROOT }),
     fixtureRoot:
       process.env.UAOS_FIXTURE_ROOT ?? resolve(process.cwd(), "fixtures", "docs"),
     journalRoot:
@@ -82,7 +84,7 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
       try {
         if (argv.length !== 2) throw new TelemetryBoundaryError("INVALID_TRACE_ID");
         const inspect = options.runtimeFactory ? (await runtimeFactory()).inspect
-          : ["7", "8"].includes(process.env.UAOS_ITERATION ?? "") ? createTelemetryInspector(process.env.UAOS_TELEMETRY_ROOT ?? resolve(process.cwd(), ".uaos/telemetry")) : undefined;
+          : ["7", "8", "9"].includes(process.env.UAOS_ITERATION ?? "") ? createTelemetryInspector(process.env.UAOS_TELEMETRY_ROOT ?? resolve(process.cwd(), ".uaos/telemetry")) : undefined;
         if (!inspect) throw new TelemetryBoundaryError("INVALID_TRACE_ID");
         const diagnosis = TelemetryDiagnosisSchema.parse(await inspect(argv[1], controller.signal));
         stdout.write(`${JSON.stringify(diagnosis)}\n`);
@@ -94,6 +96,18 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
       }
     }
     const runtime = await runtimeFactory();
+    if (argv[0] === "guard") {
+      try {
+        if (argv.length !== 2 || !runtime.guardCommand) throw new GuardBoundaryError("GUARD_INPUT_INVALID");
+        let command: unknown;
+        try { command = JSON.parse(argv[1]!); } catch { throw new GuardBoundaryError("GUARD_INPUT_INVALID"); }
+        const result = GuardCommandSuccessSchema.parse(await runtime.guardCommand(command, controller.signal));
+        stdout.write(`${JSON.stringify(result)}\n`); return 0;
+      } catch (error) {
+        const code = error instanceof GuardBoundaryError ? error.code : "GUARD_RESULT_INVALID";
+        stderr.write(`Error [${code}]: The guarded operation could not be completed.\n`); return 1;
+      }
+    }
     if (argv[0] === "eval") {
       try {
         if (argv.length !== 1 || !runtime.evaluate) throw new EvaluationBoundaryError("EVALUATION_INVALID");

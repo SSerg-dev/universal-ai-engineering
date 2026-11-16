@@ -9,6 +9,7 @@ export interface CreateIterationRuntimeOptions extends CreateRuntimeOptions {
   readonly indexId?: unknown;
   readonly reportRoot?: string;
   readonly telemetryRoot?: string;
+  readonly exportRoot?: string;
 }
 
 export function createIterationRuntime(options: CreateIterationRuntimeOptions): Promise<Runtime> {
@@ -39,6 +40,13 @@ export function createIterationRuntime(options: CreateIterationRuntimeOptions): 
     return import("./create-streaming-runtime.js").then(({ createStreamingRuntime }) => createStreamingRuntime({
       ...options, reportRoot: options.reportRoot ?? resolve(process.cwd(), ".uaos/evaluations"),
       telemetryRoot: options.telemetryRoot ?? resolve(process.cwd(), ".uaos/telemetry"),
+    }));
+  }
+  if (iteration === 9 || iteration === "9") {
+    return import("./create-guarded-runtime.js").then(({ createGuardedRuntime }) => createGuardedRuntime({
+      ...options, reportRoot: options.reportRoot ?? resolve(process.cwd(), ".uaos/evaluations"),
+      telemetryRoot: options.telemetryRoot ?? resolve(process.cwd(), ".uaos/telemetry"),
+      exportRoot: options.exportRoot ?? resolve(process.cwd(), ".uaos/exports"),
     }));
   }
   throw new Error("The selected iteration is unsupported.");

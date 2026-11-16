@@ -8,9 +8,10 @@ import type { RetrievalResourceOptions } from "./create-retrieval-resources.js";
 import type { CreateRuntimeOptions, Runtime } from "./create-runtime.js";
 import { createObservedRuntime } from "./create-observed-runtime.js";
 import { createStreamingExecution } from "./create-streaming-execution.js";
+import type { GroundedRuntimeFactory } from "./create-grounded-runtime.js";
 
 export async function createStreamingRuntime(options: CreateRuntimeOptions & RetrievalResourceOptions & {
-  reportRoot: string; telemetryRoot: string; streamExecutor?: StreamExecutionPort;
+  reportRoot: string; telemetryRoot: string; streamExecutor?: StreamExecutionPort; groundedFactory?: GroundedRuntimeFactory;
 }): Promise<Runtime> {
   const runtime = await createObservedRuntime(options);
   const streams = new RunStreamBroker({ clock: new SystemClock(), monotonic: new PerformanceClock(),

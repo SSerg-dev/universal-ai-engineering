@@ -12,6 +12,7 @@ import type { ConversationCommandHandler } from "../application/conversation-com
 import type { EvaluationReport } from "../domain/evaluation-contracts.js";
 import type { TelemetryDiagnosis } from "../domain/telemetry-contracts.js";
 import type { RunStreamPort } from "../application/ports/stream-port.js";
+import type { GuardCommandSuccess } from "../domain/guard-contracts.js";
 
 export interface Runtime {
   readonly runAgent: RunAgentUseCase;
@@ -20,6 +21,7 @@ export interface Runtime {
   readonly evaluate?: (signal?: AbortSignal) => Promise<EvaluationReport>;
   readonly inspect?: (traceId: unknown, signal?: AbortSignal) => Promise<TelemetryDiagnosis>;
   readonly streams?: RunStreamPort;
+  readonly guardCommand?: (input: unknown, signal?: AbortSignal) => Promise<GuardCommandSuccess>;
 }
 
 export interface CreateRuntimeOptions {

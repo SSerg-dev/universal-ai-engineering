@@ -56,7 +56,7 @@
 
 ### Guardrails
 
-- [ ] **GUARD-01**: Maintainer can enforce input/output rules, tool permissions, budgets, and human approval with typed auditable denials.
+- [x] **GUARD-01**: Maintainer can enforce input/output rules, tool permissions, budgets, and human approval with typed auditable denials.
 
 ### Routing
 
@@ -109,7 +109,7 @@
 | OBS-01 | Phase 7 | Implemented — review pending |
 | STREAM-01 | Phase 8 | Implemented — review pending |
 | UI-01 | Phase 8 | Implemented — review pending |
-| GUARD-01 | Phase 9 | Pending |
+| GUARD-01 | Phase 9 | Implemented — review pending |
 | ROUTER-01 | Phase 10 | Pending |
 | NFR-01 | Phase 1 | Validated — human approved |
 | NFR-02 | Phase 1 | Validated — human approved |
@@ -122,4 +122,4 @@
 
 ---
 *Requirements defined: 2026-09-28*
-*Last updated: 2026-11-15 after Phase 6 implementation. Checked requirements indicate implementation coverage; approval remains separate.*
+*Last updated: 2026-11-16 after Phase 9 implementation. Checked requirements indicate implementation coverage; approval remains separate.*

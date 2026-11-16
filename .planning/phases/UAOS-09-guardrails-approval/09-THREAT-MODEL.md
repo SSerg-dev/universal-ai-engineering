@@ -1,6 +1,6 @@
 # Phase 9 Threat Model
 
-Scope: one trusted local operator, a host-owned policy, the existing guarded documentation assistant, and one explicitly approved fixed-root export. No remote identity, broad semantic prompt-injection detection, malicious administrator, external message/payment, or exactly-once filesystem/database transaction is claimed. Implementation controls below are obligations until 09-02 evidence proves them.
+Scope: one trusted local operator, a host-owned policy, the existing guarded documentation assistant, and one explicitly approved fixed-root export. No remote identity, broad semantic prompt-injection detection, malicious administrator, external message/payment, or exactly-once filesystem/database transaction is claimed. The original obligations below are now mapped to executable checks in [final Phase 9 evidence](../../../docs/reviews/ITERATION-09-evidence.md); review and human acceptance remain pending.
 
 | Threat | Required boundary/control | Evidence obligation |
 |---|---|---|
