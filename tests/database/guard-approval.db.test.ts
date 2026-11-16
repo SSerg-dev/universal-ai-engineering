@@ -1,8 +1,13 @@
 import { randomUUID } from "node:crypto";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { basename, dirname, join, resolve } from "node:path";
 import { Client } from "pg";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { PostgresApprovalStore } from "../../src/adapters/outbound/postgres-approval-store.js";
-import { ApprovalSnapshotSchema, type ApprovalSnapshot, type GuardAuditDraft } from "../../src/domain/guard-contracts.js";
+import { FilesystemApprovedExport } from "../../src/adapters/outbound/filesystem-approved-export.js";
+import { createGuardService } from "../../src/application/guard-service.js";
+import { ApprovalSnapshotSchema, type ApprovalSnapshot, type GuardAuditDraft, type ApprovalView } from "../../src/domain/guard-contracts.js";
 import { guardFixture } from "../fixtures/guard.js";
 
 const connectionString = process.env.UAOS_TEST_DATABASE_URL;
@@ -37,6 +42,32 @@ beforeAll(async () => store().initialize(signal()));
 beforeEach(async () => { await admin((client) => client.query("TRUNCATE uaos_guard.approvals,uaos_guard.audit")); });
 
 describe("durable guarded approval and required metadata audit", () => {
+  it("resumes the actual command service and fixed-root publication over independent durable store instances", async () => {
+    const root = await mkdtemp(join(tmpdir(), "uaos-guard-db-")), f = fixture();
+    const clock = { now: () => "2026-11-16T00:00:00.000Z" }; let executions = 0;
+    const service = () => createGuardService({ policy: f.policy, identity: f.identity, clock,
+      ids: { next: (kind) => `${kind}-${randomUUID()}` }, store: store(), audit: store(),
+      exporter: new FilesystemApprovedExport({ root, clock }), answer: { execute: async (_question, runId) => {
+        executions += 1; return guardFixture("approval-result", runId).payload.result;
+      } } });
+    const decision = (operation: string, value: ApprovalView) => ({ operation, approvalId: value.approvalId,
+      expectedVersion: value.version, proposalDigest: value.proposalDigest });
+    try {
+      const pending = (await service().command({ operation: "prepare_export", requestId: "request-service", question: "private question" })).value as ApprovalView;
+      expect(pending.state).toBe("pending");
+      const duplicate = (await service().command({ operation: "prepare_export", requestId: "request-service", question: "private question" })).value;
+      expect(duplicate).toEqual(pending);
+      const approved = (await service().command(decision("approve", pending))).value as ApprovalView;
+      const succeeded = (await service().command(decision("execute", approved))).value as ApprovalView;
+      expect(succeeded.state).toBe("succeeded"); expect(executions).toBe(1);
+      expect(await readFile(join(root, `${pending.approvalId}.md`), "utf8")).toBe(pending.payload?.markdown);
+      expect(JSON.stringify(await service().command({ operation: "audit", scopeId: pending.approvalId }))).not.toMatch(/private question|Controlled evidence|lease-/u);
+    } finally {
+      const absolute = resolve(root);
+      if (dirname(absolute) !== resolve(tmpdir()) || !basename(absolute).startsWith("uaos-guard-db-")) throw new Error("Unexpected owned test root");
+      await rm(absolute, { recursive: true, force: true });
+    }
+  });
   it("reserves a request once across instances, rejects changed input, and keeps content out of audit", async () => {
     const f = fixture(), input = { snapshot: f.preparing, maxPending: 1, event: audit(f.preparing, null, "PREPARATION_RESERVED") };
     const results = await Promise.all([store().reserve(input, signal()), store().reserve({ ...input, event: audit(f.preparing, null, "PREPARATION_RESERVED") }, signal())]);
