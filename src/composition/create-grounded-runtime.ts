@@ -14,6 +14,9 @@ import type { TurnContext } from "../application/ports/turn-execution-port.js";
 import type { JournalPort } from "../application/ports/journal-port.js";
 import type { RegisteredAgentEventEnvelope } from "../domain/tool-events.js";
 import type { RetrievalMeasurementPort } from "../application/ports/telemetry-port.js";
+import type { RunCheckpointsPort } from "../application/ports/run-checkpoints-port.js";
+import type { ToolObservation } from "../domain/tool-contracts.js";
+import type { RunAgentPolicy } from "../application/agent-loop.js";
 
 export interface GroundedRuntimeOptions extends CreateRuntimeOptions, RetrievalResourceOptions {
   readonly ids?: IdGeneratorPort;
@@ -22,6 +25,9 @@ export interface GroundedRuntimeOptions extends CreateRuntimeOptions, RetrievalR
   readonly allowedTools?: ReadonlySet<string>;
   readonly onRetrieved?: (passageIds: readonly string[]) => void;
   readonly retrievalMeasurement?: RetrievalMeasurementPort;
+  readonly checkpoints?: RunCheckpointsPort<ToolObservation>;
+  readonly runPolicy?: RunAgentPolicy;
+  readonly toolTimeoutMs?: number;
 }
 
 export type GroundedRuntimeFactory = (options: GroundedRuntimeOptions) => Promise<Runtime>;
@@ -46,8 +52,9 @@ export async function createGroundedRuntime(options: GroundedRuntimeOptions): Pr
       model: new GroundedTeachingModel(options.context), tools,
       journal: options.journal ?? new JsonlJournal({ root: options.journalRoot }),
       clock: new SystemClock(), ids: options.ids ?? new SystemIdGenerator(),
-      policy: { timeoutMs: 5000, terminalEvidenceTimeoutMs: 250, maxModelCalls: 2, maxToolCalls: 1 },
-      toolPolicy: { allowedTools: options.allowedTools ?? new Set(["retrieve_passages"]), timeoutMs: 4000 },
+      policy: options.runPolicy ?? { timeoutMs: 5000, terminalEvidenceTimeoutMs: 250, maxModelCalls: 2, maxToolCalls: 1 },
+      toolPolicy: { allowedTools: options.allowedTools ?? new Set(["retrieve_passages"]), timeoutMs: options.toolTimeoutMs ?? 4000 },
+      ...(options.checkpoints ? { checkpoints: options.checkpoints } : {}),
     }),
     resolveCitation: createResolveCitation(resources.manifest.indexId, resources.repository),
   };

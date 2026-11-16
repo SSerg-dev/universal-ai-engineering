@@ -16,6 +16,7 @@ import type { ClockPort } from "./ports/clock-port.js";
 import type { IdGeneratorPort } from "./ports/id-generator-port.js";
 import type { JournalPort } from "./ports/journal-port.js";
 import type { ModelPort, ModelRequest } from "./ports/model-port.js";
+import type { RunCheckpointsPort } from "./ports/run-checkpoints-port.js";
 
 export interface RunAgentPolicy {
   readonly timeoutMs: number;
@@ -34,6 +35,7 @@ export interface AgentLoopDependencies<TObservation, TEvent extends ExecutionEve
   readonly journal: JournalPort<TEvent>;
   readonly model: ModelPort<TObservation>;
   readonly policy: RunAgentPolicy;
+  readonly checkpoints?: RunCheckpointsPort<TObservation>;
   readonly schemaVersion: TEvent["schemaVersion"];
   readonly eventSchema: { parse(input: unknown): TEvent };
   readonly actionSchema: {
@@ -152,6 +154,25 @@ export function createAgentLoop<TObservation, TEvent extends ExecutionEventEnvel
     let toolCalls = 0;
     let terminalAttempted = false;
 
+    // A checkpoint may fail or ignore cancellation. Never wait beyond the run
+    // deadline or let a late acknowledgment authorize subsequent work.
+    const checkpoint = async (invoke: () => Promise<boolean>): Promise<boolean> => {
+      if (abortContext.signal.aborted) throw abortContext.cancellation();
+      let removeAbort = () => {};
+      const value = await new Promise<unknown>((resolve, reject) => {
+        const abort = () => reject(abortContext.cancellation());
+        abortContext.signal.addEventListener("abort", abort, { once: true });
+        removeAbort = () => abortContext.signal.removeEventListener("abort", abort);
+        Promise.resolve().then(() => {
+          if (abortContext.signal.aborted) throw abortContext.cancellation();
+          return invoke();
+        }).then(resolve, reject);
+      }).finally(() => removeAbort());
+      if (abortContext.signal.aborted) throw abortContext.cancellation();
+      if (typeof value !== "boolean") throw new Error("Invalid checkpoint acknowledgment.");
+      return value;
+    };
+
     const createEvent = (
       eventType: AgentEventType,
       payload: unknown,
@@ -262,6 +283,9 @@ export function createAgentLoop<TObservation, TEvent extends ExecutionEventEnvel
       }
 
       const { question } = parsedInput.data;
+      if (dependencies.checkpoints && !await checkpoint(() => dependencies.checkpoints!.request(parsedInput.data, { runId }, abortContext.signal))) {
+        return await terminalize("INVALID_REQUEST", "request");
+      }
       let state: LoopState = "awaiting_tool";
       let toolResult: TObservation | undefined;
       let observedSources: readonly RunAgentSource[] = [];
@@ -301,6 +325,9 @@ export function createAgentLoop<TObservation, TEvent extends ExecutionEventEnvel
         }
 
         const action = parsedAction.data;
+        if (dependencies.checkpoints && !await checkpoint(() => dependencies.checkpoints!.modelAction(action, { runId, callId: modelCallId, step: modelStep }, abortContext.signal))) {
+          return await terminalize("INVALID_MODEL_ACTION", "model");
+        }
         await appendOrdinaryEvent("model.responded", {
           step: modelStep,
           callId: modelCallId,
@@ -325,12 +352,23 @@ export function createAgentLoop<TObservation, TEvent extends ExecutionEventEnvel
           });
 
           let effect: ToolEffectResult<TObservation>;
-          try {
-            effect = await executeTool(action, abortContext.signal, { runId, callId: toolCallId });
-            abortContext.signal.throwIfAborted();
-          } catch {
-            if (abortContext.signal.aborted) throw abortContext.cancellation();
-            effect = { ok: false };
+          const toolContext = { runId, callId: toolCallId, step: toolCalls };
+          if (dependencies.checkpoints && !await checkpoint(() => dependencies.checkpoints!.toolInvocation(action, toolContext, abortContext.signal))) {
+            effect = { ok: false, code: "TOOL_PERMISSION_DENIED" };
+          } else {
+            try {
+              effect = await executeTool(action, abortContext.signal, { runId, callId: toolCallId });
+              abortContext.signal.throwIfAborted();
+            } catch {
+              if (abortContext.signal.aborted) throw abortContext.cancellation();
+              effect = { ok: false };
+            }
+          }
+          if (effect.ok && dependencies.checkpoints) {
+            const observation = effect.observation;
+            if (!await checkpoint(() => dependencies.checkpoints!.toolObservation(observation, toolContext, abortContext.signal))) {
+              effect = { ok: false, code: "TOOL_OUTPUT_INVALID" };
+            }
           }
           if (!effect.ok) {
             await appendOrdinaryEvent("tool.failed", {

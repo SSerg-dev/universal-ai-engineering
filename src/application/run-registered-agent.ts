@@ -13,6 +13,7 @@ import type { IdGeneratorPort } from "./ports/id-generator-port.js";
 import type { JournalPort } from "./ports/journal-port.js";
 import type { ModelPort } from "./ports/model-port.js";
 import type { ToolDispatcherPort, ToolInvocationOptions } from "./ports/tool-dispatcher-port.js";
+import type { RunCheckpointsPort } from "./ports/run-checkpoints-port.js";
 
 export interface RegisteredRunAgentDependencies {
   readonly clock: ClockPort;
@@ -23,6 +24,7 @@ export interface RegisteredRunAgentDependencies {
   readonly policy: RunAgentPolicy;
   readonly toolPolicy: Pick<ToolInvocationOptions, "allowedTools" | "timeoutMs">;
   readonly includeCallContext?: boolean;
+  readonly checkpoints?: RunCheckpointsPort<ToolObservation>;
 }
 
 export function createRegisteredRunAgentUseCase(dependencies: RegisteredRunAgentDependencies): RunAgentUseCase {
