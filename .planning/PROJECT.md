@@ -86,4 +86,6 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update context with evidence and lessons.
 
 ---
-*Last updated: 2026-11-16 after Phase 8 implementation and evidence closure*
+*Last updated: 2026-11-16 after Phase 9 implementation and evidence closure*
+
+Phase 9 implements a sealed host policy, required metadata audit, same guarded factory across execution paths, durable explicit approval/CAS/lease state and fixed-root Markdown publication with honest uncertain outcomes/reconciliation. GUARD-01 is implemented; review, human approval and stability remain pending. Phase 10 routing/course packaging is next.

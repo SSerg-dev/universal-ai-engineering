@@ -33,6 +33,8 @@ React and Next.js are not part of the selected architecture.
 
 ## Documentation
 
+- [Iteration 9 guardrails and explicit resumable approval](docs/iterations/09-guardrails-approval.md)
+- [Iteration 9 evidence](docs/reviews/ITERATION-09-evidence.md)
 - [Iteration 8 streaming Angular inspector](docs/iterations/08-streaming-angular-ui.md)
 - [Iteration 8 evidence and desktop/mobile previews](docs/reviews/ITERATION-08-evidence.md)
 - [Iteration 7 observability and failure diagnosis](docs/iterations/07-observability.md)
@@ -60,4 +62,4 @@ React and Next.js are not part of the selected architecture.
 
 ## Status
 
-Phase 1 implementation is complete with offline CLI, Fastify HTTP, JSONL evidence, and deterministic tests. See the walkthrough for Node.js 24 installation, execution, and validation. Phase 1 was explicitly approved on 2026-11-09. Phase 2 adds a typed registry and a second tool. Phase 3 adds a consented local stdio MCP capability. Phase 4 adds PostgreSQL/pgvector ingestion, extractive grounding, and immutable passage citations. Phase 5 adds explicit durable conversation commands, idempotent replay, fenced recovery, and scoped TTL memory. Phase 6 adds a sealed dataset, independent quality gates, immutable safe reports, and uaos eval. Phase 7 adds safe optional telemetry, measured operation spans, state/quality links, and database-independent uaos inspect. Phase 8 adds bounded typed streaming/reconnect/cancellation and a Russian Angular/Tailwind answer/citation inspector with an isolated compatible build. Select iterations explicitly through composition; iteration 1 remains the default. Phase 2–8 review and approval are pending. Stability remains a separate decision.
+Phase 1 implementation is complete with offline CLI, Fastify HTTP, JSONL evidence, and deterministic tests. See the walkthrough for Node.js 24 installation, execution, and validation. Phase 1 was explicitly approved on 2026-11-09. Phase 2 adds a typed registry and a second tool. Phase 3 adds a consented local stdio MCP capability. Phase 4 adds PostgreSQL/pgvector ingestion, extractive grounding, and immutable passage citations. Phase 5 adds explicit durable conversation commands, idempotent replay, fenced recovery, and scoped TTL memory. Phase 6 adds a sealed dataset, independent quality gates, immutable safe reports, and uaos eval. Phase 7 adds safe optional telemetry, measured operation spans, state/quality links, and database-independent uaos inspect. Phase 8 adds bounded typed streaming/reconnect/cancellation and a Russian Angular/Tailwind answer/citation inspector with an isolated compatible build. Phase 9 adds host-owned audited guardrails and explicit resumable fixed-root export approval through CLI/API. Select iterations explicitly through composition; iteration 1 remains the default. Phase 2–9 review and approval are pending. Stability remains a separate decision.

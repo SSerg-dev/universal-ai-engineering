@@ -1,19 +1,19 @@
 ---
 gsd_state_version: "1.0"
-current_phase: 09
-current_phase_name: Guardrails and Approval
-status: executing
-stopped_at: Phase 9 checkpoints, publication and transactional store verified; implementing command service
+current_phase: 10
+current_phase_name: Router and Course Completion
+status: planning
+stopped_at: Phase 9 implemented with evidence; define Phase 10 routing and compatibility contracts
 last_updated: "2026-11-16"
 last_activity: 2026-11-16
-last_activity_desc: Phase 9 passed 427 root tests and 35 database checks; command service and iteration wiring pending
-state_head: 6f4b820
+last_activity_desc: Phase 9 closed with 451 root tests, 21 UI tests, 48 database checks, builds and traceability
+state_head: 6b0e1a7
 progress:
   total_phases: 10
   completed_phases: 1
   total_plans: 27
-  completed_plans: 24
-  percent: 89
+  completed_plans: 25
+  percent: 93
 ---
 
 # Project State
@@ -23,20 +23,20 @@ progress:
 See: .planning/PROJECT.md (updated 2026-11-15)
 
 **Core value:** A learner can understand, build, test, and review a reusable Agentic OS one working iteration at a time.
-**Current focus:** Phase UAOS-09 — Guardrails and Approval
+**Current focus:** Phase UAOS-10 — Router and Course Completion
 
 ## Current Position
 
-Phase: UAOS-09 (Guardrails and Approval) — EXECUTING
-Plan: 1 of 2 complete in current phase
-Status: Plan 09-02 in progress; audited checkpoints, fixed-root publication and transactional approval store verified
-Last activity: 2026-11-16 — 427 root tests, root/core compilation, build and 35 live database checks passed
+Phase: UAOS-10 (Router and Course Completion) — PLANNING
+Plan: 0 of 2 complete in current phase
+Status: Phase 9 implemented; define typed routing/fallback and course compatibility contracts before Phase 10 implementation
+Last activity: 2026-11-16 — 451 root tests, 21 UI tests, 48 database checks, both builds and links/traceability passed
 
-Progress: 24/27 roadmap plans (89%); Phase 1 approved; Phase 2–8 review pending
+Progress: 25/27 roadmap plans (93%); Phase 1 approved; Phase 2–9 review pending
 
 ## Performance Metrics
 
-- Total plans completed: 24
+- Total plans completed: 25
 - Average duration: -
 - Total execution time: Not tracked; no cumulative duration claim
 
@@ -91,7 +91,7 @@ Progress: 24/27 roadmap plans (89%); Phase 1 approved; Phase 2–8 review pendin
 
 ### Pending Todos
 
-Review Phase 2–8 evidence. Finish Phase 9 command service, all-path factory wiring, CLI/API, adversarial evidence and guide; contracts, audited checkpoints, publication and durable store are verified. Preserve metadata-only journal/telemetry, existing public error vocabularies and earlier iteration selection. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
+Review Phase 2–9 evidence. Define Phase 10 typed route/model/tool/retrieval/policy selection, bounded safe fallbacks and ten-version compatibility before implementation. Preserve metadata-only journal/telemetry, existing public error vocabularies and earlier iteration selection. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
 
 ### Blockers/Concerns
 
@@ -107,8 +107,8 @@ Review Phase 2–8 evidence. Finish Phase 9 command service, all-path factory wi
 ## Session Continuity
 
 Last session: 2026-11-16
-Stopped at: Phase 9 durable-store checkpoint complete; command service and iteration 9 wiring next
-Resume file: .planning/phases/UAOS-09-guardrails-approval/09-02-DURABLE-EVIDENCE.md
+Stopped at: Phase 9 implementation/evidence complete; Phase 10 contracts next
+Resume file: .planning/phases/UAOS-09-guardrails-approval/09-02-SUMMARY.md
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 
@@ -127,3 +127,5 @@ Phase 6 final closure on 2026-11-15 supersedes the historical core checkpoint: 3
 Phase 7 final closure on 2026-11-15 passed 363 tests in 40 files, project/core typecheck, build, links, requirement/threat coverage, and 26 live database checks. Optional metadata telemetry, measured spans, state/evaluation links, database-free CLI inspection, and safe batch export are implemented. ADR-0010 retains the initial live performance finding and correction. Human architectural review, approval, and stability remain pending.
 
 Phase 8 final closure on 2026-11-16 passed 390 root tests, 21 UI tests, strict project/core compilation, both builds, 28 database checks, seven real browser scenarios, internal links, requirement/threat coverage and clean isolated UI lock reproduction. Typed SSE/replay/cancellation and a Russian Angular/Tailwind inspector are implemented; six source-bound screenshots are retained. Root dependencies/lockfile remain unchanged. Human architectural review, approval, and stability remain pending.
+
+Phase 9 final closure on 2026-11-16 passed 451 root tests, 21 UI tests, 48 real database checks, strict project/core compilation, both builds and requirement/threat/link checks. Guarded all-path execution and explicit resumable local export are implemented. Human architectural review, approval and stability remain pending.
