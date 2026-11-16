@@ -1,9 +1,7 @@
-import { Component, provideZonelessChangeDetection } from "@angular/core";
+import { provideZonelessChangeDetection } from "@angular/core";
 import { bootstrapApplication } from "@angular/platform-browser";
+import { InspectorComponent } from "./app/inspector";
 
-@Component({ selector: "uaos-inspector", template: "<main><h1>Как рождается ответ</h1><p>Интерфейс исполнения готовится.</p></main>" })
-class Inspector {}
-
-bootstrapApplication(Inspector, { providers: [provideZonelessChangeDetection()] }).catch(() => {
+bootstrapApplication(InspectorComponent, { providers: [provideZonelessChangeDetection()] }).catch(() => {
   document.body.textContent = "Не удалось открыть интерфейс. Обновите страницу.";
 });

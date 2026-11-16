@@ -106,8 +106,12 @@ Accent is reserved for the primary question action, current timeline marker, and
 | Connection failure | Связь с запуском потеряна. Восстановите соединение, чтобы получить оставшиеся события. |
 | Create failure | Не удалось начать запуск. Проверьте учебный сервер и повторите вопрос. |
 | Protocol failure | Поток событий повреждён. Запустите вопрос заново. |
+| Expired run | Данные запуска больше недоступны. Начните вопрос заново. |
+| Cancel request failure | Не удалось отправить остановку. Повторите запрос остановки; текущий запуск продолжается. |
 | Domain failure | Не удалось завершить ответ. Повторите вопрос; код причины доступен в данных запуска. |
 | Detail disclosure | Данные запуска |
+
+When a new create is pending, previous confirmed results remain labelled «Предыдущий результат. Новый запуск начинается…» until the new run is acknowledged. A received answer without its completion terminal is labelled «Результат ещё не подтверждён. Ждём завершения запуска.»; malformed protocol hides the answer and never shows the completed badge.
 
 Cancellation is a reversible stop request for the active teaching run; no destructive confirmation dialog. New submissions replace only local visible results after the new run is created. No browser storage/history is created, and disconnect/reconnect never submits the question again.
 

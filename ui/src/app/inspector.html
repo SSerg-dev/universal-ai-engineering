@@ -1,0 +1,93 @@
+<header class="site-header">
+  <div class="shell header-row">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">U</span><span>Universal Agentic OS</span></div>
+    <span class="iteration">Итерация <strong>08</strong><span class="text-muted"> / 10</span></span>
+  </div>
+</header>
+<main class="shell">
+  <section class="hero" aria-labelledby="page-title">
+    <p class="eyebrow">От вопроса к проверяемому ответу</p>
+    <h1 id="page-title">Как рождается ответ</h1>
+    <p class="intro text-muted">Задайте вопрос по учебной документации и проследите каждый шаг.</p>
+  </section>
+
+  <section class="panel question-panel" aria-labelledby="question-label">
+    <form (submit)="submit($event)">
+      <div class="question-label-row"><label id="question-label" for="question">Вопрос к документации</label><span id="question-count" class="counter text-muted">{{ question().length }} / 2048</span></div>
+      <textarea #questionElement id="question" name="question" rows="3" maxlength="2048" placeholder="Например: execution journal"
+        [value]="question()" (input)="setQuestion($event)" [disabled]="busy()"
+        [attr.aria-invalid]="validation() ? 'true' : null" [attr.aria-describedby]="'question-hint question-count' + (validation() ? ' question-error' : '')"
+        (keydown.control.enter)="submit($event)" (keydown.meta.enter)="submit($event)"></textarea>
+      @if (validation()) { <p id="question-error" class="error-copy" role="alert">{{ validation() }}</p> }
+      <div class="form-bottom">
+        <p id="question-hint" class="hint text-muted">Учебные документы — на английском.<br><span>Ctrl / ⌘ + Enter — начать разбор</span></p>
+        <button type="submit" class="primary" [disabled]="busy()">{{ busy() ? 'Выполняем запрос…' : 'Разобрать вопрос' }}<span aria-hidden="true">↗</span></button>
+      </div>
+    </form>
+    <div class="examples" aria-label="Примеры вопросов"><span class="text-muted">Попробуйте:</span>
+      @for (example of examples; track example.question) { <button type="button" class="example" [disabled]="busy()" (click)="useExample(example.question)">{{ example.label }}</button> }
+    </div>
+  </section>
+
+  <div class="run-status-row">
+    <p class="run-status" role="status" aria-live="polite" aria-atomic="true"><span class="status-dot" [class.running]="busy()" [class.done]="completed()" aria-hidden="true"></span>{{ status() }}</p>
+    <div class="run-controls">
+      @if (canReconnect()) { <button class="secondary" type="button" (click)="reconnect()">Восстановить соединение</button> }
+      @if (canCancel()) { <button class="secondary stop" type="button" [disabled]="snapshot().stopRequested" (click)="cancel()">{{ snapshot().stopRequested ? 'Запрашиваем остановку…' : 'Остановить запуск' }}</button> }
+    </div>
+  </div>
+  @if (error()) { <p class="error-banner" role="alert">{{ error() }}</p> }
+
+  <div class="workspace">
+    <section class="panel timeline-panel" aria-labelledby="timeline-title">
+      <div class="panel-heading"><h2 id="timeline-title">Шаги выполнения</h2><span class="count-badge">{{ events().length }}</span></div>
+      @if (events().length === 0) {
+        <div class="empty timeline-empty"><span class="empty-symbol" aria-hidden="true">→</span><p class="empty-title">Каждый шаг будет виден здесь.</p><p class="text-muted">Начните с вопроса выше — покажем поиск и подготовку ответа.</p></div>
+      } @else {
+        <ol class="timeline">
+          @for (event of events(); track event.sequence; let final = $last) {
+            <li [class.current]="final && busy()" [class.failed]="event.type === 'run.failed' || event.type === 'tool.failed'">
+              <span class="step-number" aria-hidden="true">{{ event.sequence }}</span><div class="min-w-0"><p class="step-title">{{ stepTitle(event) }}</p><p class="step-detail text-muted">{{ stepDetail(event) }}</p></div>
+            </li>
+          }
+        </ol>
+      }
+    </section>
+
+    <section class="panel answer-panel" aria-labelledby="answer-title">
+      <div class="panel-heading"><h2 #answerHeading id="answer-title" tabindex="-1">Ответ и источники</h2>
+        @if (completed()) { <span class="answer-badge">Завершено</span> }
+      </div>
+      @if (submittedQuestion()) { <div class="submitted-question"><span class="text-muted">Вопрос запуска</span><p>{{ submittedQuestion() }}</p></div> }
+      @if (answer(); as response) {
+        @if (snapshot().connection === 'creating') { <p class="provisional">Предыдущий результат. Новый запуск начинается…</p> }
+        @else if (!completed()) { <p class="provisional">Результат ещё не подтверждён. Ждём завершения запуска.</p> }
+        @if (response.payload.grounding.status === 'abstained') {
+          <div class="abstention"><p class="empty-title">Подтверждение не найдено</p><p class="text-muted">В документах не нашлось подходящих фрагментов. Уточните вопрос или попробуйте другой пример.</p></div>
+        } @else {
+          <p class="answer-text">{{ response.payload.answer }}</p>
+          <div class="sources-heading"><h3>Фрагменты источников</h3><span class="text-muted">{{ response.payload.grounding.claims.length }}</span></div>
+          <ol class="source-list">
+            @for (claim of response.payload.grounding.claims; track claim.citation.passageId; let index = $index) {
+              <li class="source-card"><div class="source-label"><span class="source-number">{{ index + 1 }}</span><h4>{{ sourceTitle(claim.citation.documentId) }}</h4></div>
+                <blockquote>{{ claim.quote }}</blockquote>
+                <details class="citation-details"><summary>Сведения о цитате</summary><dl><dt>Документ</dt><dd>{{ claim.citation.documentId }}</dd><dt>Фрагмент</dt><dd>{{ claim.citation.start }}–{{ claim.citation.end }}</dd><dt>Версия</dt><dd>{{ claim.citation.revision }}</dd></dl></details>
+              </li>
+            }
+          </ol>
+        }
+      } @else {
+        <div class="empty answer-empty"><span class="empty-symbol quote" aria-hidden="true">“</span><p class="empty-title">{{ error() ? 'Ответ не подтверждён.' : last()?.type === 'run.cancelled' ? 'Запуск остановлен.' : 'Ответ появится после проверки источников.' }}</p>
+          <p class="text-muted">{{ error() || last()?.type === 'run.cancelled' ? 'Можно изменить вопрос и начать новый разбор.' : 'Цитаты помогут понять, на какие фрагменты опирается ответ.' }}</p>
+        </div>
+      }
+      @if (snapshot().state; as state) {
+        <details class="run-details"><summary>Данные запуска</summary><dl><dt>Идентификатор</dt><dd>{{ state.runId }}</dd><dt>Получено событий</dt><dd>{{ state.events.length }}</dd>
+          @if (last(); as terminalEvent) { @if (terminalEvent.type === 'run.failed' || terminalEvent.type === 'run.cancelled') { <dt>Код причины</dt><dd>{{ terminalEvent.payload.code }}</dd> } }
+          @if (answer(); as result) { <dt>Обращений к модели</dt><dd>{{ result.payload.usage.modelCalls }}</dd><dt>Вызовов инструмента</dt><dd>{{ result.payload.usage.toolCalls }}</dd> }
+        </dl></details>
+      }
+    </section>
+  </div>
+  <footer class="page-footer text-muted">Один вопрос. Видимые шаги. Источники рядом с ответом.</footer>
+</main>
