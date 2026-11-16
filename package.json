@@ -20,6 +20,7 @@
     "validate": "npm run typecheck && npm run typecheck:core && npm test && npm run build",
     "build:ui": "npm --prefix ui run build",
     "test:ui": "npm --prefix ui run test",
+    "test:browser": "node scripts/test-database.mjs --browser",
     "validate:all": "npm run validate && npm --prefix ui run validate"
   },
   "dependencies": {

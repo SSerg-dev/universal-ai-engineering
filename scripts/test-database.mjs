@@ -14,6 +14,9 @@ let created = false;
 let testExit = 1;
 
 try {
+  const args = process.argv.slice(2);
+  if (args.length > 1 || (args.length === 1 && args[0] !== "--browser")) throw new Error("Unsupported database check mode");
+  const browserMode = args[0] === "--browser";
   if (process.versions.node.split(".")[0] !== "24") throw new Error("Node.js 24 required");
   execFileSync(process.execPath, ["node_modules/typescript/bin/tsc"], { cwd: root, timeout: 30_000, stdio: ["ignore", "pipe", "pipe"] });
   if (!/^pgvector\/pgvector@sha256:[a-f0-9]{64}$/u.test(infrastructure.image)) throw new Error("Invalid image pin");
@@ -33,7 +36,8 @@ try {
   const url = `postgresql://postgres:${password}@127.0.0.1:${binding.HostPort}/uaos_fixture`;
   console.log("Testing disposable PostgreSQL/pgvector with the pinned image.");
   testExit = await new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, ["node_modules/vitest/vitest.mjs", "run", "--config", "vitest.database.config.ts"], {
+    const command = browserMode ? ["scripts/check-ui-browser.mjs"] : ["node_modules/vitest/vitest.mjs", "run", "--config", "vitest.database.config.ts"];
+    const child = spawn(process.execPath, command, {
       cwd: root, stdio: "inherit", env: { ...process.env, UAOS_TEST_DATABASE_URL: url, UAOS_TEST_DATABASE_OWNER: owner },
     });
     child.once("error", reject);

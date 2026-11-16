@@ -28,6 +28,8 @@ Publishing never awaits a subscriber or network. A throwing subscriber is detach
 
 The host executor inherits the existing five-second primary budget. A six-second stream watchdog aborts and publishes one TIMEOUT failure if an unexpected executor never settles. Its underlying active slot is retained until actual settlement, so repeated timed-out noncooperative work cannot bypass the eight-execution limit. Late events/results cannot reopen or change a terminal stream. Closing the broker denies new runs and aborts outstanding work. Watchdog expiry does not claim arbitrary underlying work has stopped.
 
+Composition accepts a host-owned StreamExecutionPort override for deterministic integration/fault testing, defaulting to the extracted observed grounded execution adapter. It is not an environment/request/model-controlled fault switch; tests can delay execution and still delegate cancellation to the actual engine without duplicating the loop.
+
 ## Boundaries and pending choices
 
 This is a trusted local course server, with loopback as the default and no CORS wildcard, public authentication, multi-tenant access, distributed replay, retrying actions, persistent content event store, or production SLO claim. Run IDs are correlation identifiers, not an authentication mechanism. A reconnect does not re-execute a question. Hosting remotely would require an explicit authorization/retention design outside this slice.

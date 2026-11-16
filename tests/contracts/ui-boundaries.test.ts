@@ -24,10 +24,12 @@ describe("Isolated Angular adapter boundary", () => {
     expect(json("ui/angular.json").projects.inspector.architect.build.builder).toBe("@angular/build:application");
     expect(json("ui/angular.json").projects.inspector.architect.test.builder).toBe("@angular/build:unit-test");
     expect(json("ui/proxy.conf.json")["/api/**"]).toMatchObject({ target: "http://127.0.0.1:3000", changeOrigin: false });
+    expect(json("package.json").scripts["validate:all"]).toBe("npm run validate && npm --prefix ui run validate");
     for (const field of ["overrides", "workspaces", "optionalDependencies", "peerDependencies"]) expect(manifest[field]).toBeUndefined();
   });
   it("allows UI to share only pure stream protocol/reducer code and never Node infrastructure", () => {
     const uiRoot = resolve("ui"), allowed = new Set([resolve("src/application/reduce-stream.ts"), resolve("src/domain/stream-contracts.ts")]);
+    const browserPackages = Object.keys(json("ui/package.json").dependencies);
     for (const file of files("ui/src")) {
       const source = readFileSync(file, "utf8");
       for (const match of source.matchAll(/(?:from\s+|import\s*\()\s*["']([^"']+)["']/gu)) {
@@ -35,7 +37,8 @@ describe("Isolated Angular adapter boundary", () => {
         if (name.startsWith(".")) {
           const path = resolve(dirname(file), name.replace(/\.js$/u, ".ts")), part = relative(uiRoot, path);
           expect(!part.startsWith(`..${sep}`) && part !== ".." || allowed.has(path), `${file} imports ${name}`).toBe(true);
-        } else expect(name.startsWith("@angular/") || file.endsWith(".spec.ts") && name === "vitest", `${file} imports ${name}`).toBe(true);
+        } else expect(browserPackages.some((packageName) => name === packageName || name.startsWith(`${packageName}/`)) ||
+          file.endsWith(".spec.ts") && name === "vitest", `${file} imports ${name}`).toBe(true);
       }
       expect(source, `${file} uses Node or executable output`).not.toMatch(/\bprocess\s*\.|\b(?:require|eval)\s*\(|\binnerHTML\b/u);
     }

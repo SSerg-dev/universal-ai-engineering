@@ -107,7 +107,7 @@ export class InspectorComponent {
       case "tool.started": return "Читаем только учебные материалы.";
       case "tool.completed": return `Поиск завершён · ${event.payload.durationMs} мс`;
       case "tool.failed": return event.payload.code === "TOOL_PERMISSION_DENIED" ? "Инструменту не выдан доступ." : "Не удалось получить фрагменты.";
-      case "answer": return "Ответ и цитаты доступны справа.";
+      case "answer": return "Ответ и цитаты доступны в блоке результата.";
       case "run.completed": return "Получено подтверждение завершения.";
       case "run.cancelled": return "Новый запуск можно начать с другого вопроса.";
       case "run.failed": return "Причина сохранена в данных запуска.";
