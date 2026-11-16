@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "route-manifest-1.0",
+  "manifestId": "local-course-routes",
+  "version": "1.0.0",
+  "policyId": "local-course-router",
+  "policyRevision": "3b9d8f8976733095ac9102aee30ebb1138ecb72b76d2dfc7616e084128a78ba7",
+  "defaultProfile": "grounded",
+  "profiles": {
+    "grounded": {
+      "model": "grounded-teaching-v1",
+      "tools": [
+        "retrieve_passages"
+      ],
+      "retrieval": "controlled-pgvector-v1",
+      "evidence": "grounded"
+    },
+    "lexical": {
+      "model": "registered-teaching-v1",
+      "tools": [
+        "search_docs",
+        "read_doc"
+      ],
+      "retrieval": "controlled-markdown-v1",
+      "evidence": "source_reference"
+    }
+  },
+  "fallback": {
+    "from": "lexical",
+    "to": "grounded",
+    "errorCode": "MODEL_FAILURE",
+    "requiresNoToolAttempt": true
+  },
+  "budget": {
+    "maxAttempts": 2,
+    "maxModelCalls": 3,
+    "maxToolCalls": 1,
+    "timeoutMs": 11000
+  },
+  "revision": "7ed623246b5fe63d760744e616ad1738cd4c3fa0456b7ff9312764902feb221d"
+}

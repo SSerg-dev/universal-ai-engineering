@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "guard-policy-1.0",
+  "policyId": "local-course-router",
+  "version": "1.0.0",
+  "input": {
+    "maxCharacters": 2048,
+    "blockedMarkers": [
+      "<<private>>"
+    ]
+  },
+  "output": {
+    "maxCharacters": 8192,
+    "blockedMarkers": [
+      "<<private>>"
+    ]
+  },
+  "tools": {
+    "allowed": [
+      "retrieve_passages",
+      "search_docs",
+      "read_doc"
+    ],
+    "maxArgumentCharacters": 4096,
+    "maxObservationCharacters": 16384
+  },
+  "budget": {
+    "maxModelCalls": 2,
+    "maxToolCalls": 1,
+    "timeoutMs": 5000,
+    "toolTimeoutMs": 4000
+  },
+  "approval": {
+    "exportEnabled": true,
+    "required": true,
+    "lifetimeSeconds": 300,
+    "leaseSeconds": 15,
+    "maxPending": 8,
+    "maxExportBytes": 32768
+  },
+  "revision": "3b9d8f8976733095ac9102aee30ebb1138ecb72b76d2dfc7616e084128a78ba7"
+}
