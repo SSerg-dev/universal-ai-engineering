@@ -114,11 +114,12 @@ describe("Accessible Angular execution inspector", () => {
     expect(root.querySelector(".answer-badge")).toBeNull();
   });
 
-  it("escapes hostile answer/quote content, preserves long text, and disposes the transport", async () => {
+  it("renders exact quotes as text, hides transport serialization, and disposes the transport", async () => {
     const { root, component, fixture } = setup(); await begin(component);
     const hostile = '<img src=x onerror="alert(1)">', quote = hostile + "длинноеслово".repeat(60);
-    update(snapshot(completedState({ answer: hostile, quote }))); fixture.detectChanges();
-    expect(root.querySelector(".answer-text")!.textContent).toBe(hostile); expect(root.querySelector("blockquote")!.textContent).toBe(quote);
+    update(snapshot(completedState({ answer: 'Citation: {"indexId":"private-serialization"}' + hostile, quote }))); fixture.detectChanges();
+    expect(root.querySelector("blockquote")!.textContent).toBe(quote);
+    expect(root.textContent).not.toContain("private-serialization"); expect(root.textContent).not.toContain("Citation:");
     expect(root.querySelector("img")).toBeNull(); expect(root.querySelector("script")).toBeNull();
     fixture.destroy(); expect(client.dispose).toHaveBeenCalledTimes(1);
   });

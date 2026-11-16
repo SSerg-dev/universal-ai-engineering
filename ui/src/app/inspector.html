@@ -65,7 +65,7 @@
         @if (response.payload.grounding.status === 'abstained') {
           <div class="abstention"><p class="empty-title">Подтверждение не найдено</p><p class="text-muted">В документах не нашлось подходящих фрагментов. Уточните вопрос или попробуйте другой пример.</p></div>
         } @else {
-          <p class="answer-text">{{ response.payload.answer }}</p>
+          <p class="answer-text">Найдено подтверждение в документации. Ответ ниже составлен из точных цитат.</p>
           <div class="sources-heading"><h3>Фрагменты источников</h3><span class="text-muted">{{ response.payload.grounding.claims.length }}</span></div>
           <ol class="source-list">
             @for (claim of response.payload.grounding.claims; track claim.citation.passageId; let index = $index) {

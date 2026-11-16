@@ -113,6 +113,8 @@ Accent is reserved for the primary question action, current timeline marker, and
 
 When a new create is pending, previous confirmed results remain labelled «Предыдущий результат. Новый запуск начинается…» until the new run is acknowledged. A received answer without its completion terminal is labelled «Результат ещё не подтверждён. Ждём завершения запуска.»; malformed protocol hides the answer and never shows the completed badge.
 
+The extractive answer is presented once through the exact grounded quote cards, introduced by «Найдено подтверждение в документации. Ответ ниже составлен из точных цитат.». The CLI answer's Markdown/JSON citation serialization is not rendered as default prose; source identifiers/revisions remain under disclosure. This is a display projection of validated claims, not a synthesized summary or a change to the primary result/evidence.
+
 Cancellation is a reversible stop request for the active teaching run; no destructive confirmation dialog. New submissions replace only local visible results after the new run is created. No browser storage/history is created, and disconnect/reconnect never submits the question again.
 
 ## UI Considerations
