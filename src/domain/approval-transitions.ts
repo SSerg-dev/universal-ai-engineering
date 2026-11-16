@@ -1,4 +1,4 @@
-import { ApprovalSnapshotSchema, GuardBoundaryError, type ApprovalSnapshot, type ApprovalState } from "./guard-contracts.js";
+import { ApprovalSnapshotSchema, GuardAuditEventSchema, GuardBoundaryError, type ApprovalSnapshot, type ApprovalState, type GuardAuditDraft } from "./guard-contracts.js";
 
 const edges: Readonly<Record<ApprovalState, readonly ApprovalState[]>> = {
   preparing: ["pending", "preparation_failed", "expired"], pending: ["approved", "denied", "expired"],
@@ -29,4 +29,40 @@ export function assertApprovalTransition(rawCurrent: ApprovalSnapshot, rawNext: 
     return;
   }
   if (!edges[current.state].includes(next.state)) throw new GuardBoundaryError("GUARD_APPROVAL_REQUIRED");
+  if (["pending", "approved", "executing"].includes(next.state) && Date.parse(next.updatedAt) >= Date.parse(next.expiresAt) ||
+    next.state === "expired" && Date.parse(next.updatedAt) < Date.parse(next.expiresAt) ||
+    next.state === "approved" && next.approvedAt !== next.updatedAt ||
+    current.state === "uncertain" && next.state === "succeeded" && next.receipt.acknowledgment !== "existing_verified") {
+    throw new GuardBoundaryError("GUARD_RESULT_INVALID");
+  }
+}
+
+export function assertApprovalTransitionAudit(current: ApprovalSnapshot | null, next: ApprovalSnapshot, draft: GuardAuditDraft): void {
+  const parsed = GuardAuditEventSchema.safeParse({ ...draft, sequence: 1 });
+  if (!parsed.success) throw new GuardBoundaryError("GUARD_RESULT_INVALID");
+  const event = parsed.data;
+  if (event.kind !== "approval.transition" || event.scopeId !== next.approvalId || event.policyId !== next.policyId ||
+    event.policyRevision !== next.policyRevision || event.timestamp !== next.updatedAt || event.payload.from !== (current?.state ?? null) ||
+    event.payload.to !== next.state || event.payload.version !== next.version) throw new GuardBoundaryError("GUARD_RESULT_INVALID");
+  let code: Extract<GuardAuditDraft, { kind: "approval.transition" }>["payload"]["code"];
+  let actor: "host" | "local_operator" = "host";
+  if (!current) {
+    if (next.state !== "preparing" || next.version !== 0) throw new GuardBoundaryError("GUARD_RESULT_INVALID");
+    code = "PREPARATION_RESERVED";
+  } else if (current.state === next.state) code = "PAYLOAD_PURGED";
+  else switch (next.state) {
+    case "pending": code = "PROPOSAL_PREPARED"; break;
+    case "approved": code = "OPERATOR_APPROVED"; actor = "local_operator"; break;
+    case "denied":
+      code = next.code === "GUARD_DENIED" ? "OPERATOR_DENIED" : next.code === "GUARD_POLICY_CHANGED" ? "POLICY_CHANGED" : "EXPORT_DISABLED";
+      if (next.code === "GUARD_DENIED") actor = "local_operator";
+      break;
+    case "executing": code = "EXECUTION_RESERVED"; actor = "local_operator"; break;
+    case "succeeded": code = "EXPORT_SUCCEEDED"; break;
+    case "preparation_failed": code = "PREPARATION_FAILED"; break;
+    case "expired": code = "APPROVAL_EXPIRED"; break;
+    case "uncertain": code = "EXECUTION_UNCERTAIN"; break;
+    default: throw new GuardBoundaryError("GUARD_RESULT_INVALID");
+  }
+  if (event.payload.code !== code || event.actor !== actor) throw new GuardBoundaryError("GUARD_RESULT_INVALID");
 }

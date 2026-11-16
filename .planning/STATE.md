@@ -3,11 +3,11 @@ gsd_state_version: "1.0"
 current_phase: 09
 current_phase_name: Guardrails and Approval
 status: executing
-stopped_at: Phase 9 contract checkpoint complete; implementing required-audit enforcement
+stopped_at: Phase 9 checkpoints, publication and transactional store verified; implementing command service
 last_updated: "2026-11-16"
 last_activity: 2026-11-16
-last_activity_desc: Phase 9 contracts passed 399 root tests, core compilation and build; enforcement remains pending
-state_head: e21b0ef
+last_activity_desc: Phase 9 passed 427 root tests and 35 database checks; command service and iteration wiring pending
+state_head: 6f4b820
 progress:
   total_phases: 10
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-11-15)
 
 Phase: UAOS-09 (Guardrails and Approval) — EXECUTING
 Plan: 1 of 2 complete in current phase
-Status: Contract plan 09-01 implemented; enforcement and approval flows in 09-02 remain pending
-Last activity: 2026-11-16 — 399 root tests, root/core compilation and build passed for policy and approval contracts
+Status: Plan 09-02 in progress; audited checkpoints, fixed-root publication and transactional approval store verified
+Last activity: 2026-11-16 — 427 root tests, root/core compilation, build and 35 live database checks passed
 
 Progress: 24/27 roadmap plans (89%); Phase 1 approved; Phase 2–8 review pending
 
@@ -91,7 +91,7 @@ Progress: 24/27 roadmap plans (89%); Phase 1 approved; Phase 2–8 review pendin
 
 ### Pending Todos
 
-Review Phase 2–8 evidence. Define Phase 9 host-owned policy, permissions, budgets, request/output validation, explicit consequential-action approval and auditable denial contracts before implementation. Preserve metadata-only journal/telemetry, existing public error vocabularies and earlier iteration selection. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
+Review Phase 2–8 evidence. Finish Phase 9 command service, all-path factory wiring, CLI/API, adversarial evidence and guide; contracts, audited checkpoints, publication and durable store are verified. Preserve metadata-only journal/telemetry, existing public error vocabularies and earlier iteration selection. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
 
 ### Blockers/Concerns
 
@@ -107,8 +107,8 @@ Review Phase 2–8 evidence. Define Phase 9 host-owned policy, permissions, budg
 ## Session Continuity
 
 Last session: 2026-11-16
-Stopped at: Phase 8 implementation/evidence complete; defining Phase 9 contracts
-Resume file: .planning/phases/UAOS-08-streaming-angular-ui/08-02-SUMMARY.md
+Stopped at: Phase 9 durable-store checkpoint complete; command service and iteration 9 wiring next
+Resume file: .planning/phases/UAOS-09-guardrails-approval/09-02-DURABLE-EVIDENCE.md
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 

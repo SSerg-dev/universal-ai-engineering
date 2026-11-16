@@ -73,7 +73,8 @@ describe("Host guard policy and explicit approval contracts", () => {
   it("permits receipt reconciliation of uncertainty but never silently retries publication", () => {
     const f = guardFixture();
     expect(() => assertApprovalTransition(f.executing, f.uncertain, "lease-execute")).not.toThrow();
-    expect(() => assertApprovalTransition(f.uncertain, { ...f.succeeded, version: 5 })).not.toThrow();
+    expect(() => assertApprovalTransition(f.uncertain, { ...f.succeeded, version: 5, receipt: { ...f.receipt, acknowledgment: "existing_verified" } })).not.toThrow();
+    expect(() => assertApprovalTransition(f.uncertain, { ...f.succeeded, version: 5 })).toThrow(expect.objectContaining({ code: "GUARD_RESULT_INVALID" }));
     expect(() => assertApprovalTransition(f.uncertain, { ...f.executing, version: 5, updatedAt: "2026-11-16T00:00:05.000Z" })).toThrow(expect.objectContaining({ code: "GUARD_APPROVAL_REQUIRED" }));
   });
 
