@@ -1,0 +1,7 @@
+# 09-02 Bound Publication Checkpoint
+
+2026-11-16 — The outbound fixed-root exporter validates canonical prepared answers, exact source membership, UTF-8 digest/byte count and safe generated filenames before writing. It exclusively creates/flushed an owned temporary file, links without overwrite, and cleans up only its own temporary file. Existing matching artifacts acknowledge the same action; mismatches are preserved. Inspection reads at most the bound byte count plus one and rejects unexpected file types/content.
+
+Root/core compilation passed. Twenty focused contract/dependency/publication tests passed in three files (2.48s), including eight filesystem/semantic checks. These cover concurrent identical publication, preserved unexpected content, path/payload/digest substitution, actual non-ASCII UTF-8 bytes, pre-abort, cryptographic rehydration, and a simulated acknowledgment failure after the artifact was published. The latter leaves the file intact and proves explicit inspection can verify it without another write.
+
+This adapter does not authorize itself: the pending command service must first acknowledge a durable approved execution claim. PostgreSQL and filesystem remain separate transactions; a failed acknowledgment does not mean no effect occurred. Durable command/state/audit integration and live recovery evidence remain pending in 09-02. Human approval/review/stability are pending.
