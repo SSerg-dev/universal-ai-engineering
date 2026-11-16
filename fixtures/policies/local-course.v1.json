@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "guard-policy-1.0",
+  "policyId": "local-course",
+  "version": "1.0.0",
+  "input": {
+    "maxCharacters": 2048,
+    "blockedMarkers": [
+      "<<private>>"
+    ]
+  },
+  "output": {
+    "maxCharacters": 8192,
+    "blockedMarkers": [
+      "<<private>>"
+    ]
+  },
+  "tools": {
+    "allowed": [
+      "retrieve_passages"
+    ],
+    "maxArgumentCharacters": 4096,
+    "maxObservationCharacters": 16384
+  },
+  "budget": {
+    "maxModelCalls": 2,
+    "maxToolCalls": 1,
+    "timeoutMs": 5000,
+    "toolTimeoutMs": 4000
+  },
+  "approval": {
+    "exportEnabled": true,
+    "required": true,
+    "lifetimeSeconds": 300,
+    "leaseSeconds": 15,
+    "maxPending": 8,
+    "maxExportBytes": 32768
+  },
+  "revision": "83352b220fd36d3fc6b063c135549dbfb8180a11d097a4fc9264499023769a52"
+}

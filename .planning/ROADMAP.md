@@ -196,7 +196,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 09-01: Define permission, budget, policy, approval, denial, and threat contracts.
+- [x] 09-01: Define permission, budget, policy, approval, denial, and threat contracts.
 - [ ] 09-02: Implement enforcement and approval flows with adversarial evidence.
 
 ### Phase 10: Router and Course Completion
@@ -231,5 +231,5 @@ Phases execute sequentially: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 �
 | 6. Evaluation System | 2/2 | Implemented; review pending | - |
 | 7. End-to-End Observability | 2/2 | Implemented; review pending | - |
 | 8. Streaming Angular UI | 2/2 | Implemented; review pending | - |
-| 9. Guardrails and Approval | 0/2 | Not started | - |
+| 9. Guardrails and Approval | 1/2 | In progress; contracts defined | - |
 | 10. Router and Course Completion | 0/2 | Not started | - |
