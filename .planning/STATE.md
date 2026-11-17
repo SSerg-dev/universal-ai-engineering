@@ -4,10 +4,10 @@ current_phase: 10
 current_phase_name: Router and Course Completion
 status: executing
 stopped_at: Phase 10 routing contracts and core verified; concrete composition and course packaging next
-last_updated: "2026-11-16"
-last_activity: 2026-11-16
-last_activity_desc: Routing core passed 476 root tests, strict project/core compilation and build; integration pending
-state_head: 36ab9f3
+last_updated: "2026-11-17"
+last_activity: 2026-11-17
+last_activity_desc: Cross-phase regression passed 476 root, 21 UI, 48 database checks and 7 browser scenarios; local inspector preview verified
+state_head: cf635c8
 progress:
   total_phases: 10
   completed_phases: 1
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-11-15)
 Phase: UAOS-10 (Router and Course Completion) — EXECUTING
 Plan: 0 of 2 complete in current phase
 Status: Plan 10-01 in progress; typed routing/fallback contracts and core verified, composition and adapters pending
-Last activity: 2026-11-16 — 451 root tests, 21 UI tests, 48 database checks, both builds and links/traceability passed
+Last activity: 2026-11-17 — 476 root tests, 21 UI tests, 48 database checks, 7 browser scenarios and both builds passed; see [cross-phase review](phases/UAOS-10-router-course-completion/10-REVIEW.md).
 
 Progress: 25/27 roadmap plans (93%); Phase 1 approved; Phase 2–9 review pending
 
@@ -91,7 +91,7 @@ Progress: 25/27 roadmap plans (93%); Phase 1 approved; Phase 2–9 review pendin
 
 ### Pending Todos
 
-Review Phase 2–9 evidence. Define Phase 10 typed route/model/tool/retrieval/policy selection, bounded safe fallbacks and ten-version compatibility before implementation. Preserve metadata-only journal/telemetry, existing public error vocabularies and earlier iteration selection. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
+Review Phase 2–9 evidence. Phase 10 contracts and routing core are implemented; concrete runtime composition, CLI/HTTP integration, ten-version compatibility and course packaging remain pending. New Phase 10 implementation was paused for the user-requested cross-phase audit/browser preview on 2026-11-17. Preserve metadata-only journal/telemetry, existing public error vocabularies and earlier iteration selection. The proposed seven-day local retention preference remains open; Phase 5 requires explicit retention and activates no automatic default.
 
 ### Blockers/Concerns
 
