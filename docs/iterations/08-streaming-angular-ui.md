@@ -34,6 +34,8 @@ Try «Журнал выполнения» (execution journal), «Политик�
 
 ## Streaming and reconnect
 
+For a disposable local preview without configuring an existing database, build the UI first and run `node scripts/test-database.mjs --preview` with Node.js 24 and Docker. Open the loopback URL printed by the runner. It serves production assets and the real iteration 8 API using only controlled fixtures in a new owner-labelled database. The preview stops after 30 minutes or Ctrl+C; the runner removes its exact owned container. Preview journals remain under ignored .uaos/ui-preview. This is a local teaching preview, not a deployment or an iteration 10 interface.
+
 [ADR-0011](../architecture/decisions/ADR-0011-bounded-run-streams.md) and the [transport guide](../architecture/stream-transport.md) define create, SSE events, replay cursors, and explicit cancellation. [The browser contract](../architecture/browser-stream-client.md) defines parsing, time bounds, and read-only reconnect.
 
 Create returns one run ID. The SSE response flushes start before execution completes. Progress/tool events follow actually persisted required evidence; a grounded answer precedes exactly one completion terminal. Failures/cancellation use distinct typed terminals. The deterministic model does not generate token deltas, and no fake delays are added for animation.
