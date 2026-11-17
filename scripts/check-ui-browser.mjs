@@ -200,7 +200,7 @@ try {
   checks.push("no-browser-storage-external-requests-or-runtime-exceptions");
   const assetDigests = {};
   for (const name of filenames) assetDigests[name] = createHash("sha256").update(await readFile(join(assets, name))).digest("hex");
-  await writeFile(join(evidenceRoot, "result.json"), JSON.stringify({ checkedOn: "2026-11-16", passed: true,
+  await writeFile(join(evidenceRoot, "result.json"), JSON.stringify({ checkedOn: new Date().toISOString().slice(0, 10), passed: true,
     sourceHead: execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim(),
     browser: version.product, checks, screenshots, assetDigests, externalRequests: 0, runtimeExceptions: 0,
     cancellationFixture: "Host-only delayed port delegates to the actual observed engine after abort; no public fault switch" }, null, 2) + "\n", { flag: "wx" });
@@ -210,7 +210,7 @@ try {
     const state = failureSnapshot ? await failureSnapshot() : null;
     if (failureScreenshot) await failureScreenshot();
     const known = ["CHECK_TIMEOUT", "CDP_TIMEOUT", "CDP_COMMAND_FAILED", "CDP_CONNECTION_FAILED", "PAGE_EVALUATION_FAILED", "BROWSER_REQUIRED", "BROWSER_LAUNCH_FAILED"];
-    await writeFile(join(evidenceRoot, "failed-result.json"), JSON.stringify({ checkedOn: "2026-11-16", passed: false, step,
+    await writeFile(join(evidenceRoot, "failed-result.json"), JSON.stringify({ checkedOn: new Date().toISOString().slice(0, 10), passed: false, step,
       code: error?.code === "ERR_ASSERTION" ? "ASSERTION_FAILED" : known.includes(error?.message) ? error.message : "CHECK_FAILED", checks, state }, null, 2) + "\n", { flag: "wx" });
   } catch { /* No raw exception is exposed while retaining safe failure evidence. */ }
   console.error(`UI browser check failed at ${step}. No raw browser/database exception is exported.`);
