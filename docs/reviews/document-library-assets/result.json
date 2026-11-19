@@ -1,0 +1,65 @@
+{
+  "checkedOn": "2026-11-19",
+  "passed": true,
+  "sourceHead": "7614cf9f972f2ad8dc6a9f9856c4deb6a1f61285",
+  "browser": "Chrome/157.0.8103.79",
+  "checks": [
+    "empty-and-validation-focus",
+    "grounded-citations-and-safe-evidence",
+    "mobile-360px-and-touch-targets",
+    "long-question-wrap-and-honest-abstention",
+    "one-create-read-only-reconnect-no-duplicate-steps",
+    "actual-engine-cancellation-focus-and-reduced-motion",
+    "real-file-preview-confirm-grounded-answer-source-and-disable",
+    "no-browser-storage-external-requests-or-runtime-exceptions"
+  ],
+  "screenshots": [
+    {
+      "filename": "desktop-empty.png",
+      "width": 1440,
+      "height": 1287
+    },
+    {
+      "filename": "desktop-answer.png",
+      "width": 1440,
+      "height": 1864
+    },
+    {
+      "filename": "mobile-answer.png",
+      "width": 360,
+      "height": 2877
+    },
+    {
+      "filename": "mobile-long-text.png",
+      "width": 360,
+      "height": 4965
+    },
+    {
+      "filename": "desktop-reconnecting.png",
+      "width": 1440,
+      "height": 1469
+    },
+    {
+      "filename": "desktop-cancelled.png",
+      "width": 1440,
+      "height": 1469
+    },
+    {
+      "filename": "desktop-uploaded-answer.png",
+      "width": 1440,
+      "height": 2608
+    },
+    {
+      "filename": "mobile-uploaded-answer.png",
+      "width": 360,
+      "height": 3942
+    }
+  ],
+  "assetDigests": {
+    "main-6FFNIEIB.js": "ff9a4ea5b0a99cda09e9a8db58724c002cae9ff5a335078f29d7cfc2299af942",
+    "styles-55PHJ4XL.css": "a56f6af4fab936d8c5d07385e87fdfb27fdd773f2e9c89a997e79b1432bdeb47"
+  },
+  "externalRequests": 0,
+  "runtimeExceptions": 0,
+  "cancellationFixture": "Host-only delayed port delegates to the actual observed engine after abort; no public fault switch"
+}

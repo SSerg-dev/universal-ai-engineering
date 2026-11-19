@@ -1,5 +1,5 @@
 ---
-status: executing
+status: complete
 date: 2026-11-19
 ---
 # Markdown/TXT library first release

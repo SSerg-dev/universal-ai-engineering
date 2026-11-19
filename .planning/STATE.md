@@ -2,12 +2,12 @@
 gsd_state_version: "1.0"
 current_phase: 10
 current_phase_name: Router and Course Completion
-status: executing
-stopped_at: Phase 10 routing contracts and core verified; concrete composition and course packaging next
-last_updated: "2026-11-17"
-last_activity: 2026-11-17
-last_activity_desc: Cross-phase regression passed 476 root, 21 UI, 48 database checks and 7 browser scenarios; local inspector preview verified
-state_head: cf635c8
+status: paused
+stopped_at: User requested pause after completed Markdown/TXT upload wave; PDF/DOCX and Phase 10 integration remain pending
+last_updated: "2026-11-19"
+last_activity: 2026-11-19
+last_activity_desc: Upload wave completed; 494 root, 27 UI, 51 database tests and 8 browser scenarios passed; paused by user request
+state_head: 89baa76
 progress:
   total_phases: 10
   completed_phases: 1
@@ -23,14 +23,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-11-15)
 
 **Core value:** A learner can understand, build, test, and review a reusable Agentic OS one working iteration at a time.
-**Current focus:** Phase UAOS-10 — Router and Course Completion
+**Current focus:** Paused after completed ad-hoc Markdown/TXT document library wave; Phase UAOS-10 integration remains pending
 
 ## Current Position
 
-Phase: UAOS-10 (Router and Course Completion) — EXECUTING
+Phase: UAOS-10 (Router and Course Completion) — PAUSED
 Plan: 0 of 2 complete in current phase
-Status: Plan 10-01 in progress; typed routing/fallback contracts and core verified, composition and adapters pending
-Last activity: 2026-11-17 — 476 root tests, 21 UI tests, 48 database checks, 7 browser scenarios and both builds passed; see [cross-phase review](phases/UAOS-10-router-course-completion/10-REVIEW.md).
+Status: User requested finish current upload wave and pause. DOC-01 implemented and verified; PDF/DOCX and Phase 10 composition/adapters pending.
+Last activity: 2026-11-19 — 494 root tests, 27 UI tests, 51 database checks, 8 browser scenarios and both builds passed; see [upload summary](quick/001-local-document-library/001-SUMMARY.md).
 
 Progress: 25/27 roadmap plans (93%); Phase 1 approved; Phase 2–9 review pending
 
@@ -106,9 +106,15 @@ Review Phase 2–9 evidence. Phase 10 contracts and routing core are implemented
 
 ## Session Continuity
 
-Last session: 2026-11-16
-Stopped at: Phase 10 core verified; concrete routing composition and CLI/API next
-Resume file: .planning/phases/UAOS-10-router-course-completion/10-01-CORE-EVIDENCE.md
+Last session: 2026-11-19
+Stopped at: Markdown/TXT wave complete; explicitly paused by user request
+Resume file: .planning/quick/001-local-document-library/.continue-here.md
+
+## Quick Tasks Completed
+
+| Task | Description | Completed | Evidence |
+|---|---|---|---|
+| 001 | Local Markdown/TXT upload, preview, confirmation and document library | 2026-11-19 | [Summary](quick/001-local-document-library/001-SUMMARY.md) |
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 

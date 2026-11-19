@@ -68,6 +68,13 @@
 - [x] **NFR-02**: Infrastructure adapters can be replaced through stable ports without changing agent-loop behavior.
 - [x] **NFR-03**: Every phase produces reproducible tests, traceability updates, reviewable evidence, and an explicit human approval state.
 
+## User-authorized extensions
+
+- [x] **DOC-01**: Local operator can upload Markdown/TXT, preview and explicitly confirm indexed content, inspect/download its original and disable future retrieval. Implemented — review pending. [Evidence](../docs/reviews/DOCUMENT-LIBRARY-evidence.md).
+- [ ] **DOC-02**: Operator can use the same reviewed upload flow for PDF/DOCX. Second release pending; OCR separately deferred.
+
+These ad-hoc extensions do not mark Phase 10 or the ten-version milestone complete.
+
 ## v2 Requirements
 
 ### Productization
@@ -122,4 +129,4 @@
 
 ---
 *Requirements defined: 2026-09-28*
-*Last updated: 2026-11-16 after Phase 9 implementation. Checked requirements indicate implementation coverage; approval remains separate.*
+*Last updated: 2026-11-19 after DOC-01 upload implementation. Checked requirements indicate implementation coverage; approval remains separate.*

@@ -46,6 +46,7 @@ Phase 1 was explicitly approved on 2026-11-09 after the typed loop, CLI/HTTP ada
 - Phase 8 implements strict content-bearing SSE, bounded replay/cancellation, a pure acceptance reducer, and a Russian Angular/Tailwind inspector. Official compatibility required an isolated UI TypeScript 6/AOT build while preserving root TypeScript 7/pins (ADR-0012). Real Chrome/database/mobile evidence and clean lock installation passed; STREAM-01/UI-01 implementation is complete, with architectural review/approval/stability pending.
 - Phase 9 implements sealed policy checkpoints and durable human-approved fixed-root exports with transactional audit, version fencing and explicit uncertain-outcome reconciliation (ADR-0013). GUARD-01 is implemented; architectural review, approval and stability remain pending. Phase 10 has typed routing contracts and a tested routing core (ADR-0014); concrete runtime/CLI/HTTP wiring and course completion remain pending.
 - Open GSD Core 1.15.0 provides the operational planning workflow and is installed locally under ignored `.codex/`.
+- On 2026-11-19 the user authorized a two-release document upload extension. First release implements opt-in local Markdown/TXT preview/confirmation/search/source inspection (ADR-0015); PDF/DOCX remains next. User then requested finish this wave and pause. Temporary preview storage is disposable; persistent local PostgreSQL supports cross-session documents. Review and approval remain pending.
 
 ## Constraints
 
