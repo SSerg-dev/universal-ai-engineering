@@ -3,6 +3,7 @@ import { createToolRuntime } from "./create-tool-runtime.js";
 import { resolve } from "node:path";
 
 export interface CreateIterationRuntimeOptions extends CreateRuntimeOptions {
+  readonly documentLibrary?: boolean;
   readonly iteration?: unknown;
   readonly mcpConsent?: unknown;
   readonly databaseUrl?: unknown;

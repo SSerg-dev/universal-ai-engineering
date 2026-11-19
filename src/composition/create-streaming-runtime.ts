@@ -11,11 +11,12 @@ import { createStreamingExecution } from "./create-streaming-execution.js";
 import type { GroundedRuntimeFactory } from "./create-grounded-runtime.js";
 
 export async function createStreamingRuntime(options: CreateRuntimeOptions & RetrievalResourceOptions & {
-  reportRoot: string; telemetryRoot: string; streamExecutor?: StreamExecutionPort; groundedFactory?: GroundedRuntimeFactory;
+  reportRoot: string; telemetryRoot: string; streamExecutor?: StreamExecutionPort; groundedFactory?: GroundedRuntimeFactory; documentLibrary?: boolean;
 }): Promise<Runtime> {
   const runtime = await createObservedRuntime(options);
   const streams = new RunStreamBroker({ clock: new SystemClock(), monotonic: new PerformanceClock(),
     ids: { nextRunId: () => `run-${randomUUID()}` }, executor: options.streamExecutor ?? createStreamingExecution(options),
   });
-  return { ...runtime, streams };
+  const documents = options.documentLibrary ? await import("./create-document-library.js").then(({ createLocalDocumentLibrary }) => createLocalDocumentLibrary(options)) : undefined;
+  return { ...runtime, streams, ...(documents ? { documents } : {}) };
 }

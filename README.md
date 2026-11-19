@@ -33,6 +33,7 @@ React and Next.js are not part of the selected architecture.
 
 ## Documentation
 
+- [Local Markdown/TXT upload, preview and searchable document library](docs/how-to/local-document-library.md)
 - [Iteration 9 guardrails and explicit resumable approval](docs/iterations/09-guardrails-approval.md)
 - [Iteration 9 evidence](docs/reviews/ITERATION-09-evidence.md)
 - [Iteration 8 streaming Angular inspector](docs/iterations/08-streaming-angular-ui.md)

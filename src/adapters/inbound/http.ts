@@ -8,11 +8,14 @@ import type { ConversationCommandHandler } from "../../application/conversation-
 import { StateBoundaryError, type StateBoundaryCode } from "../../domain/state-contracts.js";
 import type { RunStreamPort } from "../../application/ports/stream-port.js";
 import { registerStreamRoutes } from "./http-streams.js";
+import { registerDocumentRoutes } from "./http-documents.js";
+import type { DocumentLibraryPort } from "../../application/ports/document-library-port.js";
 import { GuardBoundaryError, GuardCommandSuccessSchema, type GuardBoundaryCode, type GuardCommandSuccess } from "../../domain/guard-contracts.js";
 
 const HTTP_BODY_LIMIT_BYTES = 16 * 1024;
 
 export interface BuildHttpAppOptions {
+  readonly documents?: DocumentLibraryPort;
   readonly runAgent: RunAgentUseCase;
   readonly resolveCitation?: ResolveCitationUseCase;
   readonly conversationCommand?: ConversationCommandHandler;
@@ -149,6 +152,7 @@ export function buildHttpApp(options: BuildHttpAppOptions): FastifyInstance {
   const app = Fastify({ bodyLimit: HTTP_BODY_LIMIT_BYTES, logger: false });
   app.decorateRequest("agentRunSignal", null);
   if (options.streams) registerStreamRoutes(app, options.streams);
+  if (options.documents) registerDocumentRoutes(app, options.documents);
 
   app.removeContentTypeParser("text/plain");
   app.setErrorHandler((error, _request, reply) => {

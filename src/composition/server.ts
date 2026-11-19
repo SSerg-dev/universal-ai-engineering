@@ -6,6 +6,7 @@ import { buildHttpApp } from "../adapters/inbound/http.js";
 import { createIterationRuntime } from "./create-iteration-runtime.js";
 
 export interface StartServerOptions {
+  readonly documentLibrary?: boolean;
   readonly fixtureRoot?: string;
   readonly host?: string;
   readonly journalRoot?: string;
@@ -23,6 +24,7 @@ export async function startServer(
   options: StartServerOptions = {},
 ): Promise<FastifyInstance> {
   const runtime = await createIterationRuntime({
+    ...(options.documentLibrary === undefined ? {} : { documentLibrary: options.documentLibrary }),
     iteration: options.iteration,
     mcpConsent: options.mcpConsent,
     databaseUrl: options.databaseUrl,

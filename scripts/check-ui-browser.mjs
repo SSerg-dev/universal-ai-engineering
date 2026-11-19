@@ -73,7 +73,7 @@ try {
     journalRoot: join(evidenceRoot, "journal"), telemetryRoot: join(evidenceRoot, "telemetry"), reportRoot: join(evidenceRoot, "reports") };
   step = "fixture-ingestion"; await ingestFixtures(options, new AbortController().signal);
   const execution = createStreamingExecution(options);
-  const runtime = await createStreamingRuntime({ ...options, streamExecutor: { execute: async (...args) => {
+  const runtime = await createStreamingRuntime({ ...options, documentLibrary: true, streamExecutor: { execute: async (...args) => {
     if (holdNextExecution) {
       holdNextExecution = false;
       await new Promise((resolve) => { if (args[2].aborted) resolve(); else args[2].addEventListener("abort", resolve, { once: true }); });
@@ -154,7 +154,7 @@ try {
   await screenshot("desktop-answer"); checks.push("grounded-citations-and-safe-evidence");
 
   step = "mobile-layout"; await viewport(360, 900, true); await noOverflow();
-  assert(await evaluate("[...document.querySelectorAll('button')].every(button => button.getBoundingClientRect().height >= 48)"));
+  assert(await evaluate("[...document.querySelectorAll('button')].filter(button => button.getClientRects().length).every(button => button.getBoundingClientRect().height >= 48)"));
   await screenshot("mobile-answer"); checks.push("mobile-360px-and-touch-targets");
   step = "mobile-long-text-abstention"; await submit("ж".repeat(2048)); await ready();
   await noOverflow(); assert(await evaluate("!!document.querySelector('.abstention') && document.querySelectorAll('.source-card').length===0"));
@@ -193,6 +193,35 @@ try {
   assert.equal(diagnosis.complete, true); assert.equal(diagnosis.runMetrics.status, "cancelled");
   assert.equal(diagnosis.runMetrics.modelCalls, 0); await screenshot("desktop-cancelled");
   checks.push("actual-engine-cancellation-focus-and-reduced-motion");
+
+  step = "document-upload-preview-confirm";
+  const uploadPath = join(evidenceRoot, "nebula-recovery.txt");
+  await writeFile(uploadPath, "Nebula recovery\n\nNebula recovery code is ORBIT-42.\n", { flag: "wx" });
+  await evaluate("document.querySelector('.library-panel').open=true");
+  await wait("!!document.querySelector('#document-file') && !document.querySelector('#document-file').disabled");
+  await command("DOM.enable");
+  const { root: dom } = await command("DOM.getDocument");
+  const { nodeId } = await command("DOM.querySelector", { nodeId: dom.nodeId, selector: "#document-file" });
+  await command("DOM.setFileInputFiles", { nodeId, files: [uploadPath] });
+  await wait("document.querySelector('.library-preview pre')?.textContent.includes('ORBIT-42')");
+  assert.equal((await runtime.documents.list(new AbortController().signal)).length, 0);
+  await evaluate("[...document.querySelectorAll('.library-actions button')].find(x=>x.textContent.includes('Подтвердить')).click()");
+  await wait("document.querySelector('.library-list')?.textContent.includes('Участвует в поиске')");
+  const uploaded = (await runtime.documents.list(new AbortController().signal))[0];
+  assert(uploaded?.active);
+  await submit("Nebula recovery code"); await ready();
+  assert(await evaluate("[...document.querySelectorAll('.source-card blockquote')].some(x=>x.textContent.includes('ORBIT-42'))"));
+  const uploadedRun = await evaluate("document.querySelector('.run-details dd').textContent.trim()");
+  const safeJournal = await readFile(join(options.journalRoot, `${uploadedRun}.jsonl`), "utf8");
+  assert(!safeJournal.includes("ORBIT-42") && !safeJournal.includes("Nebula recovery"));
+  await evaluate("[...document.querySelectorAll('.source-card button')].find(x=>x.textContent.includes('Открыть исходный')).click()");
+  await wait("document.querySelector('[aria-label=\"Исходный документ\"] pre')?.textContent.includes('ORBIT-42')");
+  await screenshot("desktop-uploaded-answer");
+  await viewport(360, 900, true); await noOverflow(); await screenshot("mobile-uploaded-answer");
+  await evaluate("[...document.querySelectorAll('.library-list button')].find(x=>x.textContent.includes('Отключить')).click()");
+  await wait("document.querySelector('.library-list')?.textContent.includes('Отключён от новых поисков')");
+  assert.equal((await runtime.documents.list(new AbortController().signal))[0].active, false);
+  checks.push("real-file-preview-confirm-grounded-answer-source-and-disable");
 
   step = "privacy-and-runtime-errors";
   assert(await evaluate("localStorage.length===0 && sessionStorage.length===0"));

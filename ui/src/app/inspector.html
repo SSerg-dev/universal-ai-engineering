@@ -8,8 +8,10 @@
   <section class="hero" aria-labelledby="page-title">
     <p class="eyebrow">От вопроса к проверяемому ответу</p>
     <h1 id="page-title">Как рождается ответ</h1>
-    <p class="intro text-muted">Задайте вопрос по учебной документации и проследите каждый шаг.</p>
+    <p class="intro text-muted">Задайте вопрос по документации и проследите каждый шаг.</p>
   </section>
+
+  <uaos-document-library />
 
   <section class="panel question-panel" aria-labelledby="question-label">
     <form (submit)="submit($event)">
@@ -71,6 +73,7 @@
             @for (claim of response.payload.grounding.claims; track claim.citation.passageId; let index = $index) {
               <li class="source-card"><div class="source-label"><span class="source-number">{{ index + 1 }}</span><h4>{{ sourceTitle(claim.citation.documentId) }}</h4></div>
                 <blockquote>{{ claim.quote }}</blockquote>
+                @if (claim.citation.documentId.startsWith('upload-')) { <button type="button" (click)="documentLibrary()?.openSource(claim.citation.documentId)">Открыть исходный документ</button> }
                 <details class="citation-details"><summary>Сведения о цитате</summary><dl><dt>Документ</dt><dd>{{ claim.citation.documentId }}</dd><dt>Фрагмент</dt><dd>{{ claim.citation.start }}–{{ claim.citation.end }}</dd><dt>Версия</dt><dd>{{ claim.citation.revision }}</dd></dl></details>
               </li>
             }

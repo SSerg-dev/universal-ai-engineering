@@ -29,7 +29,7 @@ try {
     journalRoot: join(evidenceRoot, "journal"), telemetryRoot: join(evidenceRoot, "telemetry"), reportRoot: join(evidenceRoot, "reports") };
   await ingestFixtures(options, AbortSignal.timeout(20_000));
   if (!stopped) {
-    app = buildHttpApp(await createStreamingRuntime(options));
+    app = buildHttpApp(await createStreamingRuntime({ ...options, documentLibrary: true }));
     app.get("/", async (_request, reply) => reply.type("text/html; charset=utf-8").send(html));
     app.get("/:asset", async (request, reply) => {
       const name = request.params?.asset;

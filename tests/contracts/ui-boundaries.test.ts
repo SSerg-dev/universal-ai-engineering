@@ -28,7 +28,7 @@ describe("Isolated Angular adapter boundary", () => {
     for (const field of ["overrides", "workspaces", "optionalDependencies", "peerDependencies"]) expect(manifest[field]).toBeUndefined();
   });
   it("allows UI to share only pure stream protocol/reducer code and never Node infrastructure", () => {
-    const uiRoot = resolve("ui"), allowed = new Set([resolve("src/application/reduce-stream.ts"), resolve("src/domain/stream-contracts.ts")]);
+    const uiRoot = resolve("ui"), allowed = new Set([resolve("src/application/reduce-stream.ts"), resolve("src/domain/stream-contracts.ts"), resolve("src/domain/document-library-contracts.ts")]);
     const browserPackages = Object.keys(json("ui/package.json").dependencies);
     for (const file of files("ui/src")) {
       const source = readFileSync(file, "utf8");

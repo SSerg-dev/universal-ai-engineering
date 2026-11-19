@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, InjectionToken, Injecto
 
 import type { StreamEvent } from "../../../src/domain/stream-contracts.js";
 import { RunStreamClient, type ClientProblem, type ClientSnapshot } from "./stream-client";
+import { DocumentLibraryComponent } from "./document-library";
 
 export const STREAM_CLIENT = new InjectionToken<Pick<RunStreamClient, "start" | "resume" | "cancel" | "dispose">>("Run stream client", {
   providedIn: "root", factory: () => new RunStreamClient(),
@@ -14,8 +15,9 @@ const problems: Record<ClientProblem, string> = {
   CANCEL_FAILED: "Не удалось отправить остановку. Повторите запрос остановки; текущий запуск продолжается.",
 };
 
-@Component({ selector: "uaos-inspector", standalone: true, templateUrl: "./inspector.html", changeDetection: ChangeDetectionStrategy.OnPush })
+@Component({ selector: "uaos-inspector", standalone: true, imports: [DocumentLibraryComponent], templateUrl: "./inspector.html", changeDetection: ChangeDetectionStrategy.OnPush })
 export class InspectorComponent {
+  readonly documentLibrary = viewChild(DocumentLibraryComponent);
   readonly #client = inject(STREAM_CLIENT);
   readonly #injector = inject(Injector);
   private readonly questionElement = viewChild<ElementRef<HTMLTextAreaElement>>("questionElement");
@@ -104,7 +106,7 @@ export class InspectorComponent {
     switch (event.type) {
       case "run.started": return "Каждый следующий шаг появится по мере выполнения.";
       case "run.progress": return event.payload.step === 1 ? "Выбираем способ найти подтверждение." : "Используем найденные фрагменты.";
-      case "tool.started": return "Читаем только учебные материалы.";
+      case "tool.started": return "Ищем в доступных документах.";
       case "tool.completed": return `Поиск завершён · ${event.payload.durationMs} мс`;
       case "tool.failed": return event.payload.code === "TOOL_PERMISSION_DENIED" ? "Инструменту не выдан доступ." : "Не удалось получить фрагменты.";
       case "answer": return "Ответ и цитаты доступны в блоке результата.";

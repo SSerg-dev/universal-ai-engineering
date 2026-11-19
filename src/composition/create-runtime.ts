@@ -15,6 +15,7 @@ import type { RunStreamPort } from "../application/ports/stream-port.js";
 import type { GuardCommandSuccess } from "../domain/guard-contracts.js";
 
 export interface Runtime {
+  readonly documents?: import("../application/ports/document-library-port.js").DocumentLibraryPort;
   readonly runAgent: RunAgentUseCase;
   readonly resolveCitation?: ResolveCitationUseCase;
   readonly conversationCommand?: ConversationCommandHandler;

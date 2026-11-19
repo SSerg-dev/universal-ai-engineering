@@ -9,6 +9,10 @@ import {
   type Citation, type Embedding, type IndexedDocument, type IndexedPassage, type IndexManifest,
 } from "../../domain/retrieval-contracts.js";
 import { Sha256ContentIdentity } from "./sha256-content-identity.js";
+import { DocumentLibraryError, LibraryEntrySchema, LibraryListSchema, LibraryDocumentSchema, LibrarySelectionSchema } from "../../domain/document-library-contracts.js";
+import type { DocumentLibraryStorePort, UploadFile } from "../../application/ports/document-library-port.js";
+import { prepareUpload } from "../../application/document-library.js";
+import { decodeUpload } from "./decode-upload.js";
 
 const DDL = `
 CREATE EXTENSION IF NOT EXISTS vector WITH SCHEMA public;
@@ -32,13 +36,19 @@ CREATE TABLE IF NOT EXISTS uaos_retrieval.passages (
  body text NOT NULL, embedding public.vector NOT NULL,
  PRIMARY KEY(index_id, passage_id), UNIQUE(index_id, document_id, revision, ordinal),
  FOREIGN KEY(index_id, document_id, revision) REFERENCES uaos_retrieval.documents(index_id, document_id, revision)
+);
+CREATE TABLE IF NOT EXISTS uaos_retrieval.uploads (
+ index_id text NOT NULL, document_id text NOT NULL, revision text NOT NULL,
+ file_name text NOT NULL, original_base64 text NOT NULL CHECK(length(original_base64)<=349528),
+ PRIMARY KEY(index_id,document_id),
+ FOREIGN KEY(index_id,document_id,revision) REFERENCES uaos_retrieval.documents(index_id,document_id,revision)
 );`;
 
 const manifestRowSchema = z.object({ index_id: z.string(), profile_id: z.string(), dimensions: z.number(), chunker: z.string() });
 const selectedPassageColumns = `p.index_id AS "indexId", p.document_id AS "documentId", p.revision,
  p.passage_id AS "passageId", d.title, p.ordinal, p.start_offset AS start, p.end_offset AS end, p.body AS text`;
 
-export class PostgresPassageRepository implements PassageRepositoryPort {
+export class PostgresPassageRepository implements PassageRepositoryPort, DocumentLibraryStorePort {
   readonly #connectionString: string;
   readonly #operationTimeoutMs: number;
   readonly #identity = new Sha256ContentIdentity();
@@ -68,7 +78,7 @@ export class PostgresPassageRepository implements PassageRepositoryPort {
       return result;
     } catch (error) {
       if (signal.aborted) throw signal.reason;
-      if (error instanceof RetrievalBoundaryError) throw error;
+      if (error instanceof RetrievalBoundaryError || error instanceof DocumentLibraryError) throw error;
       throw new RetrievalBoundaryError("REPOSITORY_FAILURE");
     } finally {
       try { await client.end().catch(() => {}); }
@@ -97,6 +107,18 @@ export class PostgresPassageRepository implements PassageRepositoryPort {
 
   async replaceDocument(rawManifest: IndexManifest, rawDocument: IndexedDocument,
     rawPassages: readonly IndexedPassage[], signal: AbortSignal): Promise<void> {
+    return this.#replaceDocument(rawManifest, rawDocument, rawPassages, signal);
+  }
+
+  async publishUpload(manifest: IndexManifest, document: IndexedDocument, passages: readonly IndexedPassage[], original: UploadFile, signal: AbortSignal): Promise<void> {
+    LibrarySelectionSchema.parse({ documentId: document.documentId });
+    const decoded = decodeUpload(original), checked = prepareUpload(decoded.file, decoded.text, decoded.bytes, manifest, this.#identity);
+    if (JSON.stringify(checked.document) !== JSON.stringify(IndexedDocumentSchema.parse(document))) throw new DocumentLibraryError("UPLOAD_CONFIRMATION_MISMATCH");
+    return this.#replaceDocument(manifest, document, passages, signal, original);
+  }
+
+  async #replaceDocument(rawManifest: IndexManifest, rawDocument: IndexedDocument,
+    rawPassages: readonly IndexedPassage[], signal: AbortSignal, original?: UploadFile): Promise<void> {
     signal.throwIfAborted();
     const manifest = IndexManifestSchema.parse(rawManifest);
     const document = IndexedDocumentSchema.parse(rawDocument);
@@ -113,6 +135,10 @@ export class PostgresPassageRepository implements PassageRepositoryPort {
       await client.query("INSERT INTO uaos_retrieval.indexes VALUES($1,$2,$3,$4) ON CONFLICT DO NOTHING",
         [manifest.indexId, manifest.embedding.id, manifest.embedding.dimensions, manifest.chunker]);
       await this.#checkManifest(client, manifest, true);
+      if (original) {
+        const count = await client.query("SELECT count(*) AS count FROM uaos_retrieval.uploads WHERE index_id=$1 AND document_id<>$2", [manifest.indexId, document.documentId]);
+        if (Number(count.rows[0]?.count) >= 100) throw new DocumentLibraryError("LIBRARY_CAPACITY");
+      }
       const inserted = await client.query(`INSERT INTO uaos_retrieval.documents VALUES($1,$2,$3,$4,$5)
         ON CONFLICT DO NOTHING RETURNING revision`, [manifest.indexId, document.documentId, document.revision, document.title, document.content]);
       if (inserted.rowCount === 1) {
@@ -128,9 +154,48 @@ export class PostgresPassageRepository implements PassageRepositoryPort {
         if (retained.rows[0]?.title !== document.title || retained.rows[0]?.content !== document.content) throw new RetrievalBoundaryError("DOCUMENT_INVALID");
       }
       signal.throwIfAborted();
+      if (original) await client.query(`INSERT INTO uaos_retrieval.uploads VALUES($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING`,
+        [manifest.indexId, document.documentId, document.revision, original.fileName, original.base64]);
       await client.query(`INSERT INTO uaos_retrieval.active_documents VALUES($1,$2,$3)
         ON CONFLICT(index_id,document_id) DO UPDATE SET revision=EXCLUDED.revision`,
         [manifest.indexId, document.documentId, document.revision]);
+      await client.query("COMMIT");
+    });
+  }
+
+  async listUploads(indexId: string, signal: AbortSignal): Promise<unknown> {
+    return this.#withClient(signal, async (client) => {
+      const rows = await client.query(`SELECT u.document_id AS "documentId",u.revision,d.title,u.file_name AS "fileName",
+        (a.document_id IS NOT NULL) AS active FROM uaos_retrieval.uploads u
+        JOIN uaos_retrieval.documents d USING(index_id,document_id,revision)
+        LEFT JOIN uaos_retrieval.active_documents a USING(index_id,document_id,revision)
+        WHERE u.index_id=$1 ORDER BY u.document_id LIMIT 101`, [indexId]);
+      return LibraryListSchema.parse(rows.rows);
+    });
+  }
+
+  async readUpload(indexId: string, documentId: string, signal: AbortSignal): Promise<unknown> {
+    LibrarySelectionSchema.parse({ documentId });
+    return this.#withClient(signal, async (client) => {
+      const rows = await client.query(`SELECT u.document_id AS "documentId",u.revision,d.title,u.file_name AS "fileName",
+        (a.document_id IS NOT NULL) AS active,d.content,u.original_base64 AS base64 FROM uaos_retrieval.uploads u
+        JOIN uaos_retrieval.documents d USING(index_id,document_id,revision)
+        LEFT JOIN uaos_retrieval.active_documents a USING(index_id,document_id,revision)
+        WHERE u.index_id=$1 AND u.document_id=$2`, [indexId, documentId]);
+      if (!rows.rows[0]) return null;
+      const { content, base64, ...entry } = rows.rows[0];
+      return LibraryDocumentSchema.parse({ entry: LibraryEntrySchema.parse(entry), content, original: { fileName: entry.fileName, base64 } });
+    });
+  }
+
+  async disableUpload(indexId: string, documentId: string, signal: AbortSignal): Promise<void> {
+    LibrarySelectionSchema.parse({ documentId });
+    await this.#withClient(signal, async (client) => {
+      await client.query("BEGIN");
+      await client.query("SELECT index_id FROM uaos_retrieval.indexes WHERE index_id=$1 FOR UPDATE", [indexId]);
+      const exists = await client.query("SELECT document_id FROM uaos_retrieval.uploads WHERE index_id=$1 AND document_id=$2", [indexId, documentId]);
+      if (!exists.rowCount) throw new DocumentLibraryError("LIBRARY_NOT_FOUND");
+      await client.query("DELETE FROM uaos_retrieval.active_documents WHERE index_id=$1 AND document_id=$2", [indexId, documentId]);
       await client.query("COMMIT");
     });
   }
