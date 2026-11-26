@@ -168,6 +168,42 @@ describe("Iteration 1 review evidence", () => {
         }
       }
     }
+    const documentAdmissionPath = "docs/reviews/DEPENDENCIES-DOC-02.json";
+    if (existsSync(documentAdmissionPath)) {
+      const admission = z.strictObject({
+        scope: z.literal("DOC-02"), decision: z.literal("Selected for implementation"),
+        installState: z.literal("active"), selectedOn: z.literal("2026-11-26"),
+        selectedBy: z.literal("Codex under the user's explicit autonomous implementation authorization"),
+        dependencies: z.array(tuple), devDependencies: z.array(tuple),
+        securityReplacements: z.array(z.strictObject({
+          name: z.string().regex(/^(?:@[a-z0-9._-]+\/)?[a-z0-9._-]+$/u),
+          from: z.string().regex(/^\d+\.\d+\.\d+$/u), to: z.string().regex(/^\d+\.\d+\.\d+$/u),
+          advisory: z.string().regex(/^GHSA-/u),
+        })),
+        transitiveResolutions: z.array(z.tuple([z.string().min(1), z.string().regex(/^\d+\.\d+\.\d+$/u)])),
+        integrity: z.record(z.string(), z.string().startsWith("sha512-")),
+        audit: z.strictObject({ runtime: z.literal("Node.js 24.22.1"), npm: z.literal("11.20.0"),
+          command: z.literal("npm audit --omit=dev --json"), vulnerabilities: z.literal(0) }),
+      }).parse(JSON.parse(read(documentAdmissionPath)));
+      expect(admission.dependencies).toEqual([["mammoth", "1.13.0"], ["unpdf", "1.9.1"]]);
+      expect(admission.devDependencies).toEqual([]);
+      expect(admission.securityReplacements).toEqual([
+        { name: "zod", from: "4.6.5", to: "4.6.7", advisory: "GHSA-mrhx-c7xc-m3w5" },
+        { name: "fastify", from: "5.12.5", to: "5.12.8", advisory: "GHSA-389g-gv7q-r4x8" },
+      ]);
+      for (const replacement of admission.securityReplacements) {
+        const index = accepted.dependencies.findIndex(([name, version]) => name === replacement.name && version === replacement.from);
+        expect(index).toBeGreaterThanOrEqual(0);
+        accepted.dependencies[index] = [replacement.name, replacement.to];
+        expect(lock.packages[`node_modules/${replacement.name}`].integrity).toBe(admission.integrity[replacement.name]);
+      }
+      additionalPins.dependencies.push(...admission.dependencies);
+      for (const [name] of admission.dependencies) {
+        expect(lock.packages[`node_modules/${name}`].integrity).toBe(admission.integrity[name]);
+      }
+      expect(lock.packages["node_modules/fast-uri"].version).toBe("4.2.4");
+      expect(lock.packages["node_modules/ajv/node_modules/fast-uri"].version).toBe("3.1.9");
+    }
     const allNames = [...names, ...additionalPins.dependencies.map(([name]) => name), ...additionalPins.devDependencies.map(([name]) => name)];
     expect(new Set(allNames).size).toBe(allNames.length);
     for (const holder of [manifest, lock.packages[""]]) {

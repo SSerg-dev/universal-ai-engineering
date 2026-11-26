@@ -26,7 +26,7 @@ Primary sources:
 - [Mammoth raw-text API](https://www.npmjs.com/package/mammoth)
 - [Mammoth security release note recommending a separate thread and timeout](https://github.com/mwilliamson/mammoth.js/blob/master/NEWS)
 
-The exact installed lock graph must additionally pass `npm audit --omit=dev` before implementation is accepted. Package metadata is admission evidence, not a security proof.
+The installed graph initially exposed pre-existing advisories in `zod@4.6.5`, `fastify@5.12.5` and their `fast-uri` graph. The admission therefore includes minimal security replacements `zod@4.6.7`, `fastify@5.12.8`, `fast-uri@4.2.4` and nested `fast-uri@3.1.9`. Under Node.js 24.22.1 with npm 11.20.0, `npm audit --omit=dev --json` then reported zero vulnerabilities. [DEPENDENCIES-DOC-02.json](../../../docs/reviews/DEPENDENCIES-DOC-02.json) preserves the exact evidence without rewriting the historical Phase 1 acceptance record. Package metadata and an audit snapshot are admission evidence, not a security proof.
 
 ## Rejected alternatives
 

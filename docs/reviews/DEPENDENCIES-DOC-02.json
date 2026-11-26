@@ -1,0 +1,42 @@
+{
+  "scope": "DOC-02",
+  "decision": "Selected for implementation",
+  "installState": "active",
+  "selectedOn": "2026-11-26",
+  "selectedBy": "Codex under the user's explicit autonomous implementation authorization",
+  "dependencies": [
+    ["mammoth", "1.13.0"],
+    ["unpdf", "1.9.1"]
+  ],
+  "devDependencies": [],
+  "securityReplacements": [
+    {
+      "name": "zod",
+      "from": "4.6.5",
+      "to": "4.6.7",
+      "advisory": "GHSA-mrhx-c7xc-m3w5"
+    },
+    {
+      "name": "fastify",
+      "from": "5.12.5",
+      "to": "5.12.8",
+      "advisory": "GHSA-389g-gv7q-r4x8"
+    }
+  ],
+  "transitiveResolutions": [
+    ["fast-uri", "4.2.4"],
+    ["ajv>fast-uri", "3.1.9"]
+  ],
+  "integrity": {
+    "mammoth": "sha512-2cawcYFcP7ISfXbBcL9lmVgTNWo88v/52ND1gnywHtVT/pX0//puPnf0iMPV9ZgmuvNOE+zkIhDgZ9M2c2dDDg==",
+    "unpdf": "sha512-nO1npM2kNyd4hj1fKzUVU6bvnWjDSxI97eycM/DgzI83dYyW+pNRI9NeMQVEfef8fI3Q06i9lkMeE1HxrQqKoA==",
+    "zod": "sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==",
+    "fastify": "sha512-moP8exb2sCHLUbJkwp+I6C0padhy4D8lp0SdmzY7HhSdZuqm7O/u3o2aq7u8okaQ//33QDzj3G/u+FsSdB8Qzw=="
+  },
+  "audit": {
+    "runtime": "Node.js 24.22.1",
+    "npm": "11.20.0",
+    "command": "npm audit --omit=dev --json",
+    "vulnerabilities": 0
+  }
+}
