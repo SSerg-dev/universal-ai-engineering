@@ -4,10 +4,10 @@ current_phase: 10
 current_phase_name: Router and Course Completion
 status: in_progress
 stopped_at: Resumed for the authorized PDF/DOCX document-library release; contracts and dependency admission come first
-last_updated: "2026-11-24"
-last_activity: 2026-11-24
-last_activity_desc: User resumed work; preparing the PDF/DOCX extraction wave with research and validation
-state_head: 89baa76
+last_updated: "2026-11-27T12:49:16.478Z"
+last_activity: 2026-11-27
+last_activity_desc: Completed and verified the Node.js 26 runtime migration; PDF/DOCX extraction remains the resumed feature work
+state_head: f892258fbe46002d06f81b6b7225e29d271387d1
 progress:
   total_phases: 10
   completed_phases: 1
@@ -30,9 +30,9 @@ See: .planning/PROJECT.md (updated 2026-11-15)
 Phase: UAOS-10 (Router and Course Completion) — IN PROGRESS
 Plan: 0 of 2 complete in current phase
 Status: User explicitly resumed work. DOC-01 Markdown/TXT is complete; PDF/DOCX contracts, extraction, and verification are next, followed by Phase 10 composition/adapters.
-Last activity: 2026-11-24 — Resumed the authorized PDF/DOCX wave from the structured handoff; research and dependency admission precede implementation.
+Last activity: 2026-11-27 — Completed and verified the Node.js 26 runtime migration; PDF/DOCX extraction remains the resumed feature work.
 
-Progress: 25/27 roadmap plans (93%); Phase 1 approved; Phase 2–9 review pending
+Progress: 25/27 roadmap plans ([█████████░] 93%); Phase 1 approved; Phase 2–9 review pending
 
 ## Performance Metrics
 
@@ -112,9 +112,10 @@ Resume file: none; the completed Markdown/TXT handoff was consumed
 
 ## Quick Tasks Completed
 
-| Task | Description | Completed | Evidence |
-|---|---|---|---|
-| 001 | Local Markdown/TXT upload, preview, confirmation and document library | 2026-11-19 | [Summary](quick/001-local-document-library/001-SUMMARY.md) |
+| # | Description | Date | Commit | Status | Directory |
+| --- | ------------- | ------ | -------- | -------- | ----------- |
+| 1 | 001 · Local Markdown/TXT upload, preview, confirmation and document library · Completed: 2026-11-19 · Evidence: [Summary](quick/001-local-document-library/001-SUMMARY.md) | — | — | — | — |
+| 261127-lns | Migrate the project runtime contract from Node.js 24 to Node.js 26.x, verify on 26.11.1, preserve historical Node 24 evidence, and update packages, tests, and current documentation | 2026-11-27 | f892258 | Verified | [261127-lns-migrate-the-project-runtime-contract-fro](./quick/261127-lns-migrate-the-project-runtime-contract-fro/) |
 
 On 2026-11-09 the user explicitly approved Phase 1 at 885242e and authorized continuing through the roadmap until the five-hour usage allowance is exhausted. Preserve coherent commits and push each completed logical task. Approval of later phases remains separate.
 
