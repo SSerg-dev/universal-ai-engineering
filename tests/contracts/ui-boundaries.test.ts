@@ -18,7 +18,7 @@ describe("Isolated Angular adapter boundary", () => {
         expect(lock.packages[`node_modules/${name}`]).toMatchObject({ version, integrity: expect.stringMatching(/^sha512-/u) });
       }
     }
-    expect(manifest.engines.node).toBe("24.x");
+    expect(manifest.engines.node).toBe("26.x");
     expect(manifest.devDependencies.typescript).toBe("6.0.3"); expect(json("package.json").devDependencies.typescript).toBe("7.0.2");
     expect(json("ui/tsconfig.json").angularCompilerOptions.strictTemplates).toBe(true);
     expect(json("ui/angular.json").projects.inspector.architect.build.builder).toBe("@angular/build:application");

@@ -97,8 +97,8 @@ describe("Iteration 1 review evidence", () => {
     expect(read("docs/reviews/RESET-0001-evidence.md")).toContain("Git commit: `e4a25e9`");
   });
 
-  it("runs under Node.js 24 with accepted original pins and separately recorded adapter additions", () => {
-    expect(process.versions.node.split(".")[0]).toBe("24");
+  it("runs under the active Node.js 26 baseline while preserving accepted original pins", () => {
+    expect(process.versions.node).toBe("26.11.1");
     const records = [...read(`${phase}/01-02-SUMMARY.md`).matchAll(/<!-- accepted-package-pins: (.+?) -->/gu)];
     expect(records).toHaveLength(1);
     const tuple = z.tuple([
@@ -204,6 +204,23 @@ describe("Iteration 1 review evidence", () => {
       expect(lock.packages["node_modules/fast-uri"].version).toBe("4.2.4");
       expect(lock.packages["node_modules/ajv/node_modules/fast-uri"].version).toBe("3.1.9");
     }
+    const runtimeAdmission = z.strictObject({
+      scope: z.literal("RUNTIME-26"), decision: z.literal("Selected for implementation"),
+      installState: z.literal("active"), selectedOn: z.literal("2026-11-27"),
+      selectedBy: z.literal("Codex under the user's explicit GO authorization"),
+      nodeEngine: z.literal("26.x"), verifiedRuntime: z.literal("26.11.1"), npm: z.literal("12.2.3"),
+      devDependencyReplacement: z.strictObject({
+        name: z.literal("@types/node"), from: z.literal("24.19.0"), to: z.literal("26.6.11"),
+      }),
+      repository: z.literal("https://github.com/DefinitelyTyped/DefinitelyTyped"),
+      integrity: z.string().startsWith("sha512-"),
+      audit: z.strictObject({ command: z.literal("npm audit --omit=dev --json"), vulnerabilities: z.literal(0) }),
+    }).parse(JSON.parse(read("docs/reviews/DEPENDENCIES-RUNTIME-26.json")));
+    const originalTypePin = accepted.devDependencies.findIndex(([name, version]) =>
+      name === runtimeAdmission.devDependencyReplacement.name && version === runtimeAdmission.devDependencyReplacement.from);
+    expect(originalTypePin).toBeGreaterThanOrEqual(0);
+    accepted.devDependencies[originalTypePin] = [runtimeAdmission.devDependencyReplacement.name, runtimeAdmission.devDependencyReplacement.to];
+    expect(lock.packages["node_modules/@types/node"].integrity).toBe(runtimeAdmission.integrity);
     const allNames = [...names, ...additionalPins.dependencies.map(([name]) => name), ...additionalPins.devDependencies.map(([name]) => name)];
     expect(new Set(allNames).size).toBe(allNames.length);
     for (const holder of [manifest, lock.packages[""]]) {
@@ -219,7 +236,7 @@ describe("Iteration 1 review evidence", () => {
         expect(lock.packages[`node_modules/${name}`].version).toBe(version);
       }
     }
-    expect(manifest.engines.node).toBe("24.x");
+    expect(manifest.engines.node).toBe("26.x");
     expect(manifest.scripts.validate.split(/\s*&&\s*/u)).toEqual([
       "npm run typecheck", "npm run typecheck:core", "npm test", "npm run build",
     ]);

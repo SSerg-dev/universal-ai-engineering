@@ -1,0 +1,21 @@
+{
+  "scope": "RUNTIME-26",
+  "decision": "Selected for implementation",
+  "installState": "active",
+  "selectedOn": "2026-11-27",
+  "selectedBy": "Codex under the user's explicit GO authorization",
+  "nodeEngine": "26.x",
+  "verifiedRuntime": "26.11.1",
+  "npm": "12.2.3",
+  "devDependencyReplacement": {
+    "name": "@types/node",
+    "from": "24.19.0",
+    "to": "26.6.11"
+  },
+  "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+  "integrity": "sha512-uUyQ2XLEz+EXh34lmS3GhKrkqn/8FU7KUiKRpk347At2bmnMVWss45yz8b4FG/tUtmV1tV/+TVkITItPROyeeQ==",
+  "audit": {
+    "command": "npm audit --omit=dev --json",
+    "vulnerabilities": 0
+  }
+}
