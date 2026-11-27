@@ -33,6 +33,7 @@ React and Next.js are not part of the selected architecture.
 
 ## Documentation
 
+- [Запуск и остановка с постоянной локальной базой](docs/how-to/run-persistent-local-database.ru.md)
 - [Local Markdown/TXT upload, preview and searchable document library](docs/how-to/local-document-library.md)
 - [Iteration 9 guardrails and explicit resumable approval](docs/iterations/09-guardrails-approval.md)
 - [Iteration 9 evidence](docs/reviews/ITERATION-09-evidence.md)

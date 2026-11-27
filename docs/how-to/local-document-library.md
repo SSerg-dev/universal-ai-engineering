@@ -4,7 +4,7 @@ This opt-in extension adds a local operator's document library to the streaming 
 
 ## Try the complete flow
 
-With Node.js 24, installed root/UI dependencies and Docker:
+With Node.js 26, installed root/UI dependencies and Docker:
 
 ```powershell
 npm run build
