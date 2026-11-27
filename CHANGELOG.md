@@ -53,6 +53,7 @@ All notable project changes are recorded here. Work remains unapproved unless an
 
 ### Changed
 
+- Moved the active development/runtime baseline from Node.js 24 to Node.js 26.x, initially verified on 26.11.1, while preserving prior Node.js 24 phase evidence as historical records (ADR-0017).
 - Reframed the project from a broad documentation-first engineering framework to a focused educational Agentic OS implementation.
 - Selected TypeScript/Node.js, Zod, Fastify, Vitest, later PostgreSQL/pgvector, and later Angular/Tailwind.
 

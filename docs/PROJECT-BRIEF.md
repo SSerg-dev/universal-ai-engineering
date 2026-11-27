@@ -31,7 +31,7 @@ A learner can understand, build, test, and review a reusable Agentic OS one work
 
 ## Technical Direction
 
-- TypeScript and Node.js 24.
+- TypeScript and Node.js 26 (`26.x`; verified on 26.11.1).
 - Zod at runtime boundaries.
 - Pure domain/application core with explicit ports.
 - Fastify and Node CLI as adapters to the same use case.

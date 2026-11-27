@@ -19,7 +19,7 @@ This repository builds a ten-iteration Universal Agentic OS course. Read `docs/P
 
 ## Current Technical Direction
 
-- TypeScript and Node.js 24
+- TypeScript and Node.js 26 (`26.x`; verified on 26.11.1)
 - Zod at runtime boundaries
 - Fastify HTTP adapter and Node CLI adapter
 - Vitest with deterministic fakes

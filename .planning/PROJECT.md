@@ -50,7 +50,7 @@ Phase 1 was explicitly approved on 2026-11-09 after the typed loop, CLI/HTTP ada
 
 ## Constraints
 
-- **Runtime**: TypeScript on Node.js 24 — one language across the core, CLI, API, and later UI contracts.
+- **Runtime**: TypeScript on Node.js 26 (`26.x`; verified on 26.11.1) — one language across the core, CLI, API, and UI contracts. Earlier Node.js 24 phase records remain historical evidence.
 - **Validation**: Zod at runtime boundaries — external and model-produced values are untrusted.
 - **Architecture**: Functional domain/application core with explicit ports — frameworks and providers remain replaceable adapters.
 - **Interfaces**: Node CLI and Fastify HTTP API call the same application use case — no duplicated orchestration.
@@ -70,6 +70,7 @@ Phase 1 was explicitly approved on 2026-11-09 after the typed loop, CLI/HTTP ada
 | Introduce Angular/Tailwind only with streaming in Iteration 8 | The UI should consume a proven event contract | — Pending |
 | Exclude React and Next.js | A second frontend stack adds complexity without serving the learning goal | — Pending |
 | Use GSD as an operational workflow | Planning discipline is useful, but architecture and approval remain human responsibilities | — Pending |
+| Move the active runtime baseline from Node.js 24 to Node.js 26.x | The local toolchain is Node.js 26.11.1 and the full workspace is migrated through a new ADR without rewriting historical evidence | — Pending |
 
 ## Evolution
 
