@@ -13,7 +13,7 @@ import { ingestFixtures } from "../dist/src/composition/ingest-fixtures.js";
 
 const root = fileURLToPath(new URL("../", import.meta.url)), owner = randomUUID();
 const databaseUrl = process.env.UAOS_TEST_DATABASE_URL;
-if (!databaseUrl || !process.env.UAOS_TEST_DATABASE_OWNER || process.versions.node.split(".")[0] !== "24") throw new Error("Use the owned database runner with Node.js 24");
+if (!databaseUrl || !process.env.UAOS_TEST_DATABASE_OWNER || process.versions.node.split(".")[0] !== "26") throw new Error("Use the owned database runner with Node.js 26");
 const evidenceRoot = join(root, ".uaos/ui-browser", owner), assets = join(root, "ui/dist/inspector/browser");
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 async function until(check, timeout = 15_000) {

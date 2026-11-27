@@ -18,7 +18,7 @@ try {
   if (args.length > 1 || (args.length === 1 && !["--browser", "--preview"].includes(args[0]))) throw new Error("Unsupported database check mode");
   const browserMode = args[0] === "--browser";
   const previewMode = args[0] === "--preview";
-  if (process.versions.node.split(".")[0] !== "24") throw new Error("Node.js 24 required");
+  if (process.versions.node.split(".")[0] !== "26") throw new Error("Node.js 26 required");
   execFileSync(process.execPath, ["node_modules/typescript/bin/tsc"], { cwd: root, timeout: 30_000, stdio: ["ignore", "pipe", "pipe"] });
   if (!/^pgvector\/pgvector@sha256:[a-f0-9]{64}$/u.test(infrastructure.image)) throw new Error("Invalid image pin");
   created = true; // Also inspect/clean up if Docker starts the container but the command times out.
@@ -49,7 +49,7 @@ try {
     child.once("close", (code) => { cleanup(); resolve(code ?? 1); });
   });
 } catch {
-  console.error("The disposable database check failed. Check Node.js 24, Docker, and the pinned image.");
+  console.error("The disposable database check failed. Check Node.js 26, Docker, and the pinned image.");
   testExit = 1;
 } finally {
   if (created) {

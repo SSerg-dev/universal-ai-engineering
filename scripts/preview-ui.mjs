@@ -8,8 +8,8 @@ import { createStreamingRuntime } from "../dist/src/composition/create-streaming
 import { ingestFixtures } from "../dist/src/composition/ingest-fixtures.js";
 
 const databaseUrl = process.env.UAOS_TEST_DATABASE_URL;
-if (!databaseUrl || !process.env.UAOS_TEST_DATABASE_OWNER || process.versions.node.split(".")[0] !== "24") {
-  throw new Error("Use node scripts/test-database.mjs --preview with Node.js 24");
+if (!databaseUrl || !process.env.UAOS_TEST_DATABASE_OWNER || process.versions.node.split(".")[0] !== "26") {
+  throw new Error("Use node scripts/test-database.mjs --preview with Node.js 26");
 }
 const root = fileURLToPath(new URL("../", import.meta.url));
 const assets = join(root, "ui/dist/inspector/browser"), owner = randomUUID();

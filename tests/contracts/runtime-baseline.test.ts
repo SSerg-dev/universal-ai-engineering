@@ -38,4 +38,12 @@ describe("Node.js runtime baseline", () => {
     expect(readFileSync("docs/architecture/decisions/ADR-0017-node-26-runtime-baseline.md", "utf8"))
       .toContain("Node.js 24 records remain historical evidence");
   });
+
+  it("uses Node.js 26 guards in active database and browser runners", () => {
+    for (const path of ["scripts/test-database.mjs", "scripts/check-ui-browser.mjs", "scripts/preview-ui.mjs"]) {
+      const source = readFileSync(path, "utf8");
+      expect(source, path).toContain('process.versions.node.split(".")[0] !== "26"');
+      expect(source, path).not.toContain('process.versions.node.split(".")[0] !== "24"');
+    }
+  });
 });
